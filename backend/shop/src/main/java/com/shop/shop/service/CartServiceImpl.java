@@ -3,15 +3,13 @@ package com.shop.shop.service;
 import com.shop.shop.domain.cart.Cart;
 import com.shop.shop.domain.cart.WishList;
 import com.shop.shop.domain.item.Item;
+import com.shop.shop.domain.item.ItemImage;
 import com.shop.shop.domain.item.ItemOption;
 import com.shop.shop.domain.member.Member;
 import com.shop.shop.dto.CartDTO;
 import com.shop.shop.dto.ItemDTO;
 import com.shop.shop.dto.WishListDTO;
-import com.shop.shop.repository.CartRepository;
-import com.shop.shop.repository.ItemOptionRepository;
-import com.shop.shop.repository.ItemRepository;
-import com.shop.shop.repository.MemberRepository;
+import com.shop.shop.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +23,18 @@ public class CartServiceImpl implements CartService {
     private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
     private final ItemOptionRepository itemOptionRepository;
+    private final ItemImageRepository itemImageRepository;
 
     // 장바구니 등록하기
     public CartDTO registerCart(CartDTO cartDTO, Long optionId) {
         Member member = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
         Item item = itemRepository.findById(cartDTO.getItemId()).orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
         ItemOption option = itemOptionRepository.findById(optionId).orElseThrow(() -> new IllegalArgumentException("해당 옵션이 존재하지 않습니다."));
+        List<ItemImage> images = itemImageRepository.findByItemId(cartDTO.getItemId());
+        ItemImage itemImage = null;
+        if (images != null || !images.isEmpty()) {
+            itemImage = images.get(0);
+        }
 
         Cart duplicatePrevention = cartRepository.findByMemberIdAndItemId(member.getId(), item.getId());
 
@@ -39,7 +43,7 @@ public class CartServiceImpl implements CartService {
         }
 
         Cart cart = new Cart();
-        cart.registerCart(member, item, option);
+        cart.registerCart(member, item, option, itemImage);
         cart.changeQty(cartDTO.getQty());
 
         cartRepository.save(cart);

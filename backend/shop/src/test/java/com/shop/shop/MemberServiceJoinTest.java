@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import com.shop.shop.domain.member.MemberRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,23 +46,23 @@ public class MemberServiceJoinTest {
     @Test
     @DisplayName("회원가입 - MemberService.makeMember 테스트")
     void testMakeMember() {
-        MemberDTO memberDTO = new MemberDTO(
-                null,
-                "test@unit.com",
-                passwordEncoder.encode("1234"),
-                "유닛테스트",
-                "010-1234-5678",
-                new Address("12345", "서울시 강남구", "테스트타워 1층"),
-                0,
-                LocalDateTime.now(),
-                false,
-                false,
-                false,
-                MemberShip.BRONZE,
-                Collections.singletonList("USER")
-        );
 
-        memberService.makeMember(memberDTO);
+        Member member = Member.builder()
+                .email("test@unit.com")
+                .password(passwordEncoder.encode("1234"))
+                .memberName("유닛테스트")
+                .phoneNumber("010-1234-5678")
+                .joinDate(LocalDateTime.now())
+                .memberShip(MemberShip.BRONZE)
+                .address(new Address("12345", "서울시 강남구", "테스트타워 1층"))
+                .stockMileage(0)
+                .wtrSns(false)
+                .social(false)
+                .delFlag(false)
+                .build();
+        member.addRole(MemberRole.USER);
+
+        memberRepository.save(member);
 
         MemberDTO found = memberService.getMemberByEmail("test@unit.com");
 

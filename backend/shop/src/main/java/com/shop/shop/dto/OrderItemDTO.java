@@ -20,13 +20,13 @@ public class OrderItemDTO {
     private Long orderId;
 
     public OrderItemDTO(OrderItem orderItem) {
-        this.orderPrice = orderItem.getOrderPrice();
-        this.qty = orderItem.getQty();
-        this.itemId = orderItem.getItem().getId();
-        this.itemOptionId = orderItem.getItemOption().getId();
-
-        // Order가 Lazy 로딩이 아닌 경우에만 활성화하는 방식
-        this.orderId = (orderItem.getOrder() != null) ? orderItem.getOrder().getId() : null;
+        if (orderItem != null) {
+            this.orderPrice = orderItem.getOrderPrice();
+            this.qty = orderItem.getQty();
+            this.itemId = (orderItem.getItem() != null) ? orderItem.getItem().getId() : null;
+            this.itemOptionId = (orderItem.getItemOption() != null) ? orderItem.getItemOption().getId() : null;
+            this.orderId = (orderItem.getOrder() != null) ? orderItem.getOrder().getId() : null;
+        }
     }
-
+    
 }

@@ -1,6 +1,7 @@
 package com.shop.shop.domain.cart;
 
 import com.shop.shop.domain.item.Item;
+import com.shop.shop.domain.item.ItemImage;
 import com.shop.shop.domain.item.ItemOption;
 import com.shop.shop.domain.member.Member;
 import jakarta.persistence.*;
@@ -33,12 +34,17 @@ public class Cart {
     @JoinColumn(name = "item_option_id")
     private ItemOption itemOption; // 선택한 옵션을 저장
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_image_id")
+    private ItemImage itemImage; // 선택한 옵션을 저장
+
     private int qty;
 
-    public void registerCart(Member member, Item item, ItemOption itemOption) {
+    public void registerCart(Member member, Item item, ItemOption itemOption, ItemImage itemImage) {
         this.member = member;
         this.item = item;
         this.itemOption = itemOption;
+        this.itemImage = itemImage;
     }
 
     public void changeQty(int qty) {

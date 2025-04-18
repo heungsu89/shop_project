@@ -35,6 +35,9 @@ public class CartDTO {
     // 다중 삭제에 필요한 ItemId를 담아두는 변수
     private Long[] deleteId;
 
+    private Long imageId;
+    private String imageName;
+
     public CartDTO(Cart cart) {
         this.cartId = cart.getId();
         this.memberId = cart.getMember().getId();
@@ -43,6 +46,9 @@ public class CartDTO {
         this.itemId = cart.getItem().getId();
         this.itemName = cart.getItem().getName();
         this.itemPrice = cart.getItem().getPrice();
+
+        this.imageId = cart.getItemImage().getId();
+        this.imageName = cart.getItemImage().getFileName();
 
         if (cart.getItemOption() != null) {
             this.optionId = cart.getItemOption().getId();

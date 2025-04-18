@@ -1,14 +1,11 @@
 package com.shop.shop.controller;
 
-import com.shop.shop.domain.order.Order;
 import com.shop.shop.dto.OrderDTO;
-import com.shop.shop.dto.WishListDTO;
 import com.shop.shop.repository.OrderItemRepository;
 import com.shop.shop.repository.OrderRepository;
 import com.shop.shop.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

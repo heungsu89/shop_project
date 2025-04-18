@@ -9,7 +9,6 @@ import com.shop.shop.domain.order.OrderItem;
 import com.shop.shop.domain.order.OrderStatus;
 import com.shop.shop.domain.order.PaymentMethod;
 import com.shop.shop.dto.OrderDTO;
-import com.shop.shop.dto.OrderItemDTO;
 import com.shop.shop.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,8 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.shop.shop.domain.order.OrderItem.createdOrderItem;
-
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -32,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     private final DeliveryRepository deliveryRepository;
     private final CartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
+    private final ItemOptionRepository itemOptionRepository;
 
     // 주문서 작성(등록)
     @Override
@@ -76,19 +74,24 @@ public class OrderServiceImpl implements OrderService {
         // 먼저 order를 저장한 후, order의 id를 참조하는 orderItem 저장
         Order savedOrder = orderRepository.save(order); // order의 id가 생성된 후에 orderItem 저장 가능
 
-//        List<OrderItem> orderItemList = new ArrayList<>();
+        List<OrderItem> orderItemList = new ArrayList<>();
         for (Cart cart : cartList) {
+//            ItemOption itemOption = itemOptionRepository.findById(cart.getItemOption().getId()).orElseThrow(() -> new RuntimeException("해당 옵션을 찾을 수 없습니다."));
             OrderItem orderItem = new OrderItem();
-            orderItem.getItemFromCart(cart, savedOrder);
+            orderItem.changeOrderPrice(cart.getItem().getPrice() * cart.getQty());
+            orderItem.changeQty(cart.getQty());
+            orderItem.changeItem(cart.getItem());
+            orderItem.changeItemOption(cart.getItemOption());
+            orderItem.changeOrder(savedOrder);
             OrderItem savedOrderItem = orderItemRepository.save(orderItem);
-//            savedOrder.addOrderItem(orderItem);  // OrderItem을 Order에 추가
-//            orderItemList.add(savedOrderItem);
+            orderItem.getItemOption().removeStock(cart.getQty());
+            orderItemList.add(savedOrderItem);
         }
 
         // Order와 OrderItem을 함께 저장
         Order saved1Order = orderRepository.save(savedOrder);  // Order와 연관된 OrderItem들이 함께 저장됩니다.
 
-        return new OrderDTO(saved1Order);
+        return new OrderDTO(saved1Order, orderItemList);
     }
 
     // 회원 이메일로 주문 모두 조회

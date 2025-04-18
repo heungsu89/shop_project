@@ -1,10 +1,9 @@
 package com.shop.shop.dto;
 
-import com.shop.shop.domain.delivery.Delivery;
 import com.shop.shop.domain.delivery.DeliveryStatus;
-import com.shop.shop.domain.member.Member;
 import com.shop.shop.domain.order.Order;
 import com.shop.shop.domain.order.OrderItem;
+import com.shop.shop.dto.OrderItemDTO;
 import com.shop.shop.domain.order.OrderStatus;
 import com.shop.shop.domain.order.PaymentMethod;
 import lombok.*;
@@ -18,7 +17,6 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class OrderDTO {
 
     private Long id;
@@ -42,13 +40,10 @@ public class OrderDTO {
 
     private DeliveryStatus deliveryStatus;
 
-//    @Builder.Default
-//    private List<OrderItem> orderItemList = new ArrayList<>();
+    private List<OrderItemDTO> orderItemList = new ArrayList<>();
 
-    private Long cartId;
-
-    // Order 를 OrderDTO 로 변환
-    public OrderDTO(Order order, List<OrderItem> orderItemList) {
+    // Order를 OrderDTO로 변환
+    public OrderDTO(Order order, List<OrderItem> items) {
         this.id = order.getId();
         this.memberId = order.getMember().getId();
         this.orderDate = order.getOrderDate();
@@ -65,13 +60,14 @@ public class OrderDTO {
         this.recipient_default_address = order.getRecipient_default_address();
         this.recipient_detailed_address = order.getRecipient_detailed_address();
         this.deliveryStatus = order.getDelivery().getStatus();
-//        this.orderItemList = orderItemList;
-//        this.orderItemList = (orderItemList != null ? orderItemList : new ArrayList<>()).stream()
-//                .map(orderItem -> new OrderItemDTO(orderItem))  // OrderItemDTO를 통해 필요한 값만 변환
-//                .collect(Collectors.toList());
+
+        // List<OrderItem> to List<OrderItemDTO>
+        this.orderItemList = (items != null ? items : new ArrayList<>()).stream()
+                .map(item -> new OrderItemDTO((OrderItem) item))  // 대신 람다식으로 명시적 호출
+                .collect(Collectors.toList());
     }
 
-    // Order 를 OrderDTO 로 변환
+    // Order를 OrderDTO로 변환
     public OrderDTO(Order order) {
         this.id = order.getId();
         this.memberId = order.getMember().getId();
@@ -89,7 +85,6 @@ public class OrderDTO {
         this.recipient_default_address = order.getRecipient_default_address();
         this.recipient_detailed_address = order.getRecipient_detailed_address();
         this.deliveryStatus = order.getDelivery().getStatus();
-//        this.orderItemList = order.getOrderItems();
     }
 
 }
