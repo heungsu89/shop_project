@@ -1,6 +1,9 @@
 import { NavLink } from 'react-router-dom';
 
 const MyNav = () => {
+  const pageParam = `/?page=0&size=10`;
+
+
   return (
     <aside className='myNavWrap'>
       <div className="asideNav">
@@ -14,7 +17,7 @@ const MyNav = () => {
           <ul>
             <li><NavLink to="/admin/mypage/order">주문</NavLink></li>
             <li><NavLink to="/admin/mypage/inquiry">문의</NavLink></li>
-            <li><NavLink to="/admin/mypage/product">상품</NavLink></li>
+            <li><NavLink to={`/admin/mypage/product${pageParam}`}>상품</NavLink></li>
             <li><NavLink to="/admin/mypage/category">분류</NavLink></li>
             <li><NavLink to="/admin/mypage/member">회원</NavLink></li>
             <li><NavLink to="/admin/mypage/event">이벤트</NavLink></li>

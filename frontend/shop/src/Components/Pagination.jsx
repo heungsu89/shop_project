@@ -1,36 +1,48 @@
-import React from 'react';
-// import './Pagination.scss'; // 스타일은 따로
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import '../static/css/Pagination.scss';
 
-const Pagination = ({ pageInfo, onPageChange }) => {
-  const { number, totalPages } = pageInfo;
-  const currentPage = number + 1;
+const Pagination = ({ pageInfo }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
-  const MAX_PAGES = 10;
-  const startPage = Math.floor((currentPage - 1) / MAX_PAGES) * MAX_PAGES + 1;
-  const endPage = Math.min(startPage + MAX_PAGES - 1, totalPages);
+  const currentPage = pageInfo.number;
+  const totalPages = pageInfo.totalPages;
+  const size = parseInt(searchParams.get("size")) || pageInfo.size || 5;
 
-  const handleClick = (page) => {
-    if (page >= 1 && page <= totalPages && page !== currentPage) {
-      onPageChange(page - 1); // 서버는 0부터 시작하니까
-    }
+  const pageRange = 5;
+  const startPage = Math.floor(currentPage / pageRange) * pageRange;
+  const endPage = Math.min(startPage + pageRange, totalPages);
+
+  const moveTo = (page) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", page);
+    params.set("size", size);
+    navigate({ pathname: location.pathname, search: `?${params.toString()}` });
   };
 
   return (
     <div className="pagination">
-      <button onClick={() => handleClick(currentPage - 1)} disabled={currentPage === 1}>PREV</button>
-      {Array.from({ length: endPage - startPage + 1 }, (_, idx) => {
-        const page = startPage + idx;
+      {/* <button disabled={currentPage === 0} onClick={() => moveTo(0)}>처음</button> */}
+      {/* <button disabled={startPage === 0} onClick={() => moveTo(startPage - pageRange)}>이전페이지</button> */}
+      <button disabled={currentPage === 0} onClick={() => moveTo(currentPage - 1)}>PREV</button>
+      <div className='pageNum'>
+      {Array.from({ length: endPage - startPage }, (_, i) => {
+        const page = startPage + i;
         return (
           <button
             key={page}
+            onClick={() => moveTo(page)}
             className={page === currentPage ? 'active' : ''}
-            onClick={() => handleClick(page)}
           >
-            {page}
+            {page + 1}
           </button>
         );
       })}
-      <button onClick={() => handleClick(currentPage + 1)} disabled={currentPage === totalPages}>NEXT</button>
+      </div>
+      <button disabled={currentPage + 1 >= totalPages} onClick={() => moveTo(currentPage + 1)}>NEXT</button>
+      {/* <button disabled={endPage >= totalPages} onClick={() => moveTo(startPage + pageRange)}>다음페이지</button> */}
+      {/* <button disabled={currentPage === totalPages - 1} onClick={() => moveTo(totalPages - 1)}>끝</button> */}
     </div>
   );
 };

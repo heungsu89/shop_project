@@ -1,103 +1,89 @@
-import React,{ useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector} from "react-redux";
+import { useSelector } from "react-redux";
 import Logo from '../static/svg/logo.svg?react';
 import LogoutComponent from './member/LogoutComponent';
-import { getCookie, setCookie, removeCookie } from "../util/cookieUtil";
+import { getCookie, removeCookie } from "../util/cookieUtil";
 import { categoryList } from '../api/categoryApi';
 
 const Header = ({ isMypage }) => {
   const navigate = useNavigate();
-  const loginState = useSelector(state => state.loginSlice)
+  const loginState = useSelector(state => state.loginSlice);
   const isLoggedIn = loginState && loginState.email !== '';
   const [memberInfo, setInfo] = useState(null);
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    fetchCategories();
-  
-    const handleUpdate = () => {
-      fetchCategories(); // 다시 가져오기
-    }
-  
-    window.addEventListener('categoryUpdated', handleUpdate);
-  
-    return () => {
-      window.removeEventListener('categoryUpdated', handleUpdate);
-    }
+  /** 동적으로 생성된 카테고리 불러오기기 */
+  const fetchCategories = useCallback(() => {
+    categoryList().then(setCategories);
   }, []);
 
-  const fetchCategories = () => {
-    categoryList().then(data => {
-      setCategories(data);
-    });
-  };
-  
-
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-
-    removeCookie("member");  // 쿠키 삭제
-    navigate("/login");
-  }
+  /** 로그인 정보 확인 및 동적 카테고리 감지 업데이트 */
   useEffect(() => {
+    fetchCategories();
+
     if (isLoggedIn) {
       const info = getCookie("member");
       setInfo(info);
     } else {
       setInfo(null);
     }
-  }, [isLoggedIn]);
-  
-  const mypageLink = memberInfo?.roleNames?.includes("ADMIN") ? "/admin/mypage" : "mypage";
 
-  
+    const handleUpdate = () => fetchCategories();
+    window.addEventListener('categoryUpdated', handleUpdate);
+
+    return () => window.removeEventListener('categoryUpdated', handleUpdate);
+  }, [isLoggedIn, fetchCategories]);
+
+  const handleLogout = () => {
+    removeCookie("member");
+    localStorage.removeItem("isLoggedIn");
+    navigate("/login");
+  };
+
+  /** 관리자, 일반유저 인지 따라 링크 다르게 하기 */
+  const mypageLink = memberInfo?.roleNames?.includes("ADMIN") ? "/admin/mypage" : "/mypage";
+
   return (
-    <header className='header'>
+    <header className="header">
       <div className={`innerWrap ${isMypage ? 'mypage' : ''}`}>
-          <h1 className='logo'>
-            <Link to="/">
-              <Logo/>
-              <strong className='blind'>NØRD</strong>
-            </Link>
-          </h1>
-          <nav className="gnb">
-            <ul className="cartegory">
-            {categories.length > 0 && categories.map((data) => (
-              <li key={data.id}>
-                  <Link to={`/shop/category/${data.id}`}>{data.categoryName}</Link>
-                </li>
+        <h1 className="logo">
+          <Link to="/">
+            <Logo />
+            <strong className="blind">NØRD</strong>
+          </Link>
+        </h1>
+
+        <nav className="gnb">
+          <ul className="cartegory">
+            {/*동적으로 관리 생성되는 카테고리 링크 페이지*/}
+            {categories.map((cat) => (
+              <li key={cat.id}>
+                <Link to={`/shop/category/${cat.id}`}>{cat.categoryName}</Link>
+              </li>
             ))}
+            <li><Link to="/shop">SHOP</Link></li>
+            <li><Link to="/magazine">MAGAZINE</Link></li>
+            <li><Link to="/event">EVENT</Link></li>
+          </ul>
+        </nav>
 
-              <li><Link to="/shop">SHOP</Link></li>
-              <li><Link to="/magazine">MAGAZINE</Link></li>
-              <li><Link to="/event">EVENT</Link></li>
-            </ul>
-          </nav>
-
-          <div className="utillMenu">
-          
-          {isLoggedIn ? (
-            //로그인 됬을 때
-            <ul>
-              <li><Link to="/search">SEARCH</Link></li>
-              <li><Link to="/cart">CART</Link></li>
-              <li><Link to={mypageLink}>MYPAGE</Link></li>
-              <li><LogoutComponent></LogoutComponent></li>
-            </ul>
-            ):(
-              //로그인 안됬을 때
-            <ul>
-                <li><Link to="/search">SEARCH</Link></li>
-                <li><Link to="/member/login">CART</Link></li>
-                <li><Link to="/member/login">MYPAGE</Link></li>
-                <li><Link to="/member/login">LOGIN</Link></li>
-            </ul>
+        <div className="utillMenu">
+          <ul>
+            {/* 로그인 상태 여부에 따라 링크 변환 */}
+            <li><Link to="/search">SEARCH</Link></li>
+            <li><Link to={isLoggedIn ? "/cart" : "/member/login"}>CART</Link></li>
+            <li><Link to={isLoggedIn ? mypageLink : "/member/login"}>MYPAGE</Link></li>
+            {isLoggedIn ? (
+              <li><LogoutComponent /></li>
+            ) : (
+              <li><Link to="/member/login">LOGIN</Link></li>
             )}
-          </div>
+          </ul>
+        </div>
       </div>
     </header>
   );
-}
+};
 
 export default Header;

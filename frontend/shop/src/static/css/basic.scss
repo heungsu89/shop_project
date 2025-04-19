@@ -3,10 +3,10 @@
 
 $headerHeight : 80px;
 $innerPadding : 40px;
+$boderStyle : solid 1px var(--charcoal-grey);
 
 :root {
   --font-main: 'Pretendard GOV', sans-serif;
-
   --deep-onyx: #121212;
   --charcoal-grey: #282B2B;
   --ash-white: #EAEAEA;
@@ -14,7 +14,7 @@ $innerPadding : 40px;
   --slate-blue: #3A506B;
   --muted-sand: #C6B7A6;
   --Pointer:#FF564C;
-
+  --white: #fff;
   --h1: 48px;
   --h2: 36px;
   --h3: 28px;
@@ -26,10 +26,11 @@ $innerPadding : 40px;
 
 a{color: inherit;
   &:focus{outline: 1px solid var(--charcoal-grey);}
+  &:active{outline: none;}
 }
-button{font-family:inherit;}
+button{font-family:inherit;background: none;border:none;}
 label{display: flex;align-items: center;gap: 0 4px;cursor: pointer;}
-html,body,#root{font-family: var(--font-main);color: var(--charcoal-grey);background-color: white;font-size: var(--text-base);min-height:100%;
+html,body{font-family: var(--font-main);color: var(--charcoal-grey);background-color: white;font-size: var(--text-base);min-height:100%;
   h1{font-size: var(--h1);}
   h2{font-size: var(--h2);letter-spacing:-0.02em;}
   h3{font-size: var(--h3);}
@@ -37,7 +38,7 @@ html,body,#root{font-family: var(--font-main);color: var(--charcoal-grey);backgr
   h5{font-size: var(--h5);}
 }
 
-/** 인풋 기본 디자인*/
+/** 인풋 기본 디자인 */
 input:read-only{background-color: var(--ash-white);}
 input[type=text],
 input[type=email],
@@ -46,12 +47,65 @@ input[type=password]{width: 100%;font-family: inherit;font-size: var(--text-base
   &:focus{outline-color: var(--slate-blue);box-shadow: 0 0 3px var(--slate-blue);}
 }
 
+/** 테이블 너비 */
+$itemNumber : 50px;
+$itemID : 50px;
+$itemDiscountRate : 80px;
+$itemPriceInfo : 140px;
+$itemTotalScore : 80px;
+$itemDate : 140px;
+$itemSalesVolume : 50px;
 
-/** 버튼 디자인 모음*/
-button,a.btn{display: flex;justify-content: center;align-items: center;font-size: var(--text-base);color: var(--ash-white);background: var(--charcoal-grey);border: none;border-radius: 3px;min-width: 74px;
-  /**큰 버튼 기본*/
-  &.bigBtn{font-size: 16px;padding: 10px 20px;color: var(--ash-white);
-    /**볼드 처리*/
+/** 테이블 디자인*/
+.tablePage{
+  display:flex;flex-direction: column;gap: 20px 0;
+  .itemSubMenu{display: flex;justify-content: space-between;align-items: center;gap: 30px;}
+  .itemTable{display: block;
+    th,td{display: flex;justify-content: center;flex: 1;align-items: center;}
+    th{align-items:center;}
+    td{padding: 10px;}
+    .itemThead{display: flex; height: 42px;border-top:solid 1px var(--charcoal-grey);border-bottom:solid 1px var(--charcoal-grey);}
+    .itemTbody{display: flex; flex-direction: column;
+      .itemTr{border-bottom: $boderStyle}
+      .itemInfo{justify-content: flex-start;
+        .itemImg{width: 80px; aspect-ratio: 3/4; border: solid 1px var(--charcoal-grey); margin-right: 10px;
+          img{width: 100%;height: 100%; object-fit: cover;}
+        }
+        .itemDetailInfo{display: flex; flex-direction: column; gap: 10px;
+          a{text-decoration: underline;color: var(--slate-blue);}
+        }
+      }
+    }
+    .itemTr{display: flex;flex:1;;
+      .itemNumber{width: $itemNumber;flex:0 0 $itemNumber;}
+      .itemID{width: $itemNumber;flex:0 0 $itemNumber;}
+      .itemDiscountRate{width: $itemDiscountRate;flex:0 0 $itemDiscountRate;}
+      .itemPriceInfo{width: $itemPriceInfo;flex:0 0 $itemPriceInfo; flex-direction: column;
+        span{display: block;}
+        .itemOriginalPrice{text-decoration: line-through;}
+      }
+      .itemTotalScore{width: $itemTotalScore;flex:0 0 $itemTotalScore;}
+      .itemDate{width: $itemDate;flex:0 0 $itemDate;}
+      .itemSalesVolume{width: $itemSalesVolume;flex:0 0 $itemSalesVolume;}
+      .itemDelFlag{width: $itemDate;flex:0 0 $itemDate;
+        &.deleted{color: var(--Pointer);}
+        &.active{color: var(--slate-blue);}
+      }
+    }
+  }
+}
+
+/** 버튼 디자인 모음 */
+button.btn,
+a.btn{display: flex;justify-content: center;align-items: center;font-size: var(--text-base);border: none;border-radius: 3px;min-width: 74px;border:1px solid transparent;padding: 6px 12px;
+  
+  &.black{color: var(--ash-white);background: var(--charcoal-grey);border-color: var(--charcoal-grey);}
+  &.gray{color: var(--charcoal-grey);background: var(--ash-white);border-color: var(--ash-white);}
+  &.line{color: var(--charcoal-grey);background: var(--white);border-color: var(--charcoal-grey);}
+
+  /**큰 버튼 기본 */
+  &.bigBtn{font-size: 16px;padding: 10px 20px;
+    /**볼드 처리 */
     &.bold{font-weight: bold;}
   }
 
@@ -64,7 +118,11 @@ button,a.btn{display: flex;justify-content: center;align-items: center;font-size
     button{white-space: nowrap;}
   }
 }
-.borderSection{border: solid 1px var(--charcoal-grey);border-radius: 3px;padding: 29px;
+.borderSection{flex-direction:column; border: solid 1px var(--charcoal-grey);border-radius: 3px;padding: 29px;
+
+  &.filter{display:flex;gap:20px 0;
+    >strong{display: block;font-size: var(--h3);}
+  }
   .inputTitle{font-size: var(--h5);}
 }
 
@@ -84,7 +142,7 @@ button,a.btn{display: flex;justify-content: center;align-items: center;font-size
 .container{padding-top: $headerHeight;min-height: 100%;}
 .point{color: var(--Pointer);}
 
-/**헤더*/
+/** 헤더 */
 .header{
   position: fixed;top:0;left:0;width:100%;background:#fff;z-index: 100;
   .innerWrap{display: flex;align-items: center;height:$headerHeight;border-bottom:solid 1px transparent;
@@ -97,7 +155,7 @@ button,a.btn{display: flex;justify-content: center;align-items: center;font-size
   }
 }
 
-/**푸터*/
+/** 푸터 */
 .footer{margin-top: auto;
   .innerWrap{padding-top:40px;padding-bottom:40px;border-top:solid 1px transparent;}
   .f_content_top{display: flex;align-items: flex-start;justify-content: space-between;

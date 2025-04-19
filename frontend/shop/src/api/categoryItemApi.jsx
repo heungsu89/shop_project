@@ -1,5 +1,5 @@
 import axios from 'axios';
-import jwtAxios from "../util/jwtUtil"; 
+// import jwtAxios from "../util/jwtUtil"; 
 const API_SERVER_HOST = import.meta.env.VITE_API_SERVER_HOST;
 const itemHost = `${API_SERVER_HOST}/api/category/page`; 
 

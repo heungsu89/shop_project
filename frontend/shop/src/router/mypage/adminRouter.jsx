@@ -4,7 +4,8 @@ const Loading = () => <div>Loading....</div>;
 
 const AdminMainPage = lazy(() => import("../../Pages/myPage/admin/AdminMainPage"));
 const OrderListComponent = lazy(() => import("../../Components/mypage/admin/order/OrderListComponent"));
-const ProductListComponent = lazy(() => import("../../Components/mypage/admin/product/ProductListComponent"));
+const ProductComponent = lazy(() => import("../../Components/mypage/admin/product/ProductCompornt"));
+const ProductAddComponent = lazy(() => import("../../Components/mypage/admin/product/ProductAddComponent"));
 const CategoryCompoenet = lazy(() => import("../../Components/mypage/admin/category/CategoryCompoenet"));
 const BoardListComponent = lazy(() => import("../../Components/mypage/admin/board/BoardListComponent"));
 const InquiryListComponent = lazy(() => import("../../Components/mypage/admin/inquiry/InquiryListCompoenet"));
@@ -26,8 +27,16 @@ const adminRouter = () => {
         {
           path: "product",
           element: (
-            <Suspense fallback={<Loading />}><ProductListComponent /></Suspense>
+            <Suspense fallback={<Loading />}><ProductComponent /></Suspense>
           ),
+          children:[
+            {
+              path: "add",
+              element :(
+                <Suspense fallback={<Loading />}><ProductAddComponent /></Suspense>
+              )
+            }
+          ]
         },
         {
           path: "category",

@@ -10,12 +10,7 @@ const AppInit = () => {
   useEffect(() => {
     const member = getCookie("member");
     if (member) {
-      try {
-        const parsed = JSON.parse(member);
-        dispatch(login(parsed)); // 로그인 상태 복원
-      } catch (e) {
-        console.warn("❌ 쿠키 파싱 오류:", e);
-      }
+      dispatch(login(member)); // 이제 JSON.parse 필요 없음
     }
   }, []);
 
