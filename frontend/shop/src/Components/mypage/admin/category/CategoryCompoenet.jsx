@@ -188,7 +188,7 @@ const CategoryComponent = () => {
         };
       
         categoryModify(payload).then(() => {
-          alert("카테고리 이동 완료");
+          // alert("카테고리 이동 완료");
           fetchCategories();
         });
       };

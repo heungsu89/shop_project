@@ -33,6 +33,7 @@ public class ItemDTO {
     private boolean delFlag;
     private LocalDateTime dueDate;
     private int salesVolume;
+    private Long categoryId;
 
     @Builder.Default
     private List<ItemOptionDTO> options = new ArrayList<>();
@@ -54,6 +55,7 @@ public class ItemDTO {
         this.delFlag = item.isDelFlag();
         this.dueDate = item.getDueDate();
         this.salesVolume = item.getSalesVolume();
+        this.categoryId = item.getCategoryId();
 
         // 대표 이미지 설정
         this.uploadFileNames = (images != null && !images.isEmpty())
@@ -72,6 +74,7 @@ public class ItemDTO {
         this.delFlag = item.isDelFlag();
         this.dueDate = item.getDueDate();
         this.salesVolume = item.getSalesVolume();
+        this.categoryId = item.getCategoryId();
 
         // 대표 이미지 설정
         this.uploadFileNames = (images != null && !images.isEmpty())
@@ -102,6 +105,7 @@ public class ItemDTO {
         this.delFlag = item.isDelFlag();
         this.dueDate = item.getDueDate();
         this.salesVolume = item.getSalesVolume();
+        this.categoryId = item.getCategoryId();
 
         // 옵션 변환
         this.options = (options != null && !options.isEmpty())
@@ -133,6 +137,6 @@ public class ItemDTO {
         // 파일 이름 리스트 변환
         this.uploadFileNames = (images != null && !images.isEmpty())
                 ? images.stream().map(ItemImage::getFileName).toList()
-                : List.of("default.png");
+                : new ArrayList<>(); // ✅ 빈 리스트로 처리
     }
 }

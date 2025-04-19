@@ -1,0 +1,225 @@
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import CategorySelector from '../../../CategorySelector';
+import ImageUploadComponent from '../../../ImageUploadComponent';
+import EditorComponent from '../../../EditorComponent';
+import { getProductById, registerProduct, updateProduct } from '../../../../api/productApi';
+import '../../../../static/css/adminProduct.scss';
+
+const DEFAULT_FORM = {
+  name: '',
+  description: '',
+  totalScore: 0,
+  price: 0,
+  discountRate: 0,
+  delFlag: false,
+  info: {
+    브랜드: '',
+    원산지: ''
+  }
+};
+
+const ProductFormComponent = () => {
+  const { id } = useParams();
+  const isEdit = Boolean(id);
+
+  const [form, setForm] = useState(DEFAULT_FORM);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [images, setImages] = useState([null, null, null, null]);
+  const [optionName, setOptionName] = useState('');
+  const [options, setOptions] = useState([{ optionValue: '', optionPrice: 0, stockQty: 0 }]);
+  const [content, setContent] = useState('');
+
+  useEffect(() => {
+    if (isEdit) {
+      getProductById(id).then(data => {
+        console.log('받아온 데이터:', data);
+  
+        setForm({
+          ...DEFAULT_FORM,
+          ...data,
+          info: data.info || { 브랜드: '', 원산지: '' }
+        });
+  
+        setSelectedCategoryId(data.categoryId);
+  
+        const serverImages = (data.uploadFileNames || []).map(name => ({
+          url: `http://localhost:8081/upload/${name}`,
+          file: null
+        }));
+  
+        // 항상 4개 채우기
+        setImages(serverImages.concat(Array(4).fill(null)).slice(0, 4));
+  
+        setOptions(data.options || [{ optionValue: '', optionPrice: 0, stockQty: 0 }]);
+        setOptionName(data.options?.[0]?.optionName || '');
+        setContent(data.description || '');
+      });
+    }
+  }, [id, isEdit]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleInfoChange = (key, value) => {
+    setForm(prev => ({
+      ...prev,
+      info: {
+        ...prev.info,
+        [key]: value
+      }
+    }));
+  };
+
+  const handleOptionChange = (index, key, value) => {
+    const newOptions = [...options];
+    newOptions[index][key] = value;
+    setOptions(newOptions);
+  };
+
+  const handleRemoveOption = (index) => {
+    setOptions(options.filter((_, i) => i !== index));
+  };
+
+  const handleFormSubmit = async () => {
+    if (!form.name.trim()) return alert('상품명을 입력해주세요.');
+    if (!form.price || isNaN(Number(form.price))) return alert('원가를 숫자로 입력해주세요.');
+    if (!selectedCategoryId) return alert('카테고리를 선택해주세요.');
+    if (!optionName.trim()) return alert('옵션명을 입력해주세요.');
+    if (options.length === 0 || options.some(opt => !opt.optionValue.trim())) return alert('모든 옵션 값을 입력해주세요.');
+    if (!images[0] && !isEdit) return alert('최소 하나의 이미지를 등록해주세요.');
+
+    const dto = {
+      ...form,
+      description: content,
+      categoryId: selectedCategoryId,
+      options: options.map(opt => ({
+        optionName,
+        optionValue: opt.optionValue,
+        optionPrice: Number(opt.optionPrice),
+        stockQty: Number(opt.stockQty)
+      }))
+    };
+
+    const filesToUpload = images.filter(Boolean).map(img => img.file);
+
+
+    console.log(dto.categoryId)
+    console.log(filesToUpload)
+    console.log(selectedCategoryId)
+
+    try {
+      if (isEdit) {
+        const existingImageNames = images
+          .filter(img => img && !img.file && img.url) // 기존 이미지 중 남아있는 것만
+          .map(img => img.url.split('/').pop()); // 파일명 추출
+      
+        dto.uploadFileNames = existingImageNames; // 서버에 남길 이미지명만 담기
+      
+        await updateProduct({ id, itemDTO: dto, files: filesToUpload });
+        alert('상품 수정이 완료되었습니다.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('상품 처리 중 오류가 발생했습니다.');
+    }
+  };
+
+  return (
+    <>
+      <h2 className="pageTitle">상품 - {isEdit ? '상품 수정' : '상품 등록'}</h2>
+      <div className="pageContainer product">
+        <CategorySelector
+          selectedId={selectedCategoryId}  // 수정모드 시 서버에서 받은 값
+          onSelectCategory={setSelectedCategoryId}
+        />
+        <ImageUploadComponent images={images} setImages={setImages} />
+
+        <div className="borderSection">
+          <div className='inputWrap'>
+            <div className="inputTitle"><span className='point'>[필수]</span>상품명</div>
+            <div className="inputBox">
+              <input name="name" value={form.name} onChange={handleInputChange} placeholder="상품명을 입력해주세요." type="text" />
+            </div>
+          </div>
+        </div>
+
+        <div className="borderSection">
+          <div className='inputWrap'>
+            <div className="inputTitle"><span className='point'>[필수]</span>원가</div>
+            <div className="inputBox">
+              <input name="price" value={form.price} onChange={handleInputChange} placeholder="원가를 입력해주세요." type="number" />
+            </div>
+          </div>
+        </div>
+
+        <div className="borderSection">
+          <div className='inputWrap'>
+            <div className="inputTitle">할인율</div>
+            <div className="inputBox">
+              <input name="discountRate" value={form.discountRate} onChange={handleInputChange} placeholder="할인율 입력해주세요." type="number" />
+            </div>
+          </div>
+        </div>
+
+        <div className="borderSection optionWrap">
+          <div className="inputWrap">
+            <div className="inputTitle"><span className="point">[필수]</span>옵션</div>
+            <div className="inputBox">
+              <input type="text" placeholder="옵션명 예) SIZE" value={optionName} onChange={(e) => setOptionName(e.target.value)} />
+              <button className='btn black' type="button" onClick={() => setOptions([...options, { optionValue: '', optionPrice: 0, stockQty: 0 }])}>옵션 추가</button>
+            </div>
+            <div className='optionItemsWrap'>
+              {options.map((opt, idx) => (
+                <div key={idx} className="optionItem">
+                  <input type="text" placeholder="옵션" value={opt.optionValue} onChange={(e) => handleOptionChange(idx, 'optionValue', e.target.value)} />
+                  <input type="number" placeholder="가격(원)" value={opt.optionPrice} onChange={(e) => handleOptionChange(idx, 'optionPrice', e.target.value)} />
+                  <input type="number" placeholder="재고" value={opt.stockQty} onChange={(e) => handleOptionChange(idx, 'stockQty', e.target.value)} />
+                  <button className='btn black' type="button" onClick={() => handleRemoveOption(idx)}>삭제</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="borderSection">
+          <div className='inputWrap'>
+            <div className="inputTitle">제조정보</div>
+          </div>
+          <div className='innerInput'>
+            <div className='inputWrap'>
+              <div className="inputTitle">브랜드</div>
+              <div className="inputBox">
+                <input value={form.info.브랜드} onChange={(e) => handleInfoChange('브랜드', e.target.value)} placeholder="브랜드명을 입력해주세요." type="text" />
+              </div>
+            </div>
+            <div className='inputWrap'>
+              <div className="inputTitle">제조국</div>
+              <div className="inputBox">
+                <input value={form.info.원산지} onChange={(e) => handleInfoChange('원산지', e.target.value)} placeholder="제조국을 입력해주세요." type="text" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="borderSection">
+          <div className='inputWrap'>
+            <div className="inputTitle">상세정보</div>
+            <EditorComponent
+              value={content}
+              onChange={setContent}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className='itemSubMenu'>
+        <button className='btn black' onClick={handleFormSubmit}>{isEdit ? '상품 수정' : '상품 등록'}</button>
+      </div>
+    </>
+  );
+};
+
+export default ProductFormComponent;

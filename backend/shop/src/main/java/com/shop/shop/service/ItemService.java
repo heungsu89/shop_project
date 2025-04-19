@@ -21,7 +21,7 @@ public interface ItemService {
 
     public ItemDTO getOne(Long id); // 특정 아이템 조회
 
-    public ItemDTO updateItem(Long id, ItemDTO itemDTO); // 특정 아이템 수정
+    public ItemDTO updateItem(Long id, ItemDTO itemDTO, List<MultipartFile> files); // 특정 아이템 수정
 
     public void deleteItem(Long id); // 특정 아이템 삭제
 

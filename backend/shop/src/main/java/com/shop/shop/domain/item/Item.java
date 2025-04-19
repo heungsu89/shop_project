@@ -32,6 +32,7 @@ public class Item {
     private boolean delFlag;
     private LocalDateTime dueDate;
     private int salesVolume;
+    private Long categoryId;
 
     // 아이템 옵션
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
@@ -106,4 +107,11 @@ public class Item {
         this.options.clear();
     }
 
+    public void changeDescription(String description) {
+        this.description = description;
+    }
+
+    public void changeCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
 }

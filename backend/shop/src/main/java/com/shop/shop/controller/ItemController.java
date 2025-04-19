@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -117,14 +118,16 @@ public class ItemController {
     }
 
     // 아이템 수정
-    @PutMapping("/modify/{id}")
+    @PostMapping(value = "/modify/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ItemDTO> updateItem(
             @PathVariable Long id,
-            @RequestBody ItemDTO itemDTO
+            @RequestPart("itemDTO") ItemDTO itemDTO,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
-        ItemDTO updatedItem = itemService.updateItem(id, itemDTO);
-        return ResponseEntity.ok(updatedItem);
-    }
+        System.out.println("파일 수: " + (files != null ? files.size() : 0));
+        return ResponseEntity.ok(itemService.updateItem(id, itemDTO, files));
+    };
+
 
     // 아이템 삭제 (논리적 삭제)
     @DeleteMapping("/{id}")

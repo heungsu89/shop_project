@@ -188,30 +188,25 @@ public class ItemServiceImpl implements ItemService {
 //        });r
     }
 
-    // 아이템 정보 수정
     @Override
-    public ItemDTO updateItem(Long id, ItemDTO itemDTO) {
+    public ItemDTO updateItem(Long id, ItemDTO itemDTO, List<MultipartFile> files) {
         Item item = itemRepository.findById(id).orElseThrow();
-//        ItemOption itemOption = itemOptionRepository.findById(id).orElseThrow();
 
-        if (itemDTO.getName() != null) {
-            item.changeName(itemDTO.getName());
-        }
-
+        // 기본 필드 수정
+        if (itemDTO.getName() != null) item.changeName(itemDTO.getName());
+        if (itemDTO.getDescription() != null) item.changeDescription(itemDTO.getDescription());
+        if (itemDTO.getCategoryId() != null) item.changeCategoryId(itemDTO.getCategoryId());
         item.changeDelFlag(itemDTO.isDelFlag());
 
-        // 인포
+        // 인포 수정
+        item.getInfo().clear();
         if (itemDTO.getInfo() != null) {
-            item.getInfo().clear();
-            itemDTO.getInfo().forEach((key, value) -> {
-                item.addInfo(new ItemInfo(key, value));
-            });
+            itemDTO.getInfo().forEach((key, value) -> item.addInfo(new ItemInfo(key, value)));
         }
 
-        // 옵션
+        // 옵션 수정
+        item.getOptions().clear();
         if (itemDTO.getOptions() != null) {
-            item.getOptions().clear(); // 기존 옵션 삭제
-
             List<ItemOption> updatedOptions = itemDTO.getOptions().stream()
                     .map(optionDTO -> ItemOption.builder()
                             .optionName(optionDTO.getOptionName())
@@ -221,22 +216,35 @@ public class ItemServiceImpl implements ItemService {
                             .itemId(item.getId())
                             .build())
                     .toList();
-
-            item.getOptions().addAll(updatedOptions); // 새로운 옵션 추가
+            item.getOptions().addAll(updatedOptions);
         }
 
-        // 이미지
+        // 기존 이미지 제거
+        item.clearList();
+
+        // 유지할 이미지 파일명 등록 (프론트에서 받은 uploadFileNames 기준)
         if (itemDTO.getUploadFileNames() != null) {
-            item.clearList(); // 이미지를 비우는 것
-            itemDTO.getUploadFileNames().forEach(fileName -> {
+            for (String fileName : itemDTO.getUploadFileNames()) {
                 item.addImage(ItemImage.builder().fileName(fileName).build());
-            });
+            }
+        }
+
+        // 새로 업로드된 이미지 추가
+        if (files != null && !files.isEmpty()) {
+            List<String> newFileNames = fileUtil.saveFiles(files);
+            for (String fileName : newFileNames) {
+                item.addImage(ItemImage.builder().fileName(fileName).build());
+            }
+            System.out.println("[업데이트] 추가된 파일 수: " + newFileNames.size());
+        } else {
+            System.out.println("[업데이트] 추가된 파일 없음");
         }
 
         itemRepository.save(item);
 
         return new ItemDTO(item, item.getImages(), item.getOptions(), item.getInfo());
     }
+
 
     // 논리적 삭제
     @Override

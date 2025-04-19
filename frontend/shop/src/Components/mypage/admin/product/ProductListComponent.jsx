@@ -6,6 +6,7 @@ import { NavLink, Link } from "react-router-dom";
 import { getFormattedPrice } from "../../../../util/priecUtil";
 import { formatDateToDot } from "../../../../util/dateUtil";
 import { productList } from "../../../../api/productApi";
+import Pagination from "../../../Pagination"
 
 const ProductListComponent = () =>{
     const [productData, setData] = useState({});
@@ -114,7 +115,7 @@ const ProductListComponent = () =>{
                                         <td className="itemID">{item.id}</td>
                                         <td className="itemInfo">
                                             <div className="itemImg">
-                                                <img src={item.uploadFileNames?.[0] || '/default.png'} alt={item.name}/>
+                                                <img src={`http://localhost:8081/upload/${item.uploadFileNames?.[0]}` || '/default.png'} alt={item.name}/>
                                             </div>
                                             <div className="itemDetailInfo">
                                                 <p>{item.name}</p>
@@ -127,7 +128,7 @@ const ProductListComponent = () =>{
                                                     }
                                                 </p>
                                                 )}
-                                                <NavLink to={'#'}>상품상세 보기</NavLink>
+                                                <NavLink to={`/admin/mypage/product/modify/${item.id}`}>상품상세 보기</NavLink>
                                             </div>
                                         </td>
                                         <td className="itemDiscountRate">

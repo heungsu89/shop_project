@@ -42,8 +42,6 @@ const AdminMainPage =()=>{
 
   if (!isLoggedIn || !memberInfo) return null; // 렌더링 차단 (필요 시 로딩 처리 가능)
 
-    console.log(memberInfo)
-
 
     return(
         <BasicLayout>

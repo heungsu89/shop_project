@@ -5,7 +5,8 @@ const Loading = () => <div>Loading....</div>;
 const AdminMainPage = lazy(() => import("../../Pages/myPage/admin/AdminMainPage"));
 const OrderListComponent = lazy(() => import("../../Components/mypage/admin/order/OrderListComponent"));
 const ProductComponent = lazy(() => import("../../Components/mypage/admin/product/ProductCompornt"));
-const ProductAddComponent = lazy(() => import("../../Components/mypage/admin/product/ProductAddComponent"));
+const ProductListComponent = lazy(()=>import("../../Components/mypage/admin/product/ProductListComponent"));
+const ProductFormComponent = lazy(() => import("../../Components/mypage/admin/product/ProductFormComponent"));
 const CategoryCompoenet = lazy(() => import("../../Components/mypage/admin/category/CategoryCompoenet"));
 const BoardListComponent = lazy(() => import("../../Components/mypage/admin/board/BoardListComponent"));
 const InquiryListComponent = lazy(() => import("../../Components/mypage/admin/inquiry/InquiryListCompoenet"));
@@ -31,9 +32,19 @@ const adminRouter = () => {
           ),
           children:[
             {
+              index: true,  // <- 기본 라우트
+              element: <Suspense fallback={<Loading />}><ProductListComponent /></Suspense>
+            },
+            {
               path: "add",
               element :(
-                <Suspense fallback={<Loading />}><ProductAddComponent /></Suspense>
+                <Suspense fallback={<Loading />}><ProductFormComponent /></Suspense>
+              )
+            },
+            {
+              path: "modify/:id", // <-- 수정할 상품 ID
+              element: (
+                <Suspense fallback={<Loading />}><ProductFormComponent /></Suspense>
               )
             }
           ]

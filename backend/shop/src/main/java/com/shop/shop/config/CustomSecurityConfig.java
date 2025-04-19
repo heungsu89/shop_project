@@ -40,11 +40,10 @@ public class CustomSecurityConfig {
 
         log.info("---------------------security config---------------------------");
 
-        http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/member/**").permitAll() // 로그인 요청 완전 허용
+                        .requestMatchers("/api/member/**").permitAll()
                         .requestMatchers("/api/items/**").permitAll()
                         .requestMatchers("/api/category/**").permitAll()
                         .requestMatchers("/api/cart/**").permitAll()
@@ -53,7 +52,8 @@ public class CustomSecurityConfig {
                         .requestMatchers("/api/mileage/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/delivery/**").permitAll()
-                        .requestMatchers("/api/admin/**").hasAnyRole("MANAGER", "ADMIN") // 여러개
+                        .requestMatchers("/upload/**").permitAll() // ✅ 추가된 라인
+                        .requestMatchers("/api/admin/**").hasAnyRole("MANAGER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -61,7 +61,6 @@ public class CustomSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .formLogin(form -> form.disable())
-
                 .exceptionHandling(exception -> exception.accessDeniedHandler(new CustomAccessDeniedHandler()));
 
         return http.build();
