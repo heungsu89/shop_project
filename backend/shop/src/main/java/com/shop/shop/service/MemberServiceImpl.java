@@ -10,6 +10,8 @@ import com.shop.shop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -205,6 +207,17 @@ public class MemberServiceImpl implements MemberService {
         for (Member memberList : member) {
             memberDTO.add(entityToDTO(memberList));
         }
+        return memberDTO;
+    }
+
+    // 모든 회원 조회(페이징)
+    @Override
+    public Page<MemberDTO> getAllMembersPage(Pageable pageable) {
+        Page<Member> memberPage = memberRepository.findAllMemberPage(pageable);
+        if (memberPage == null) {
+            throw new RuntimeException("회원 조회를 실패하였습니다.");
+        }
+        Page<MemberDTO> memberDTO = memberPage.map(this::entityToDTO);
         return memberDTO;
     }
 

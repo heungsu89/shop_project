@@ -1,5 +1,8 @@
 package com.shop.shop.service;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import com.shop.shop.domain.member.Member;
 import com.shop.shop.dto.MemberDTO;
@@ -42,6 +45,8 @@ public interface MemberService {
     Long saveMember(MemberDTO memberDTO); // 일반 회원가입
 
     List<MemberDTO> getAllMembers(); // 모든 회원 조회
+
+    public Page<MemberDTO> getAllMembersPage(Pageable pageable); // 모든 회원 조회(페이징)
 
     MemberDTO getMemberById(Long id); // ID를 기준으로 특정 회원 조회
 

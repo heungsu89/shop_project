@@ -3,9 +3,13 @@ package com.shop.shop.controller.login;
 import com.shop.shop.dto.MemberDTO;
 import com.shop.shop.repository.MemberRepository;
 import com.shop.shop.service.MemberService;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +37,17 @@ public class MemberController {
     @GetMapping("/list") // 기본 주소로 동작 -> /api/members
     public ResponseEntity<List<MemberDTO>> getAllMembers() {
         return ResponseEntity.ok(memberService.getAllMembers());
+    }
+
+    // 모든 회원 조회(페이징)
+    @GetMapping("/listPage")
+    public ResponseEntity<Page<MemberDTO>> getAllMembersPage(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<MemberDTO> memberDTO = memberService.getAllMembersPage(pageable);
+        return ResponseEntity.ok(memberDTO);
     }
 
     //     특정 회원 조회 (ID 기준)
