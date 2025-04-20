@@ -1,45 +1,47 @@
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import BasicLayout from "../../layout/BasicLayout";
 import '../../static/css/shop.scss';
 import '../../static/css/siderbar.scss';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const ItemListPage = () => {
-  const [activeCategory, setActiveCategory] = useState("OUTWEAR");
-  const [searchParams] = useSearchParams();
-  const currentPage = searchParams.get('page') ? parseInt(searchParams.get('page'), 10) : 1;
-  const [activeSortButton, setActiveSortButton] = useState('NEWEST');
+  const [items, setItems] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(() => new URLSearchParams(window.location.search).get('category') || "OUTWEAR");
+  const [activeSortButton, setActiveSortButton] = useState(() => new URLSearchParams(window.location.search).get('sort') || "NEWEST");
+  const [totalElements, setTotalElements] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const itemsPerPage = 10;
 
-  // 임시 더미 데이터 (9개)
-  const dummyItems = {
-    content: Array.from({ length: 9 }, (_, index) => ({
-      id: index + 1,
-      name: `더미 상품 ${index + 1}`,
-      description: `이것은 더미 상품 ${index + 1} 입니다.`,
-      price: `${(20000 + index * 1000)}KR`,
-      totalScore: 4.0 - index * 0.1,
-      discountRate: index % 3 === 0 ? 10 + index * 2 : 0,
-      delFlag: false,
-      dueDate: "2025-04-20T12:00:00.000000",
-      salesVolume: index * 5,
-      options: [
-        { optionName: "색상", optionValue: ["빨강", "파랑", "검정"][index % 3], optionPrice: 0, stockQty: 10 - index },
-        { optionName: "사이즈", optionValue: ["S", "M", "L"][index % 3], optionPrice: 0, stockQty: 5 + index },
-      ],
-      info: { 원산지: "국내", 브랜드: "더미 브랜드" },
-      uploadFileNames: [`dummy_${(index % 3) + 1}.png`], // dummy_1.png, dummy_2.png, dummy_3.png 순환
-    })),
-    pageable: { pageNumber: 0, pageSize: 10, sort: { empty: true, sorted: false, unsorted: true }, offset: 0, paged: true, unpaged: false },
-    last: true,
-    totalPages: 1,
-    totalElements: 9,
-    first: true,
-    size: 10,
-    number: 0,
-    sort: { empty: true, sorted: false, unsorted: true },
-    numberOfElements: 9,
-    empty: false,
+  const fetchItems = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`http://localhost:8081/api/items/listPage`, {
+        params: {
+          page: currentPage - 1,
+          category: activeCategory,
+          sort: activeSortButton,
+          size: itemsPerPage
+        }
+      });
+      setItems(response.data.content || []);
+      setTotalElements(response.data.totalElements || 0);
+    } catch (error) {
+      console.error("상품 목록을 불러오는데 실패했습니다.", error);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchItems();
+  }, [currentPage, activeCategory, activeSortButton]);
 
   const handleAddCart = (id) => {
     console.log("장바구니 추가:", id);
@@ -51,21 +53,29 @@ const ItemListPage = () => {
 
   const handleCategoryClick = (category) => {
     setActiveCategory(category);
+    setSearchParams({ page: 1, category: category, sort: activeSortButton });
   };
 
   const handleSortButtonClick = (sortType) => {
     setActiveSortButton(sortType);
-    console.log(`정렬 기준 변경: ${sortType}`);
+    setSearchParams({ page: 1, category: activeCategory, sort: sortType });
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <BasicLayout>
       <div className="itemListContainer">
         <div className="itemListSection">
-          {dummyItems.content.map((item) => (
+          {items.map((item) => (
             <div key={item.id} className="itemCard">
               <div className="itemImageWrapper">
-                <img src={`/images/${item.uploadFileNames[0] || 'default.png'}`} alt={item.name} className="itemImage" />
+                <img
+                  src={`/images/${item.uploadFileNames?.[0] || 'default.png'}`}
+                  alt={item.name}
+                  className="itemImage"
+                />
                 <div className="itemButtonGroup">
                   <button onClick={() => handleAddWishlist(item.id)}>WISH</button>
                   <button onClick={() => handleAddCart(item.id)}>CART</button>
@@ -74,8 +84,10 @@ const ItemListPage = () => {
               <div className="itemInfo">
                 <div className="itemName">{item.name}</div>
                 <div className="space">
-                  <div className="itemSalePrice">{item.price * (1 - item.discountRate / 100)}</div>
-                  <div className="itemOriginalPrice">{item.price}</div>
+                  <div className="itemSalePrice">
+                    {Math.floor(item.price * (1 - item.discountRate / 100))}KR
+                  </div>
+                  <div className="itemOriginalPrice">{item.price}KR</div>
                   <div className="itemDiscount">{item.discountRate}%</div>
                 </div>
               </div>
@@ -87,83 +99,54 @@ const ItemListPage = () => {
           <div className="innerSiedbarWrap">
             <h1 className="categoryTitle">SHOP</h1>
             <div className="searchBox">
-              <input type="text" placeholder="SEARCH TEXT" /><button>SEARCH</button>
+              <input type="text" placeholder="SEARCH TEXT" />
+              <button>SEARCH</button>
             </div>
 
             <div className="categoryBox">
               <ul className="categoryList">
-                <li
-                  className={activeCategory === 'OUTWEAR' ? 'active' : ''}
-                  onClick={() => handleCategoryClick('OUTWEAR')}
-                >
-                  OUTWEAR
-                </li>
-                <li
-                  className={activeCategory === 'TOP' ? 'active' : ''}
-                  onClick={() => handleCategoryClick('TOP')}
-                >
-                  TOP
-                </li>
-                <li
-                  className={activeCategory === 'KNITWEAR' ? 'active' : ''}
-                  onClick={() => handleCategoryClick('KNITWEAR')}
-                >
-                  KNITWEAR
-                </li>
-                <li
-                  className={activeCategory === 'BOTTOM' ? 'active' : ''}
-                  onClick={() => handleCategoryClick('BOTTOM')}
-                >
-                  BOTTOM
-                </li>
-                <li
-                  className={activeCategory === 'ACC' ? 'active' : ''}
-                  onClick={() => handleCategoryClick('ACC')}
-                >
-                  ACC
-                </li>
+                {["OUTWEAR", "TOP", "KNITWEAR", "BOTTOM", "ACC"].map((cat) => (
+                  <li
+                    key={cat}
+                    className={activeCategory === cat ? 'active' : ''}
+                    onClick={() => handleCategoryClick(cat)}
+                  >
+                    {cat}
+                  </li>
+                ))}
               </ul>
             </div>
 
             <div className="paginationSection">
-              <div className="totalCount">TOTAL {dummyItems.totalElements}</div>
+              <div className="totalCount">TOTAL {totalElements}</div>
               <div className="sortButtons">
-                {activeSortButton === 'NEWEST' ? (
-                  <button className="active" onClick={() => handleSortButtonClick('NEWEST')}>
-                    <span>NEWEST</span>
+                {["NEWEST", "PRICE HIGH", "PRICE LOW"].map((type) => (
+                  <button
+                    key={type}
+                    className={activeSortButton === type ? "active" : ""}
+                    onClick={() => handleSortButtonClick(type)}
+                  >
+                    <span>{type}</span>
                   </button>
-                ) : (
-                  <button onClick={() => handleSortButtonClick('NEWEST')}>NEWEST</button>
-                )}
-
-                {activeSortButton === 'PRICE HIGH' ? (
-                  <button className="active" onClick={() => handleSortButtonClick('PRICE HIGH')}>
-                    <span>PRICE HIGH</span>
-                  </button>
-                ) : (
-                  <button onClick={() => handleSortButtonClick('PRICE HIGH')}>PRICE HIGH</button>
-                )}
-
-                {activeSortButton === 'PRICE LOW' ? (
-                  <button className="active" onClick={() => handleSortButtonClick('PRICE LOW')}>
-                    <span>PRICE LOW</span>
-                  </button>
-                ) : (
-                  <button onClick={() => handleSortButtonClick('PRICE LOW')}>PRICE LOW</button>
-                )}
+                ))}
               </div>
+
               <div className="pageLinks">
-                {Array.from({ length: Math.ceil(dummyItems.totalElements / 10) }, (_, i) => (
+                {Array.from({ length: Math.ceil(totalElements / itemsPerPage) }, (_, i) => (
                   <Link
                     key={i + 1}
-                    to={`?page=${i + 1}`}
+                    to={`?page=${i + 1}${activeCategory !== 'OUTWEAR' ? `&category=${activeCategory}` : ''}${activeSortButton !== 'NEWEST' ? `&sort=${activeSortButton}` : ''}`}
                     className={currentPage === i + 1 ? 'current' : ''}
                   >
                     {i + 1}
                   </Link>
                 ))}
-                {currentPage < Math.ceil(dummyItems.totalElements / 10) && (
-                  <Link to={`?page=${currentPage + 1}`}>NEXT</Link>
+                {currentPage < Math.ceil(totalElements / itemsPerPage) && (
+                  <Link
+                    to={`?page=${currentPage + 1}${activeCategory !== 'OUTWEAR' ? `&category=${activeCategory}` : ''}${activeSortButton !== 'NEWEST' ? `&sort=${activeSortButton}` : ''}`}
+                  >
+                    NEXT
+                  </Link>
                 )}
               </div>
             </div>
