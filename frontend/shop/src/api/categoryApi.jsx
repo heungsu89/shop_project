@@ -20,7 +20,6 @@ export const createCategory= async (date)=>{
 export const categoryList= async ()=>{
     try {
       const res = await axios.get(`${host}/list`);
-      console.log('카테고리 조회 성공:', res.data);
       return res.data;
     } catch (error) {
       console.error('카테고리 조회 실패:', error.response?.data || error.message);

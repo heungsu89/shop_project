@@ -3,15 +3,16 @@ import { useParams } from 'react-router-dom';
 import CategorySelector from '../../../CategorySelector';
 import ImageUploadComponent from '../../../ImageUploadComponent';
 import EditorComponent from '../../../EditorComponent';
-import { getProductById, registerProduct, updateProduct } from '../../../../api/productApi';
+import useCustomLogin  from '../../../../hooks/useCustomLogin';
+import { getProductById, deleteProduct, updateProduct, registerProduct } from '../../../../api/productApi';
 import '../../../../static/css/adminProduct.scss';
 
 const DEFAULT_FORM = {
   name: '',
   description: '',
-  totalScore: 0,
-  price: 0,
-  discountRate: 0,
+  totalScore: '',
+  price: '',
+  discountRate: '',
   delFlag: false,
   info: {
     브랜드: '',
@@ -22,13 +23,13 @@ const DEFAULT_FORM = {
 const ProductFormComponent = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
-
   const [form, setForm] = useState(DEFAULT_FORM);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [images, setImages] = useState([null, null, null, null]);
   const [optionName, setOptionName] = useState('');
   const [options, setOptions] = useState([{ optionValue: '', optionPrice: 0, stockQty: 0 }]);
   const [content, setContent] = useState('');
+  const { moveToPath } = useCustomLogin();
 
   useEffect(() => {
     if (isEdit) {
@@ -83,6 +84,10 @@ const ProductFormComponent = () => {
     setOptions(options.filter((_, i) => i !== index));
   };
 
+  const handleDelete = () =>{
+    deleteProduct(id).then(data=>alert("상품이 삭제(판매중지) 되었습니다."));
+  }
+
   const handleFormSubmit = async () => {
     if (!form.name.trim()) return alert('상품명을 입력해주세요.');
     if (!form.price || isNaN(Number(form.price))) return alert('원가를 숫자로 입력해주세요.');
@@ -120,7 +125,12 @@ const ProductFormComponent = () => {
       
         await updateProduct({ id, itemDTO: dto, files: filesToUpload });
         alert('상품 수정이 완료되었습니다.');
+        moveToPath('/admin/mypage/product/');
+      }else{
+        registerProduct({itemDTO: dto, categoryId :selectedCategoryId,files: filesToUpload })
+        moveToPath('/admin/mypage/product/');
       }
+      
     } catch (err) {
       console.error(err);
       alert('상품 처리 중 오류가 발생했습니다.');
@@ -216,6 +226,7 @@ const ProductFormComponent = () => {
       </div>
 
       <div className='itemSubMenu'>
+        {isEdit && (<button className='btn line' onClick={handleDelete}>상품삭제</button>)}
         <button className='btn black' onClick={handleFormSubmit}>{isEdit ? '상품 수정' : '상품 등록'}</button>
       </div>
     </>

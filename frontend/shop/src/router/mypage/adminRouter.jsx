@@ -56,6 +56,12 @@ const adminRouter = () => {
           ),
         },
         {
+          path: "user",
+          element: (
+            <Suspense fallback={<Loading />}><CategoryCompoenet /></Suspense>
+          ),
+        },
+        {
           path: "board",
           element: (
             <Suspense fallback={<Loading />}><BoardListComponent /></Suspense>
