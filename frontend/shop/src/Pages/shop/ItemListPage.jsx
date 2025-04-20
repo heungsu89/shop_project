@@ -43,11 +43,13 @@ const ItemListPage = () => {
     fetchItems();
   }, [currentPage, activeCategory, activeSortButton]);
 
-  const handleAddCart = (id) => {
+  const handleAddCart = (id, event) => {
+    event.stopPropagation();
     console.log("장바구니 추가:", id);
   };
 
-  const handleAddWishlist = (id) => {
+  const handleAddWishlist = (id, event) => {
+    event.stopPropagation();
     console.log("관심상품 추가:", id);
   };
 
@@ -69,7 +71,7 @@ const ItemListPage = () => {
       <div className="itemListContainer">
         <div className="itemListSection">
           {items.map((item) => (
-            <div key={item.id} className="itemCard">
+            <div key={item.id} className="itemCard" onClick={() => navigate(`/item/${item.id}`)} style={{ cursor: 'pointer' }}>
               <div className="itemImageWrapper">
                 <img
                   src={`/images/${item.uploadFileNames?.[0] || 'default.png'}`}
@@ -77,8 +79,8 @@ const ItemListPage = () => {
                   className="itemImage"
                 />
                 <div className="itemButtonGroup">
-                  <button onClick={() => handleAddWishlist(item.id)}>WISH</button>
-                  <button onClick={() => handleAddCart(item.id)}>CART</button>
+                  <button onClick={(event) => handleAddWishlist(item.id, event)}>WISH</button>
+                  <button onClick={(event) => handleAddCart(item.id, event)}>CART</button>
                 </div>
               </div>
               <div className="itemInfo">
