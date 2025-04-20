@@ -15,5 +15,6 @@ public class MemberModifyDTO {
     private String detailed_address;
     private boolean delFlag;
     private MemberShip memberShip;
+    private int stockMileage;
 
 }

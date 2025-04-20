@@ -162,11 +162,11 @@ public class MemberServiceImpl implements MemberService {
         result.getAddress().setZip_code(memberModifyDTO.getZip_code());
         result.getAddress().setDefault_address(memberModifyDTO.getDefault_address());
         result.getAddress().setDetailed_address(memberModifyDTO.getDetailed_address());
+        result.changeStockMileage(memberModifyDTO.getStockMileage());
 
         if (memberModifyDTO.getMemberShip() != null) {
             result.changeMemberShip(memberModifyDTO.getMemberShip());
         }
-
         memberRepository.save(result);
     }
 

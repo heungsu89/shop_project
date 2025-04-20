@@ -27,6 +27,7 @@ public class MemberController {
     private final MemberRepository memberRepository;
     private final ModelMapper modelMapper;
 
+    // 일반 회원 등록
     @PostMapping("/register")
     public Map<String, String> registerMember(@RequestBody MemberDTO memberDTO) {
         memberService.makeMember(memberDTO);
