@@ -15,6 +15,10 @@ import java.util.List;
 @Repository
 public interface MileageRepository extends JpaRepository<Mileage, Long> {
 
+    // 모든 마일리지 조회
+    @Query("SELECT m FROM Mileage m")
+    public Page<Mileage> findAllMileagePage(Pageable pageable);
+
     // 회원Id를 기준으로 마일리지 내역 모두 조회
     @Query("SELECT m FROM Mileage m WHERE m.member.id = :memberId")
     public List<Mileage> findAllByMemberId(@Param("memberId") Long memberId);

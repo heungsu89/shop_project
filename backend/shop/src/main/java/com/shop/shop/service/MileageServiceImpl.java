@@ -25,6 +25,14 @@ public class MileageServiceImpl implements MileageService {
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
 
+    // 마일리지 내역 모두 조회
+    @Override
+    public Page<MileageDTO> findAllMileagePage(Pageable pageable) {
+        Page<Mileage> mileagePage = mileageRepository.findAllMileagePage(pageable);
+        Page<MileageDTO> mileageDTOPage = mileagePage.map(MileageDTO::new);
+        return mileageDTOPage;
+    }
+
     // 회원Id를 기준으로 마일리지 내역 전부 조회
     @Override
     public List<MileageDTO> findAllByMemberId(Long memberId) {

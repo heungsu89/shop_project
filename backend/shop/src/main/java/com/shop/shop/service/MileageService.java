@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface MileageService {
 
+    public Page<MileageDTO> findAllMileagePage(Pageable pageable);
     public List<MileageDTO> findAllByMemberId(Long memberId);
     public Page<MileageDTO> findAllByMemberId(Pageable pageable, Long memberId);
     public List<MileageDTO> findAllByMemberEmail(String email);
