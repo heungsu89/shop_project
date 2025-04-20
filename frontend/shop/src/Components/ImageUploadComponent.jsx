@@ -1,4 +1,5 @@
 import { useRef, useEffect } from 'react';
+import defaultImg from "../static/images/default.png"
 
 const ImageUploadComponent = ({ images, setImages }) => {
   const fileInputRefs = useRef([]);
@@ -44,7 +45,7 @@ const ImageUploadComponent = ({ images, setImages }) => {
               {images[0] ? (
                 <div className="imagePreview">
                   <img
-                    src={images[0]?.preview || images[0]?.url}
+                    src={images[0]?.preview || images[0]?.url || defaultImg}
                     alt="섬네일 이미지"
                   />
                   <button type="button" className="imagDelete" onClick={() => handleRemoveImage(0)}>✕</button>
@@ -71,7 +72,7 @@ const ImageUploadComponent = ({ images, setImages }) => {
                 {images[idx] ? (
                   <div className="imagePreview">
                     <img
-                      src={images[idx]?.preview || images[idx]?.url}
+                      src={images[idx]?.preview || images[idx]?.url || defaultImg}
                       alt={`추가 이미지 ${idx}`}
                     />
                     <button type="button" className="imagDelete" onClick={() => handleRemoveImage(idx)}>✕</button>
