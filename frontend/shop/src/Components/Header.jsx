@@ -56,12 +56,13 @@ const Header = ({ isMypage }) => {
 
         <nav className="gnb">
           <ul className="cartegory">
-            {/*동적으로 관리 생성되는 카테고리 링크 페이지*/}
-            {categories.map((cat) => (
-              <li key={cat.id}>
-                <Link to={`/shop/category/${cat.id}`}>{cat.categoryName}</Link>
-              </li>
-            ))}
+            {categories
+              .filter(cat => cat.categoryName !== '테스트') // "테스트" 카테고리 필터링
+              .map((cat) => (
+                <li key={cat.id}>
+                  <Link to={`/shop/category/${cat.id}`}>{cat.categoryName}</Link>
+                </li>
+              ))}
             <li><Link to="/shop">SHOP</Link></li>
             <li><Link to="/magazine">MAGAZINE</Link></li>
             <li><Link to="/event">EVENT</Link></li>
