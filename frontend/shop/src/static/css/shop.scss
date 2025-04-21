@@ -1,85 +1,83 @@
 .itemListContainer {
-    display: flex;
-  }
-  
-  .itemListContainer .itemListSection {
-    flex: 1;
-    height: 2000px;
-  }
-  
-  .itemListSection {
-    padding: 40px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .itemCard {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 420px;
-  }
-  
-  .itemImageWrapper {
-    position: relative;
-    width: 420px;
-    height: 563px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-start;
-    padding: 10px;
-    box-sizing: border-box;
-  }
-  
-  .itemImageWrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .itemButtonGroup {
-    display: flex;
-  }
-  
-  .itemButtonGroup button {
-    background-color: rgba(255, 255, 255, 0.7);
-    color: black;
-    font-size: 12px;
-    cursor: pointer;
-    border: none;
-  }
-  
- .itemInfo{
-    height : 44px;
-    width: 420px;
-    display: flex;
-    gap: 10px;
-    justify-content: space-between;
-    align-items: center;
-    padding : 40px;
- }
+  display: flex;
+}
 
- .itemName{
-    margin-right: 30px;
- }
+.itemListContainer .itemListSection {
+  flex: 1;
+}
 
- .space{
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
+.itemListSection {
+  padding: 40px 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
 
-  .itemSalePrice {
-    font-weight: bold;
-  }
-  
-  .itemOriginalPrice {
-    color: var(--placeholder);
-    text-decoration: line-through;
-  }
-  
-  .itemDiscount {
-    color: red;
-    font-weight: bold;
-  } 
+.itemCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: azure; 
+}
+
+.itemImageWrapper {
+  position: relative;
+  flex: 1;
+  aspect-ratio: 3/4; 
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.itemImageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.itemButtonGroup {
+  display: flex;
+}
+
+.itemButtonGroup button {
+  background-color: rgba(255, 255, 255, 0.7);
+  color: black;
+  font-size: 12px;
+  cursor: pointer;
+  border: none;
+}
+
+.itemInfo{
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding : 20px; 
+  box-sizing: border-box; 
+}
+
+.itemName{
+  margin-right: 30px;
+}
+
+.space{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.itemSalePrice {
+  font-weight: bold;
+}
+
+.itemOriginalPrice {
+  color: var(--placeholder);
+  text-decoration: line-through;
+}
+
+.itemDiscount {
+  color: red;
+  font-weight: bold;
+}
