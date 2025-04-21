@@ -1,10 +1,10 @@
 import { Outlet } from "react-router-dom";
 
-const ProductComponent = () =>{
+const MemberCompenet =()=>{
     return(
         <div className="myPageComponent">
             <Outlet />
         </div>
     )
 }
-export default ProductComponent;
+export default MemberCompenet;
