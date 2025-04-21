@@ -1,9 +1,9 @@
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom";
 import BasicLayout from "../../layout/BasicLayout";
 import '../../static/css/shop.scss';
 import '../../static/css/siderbar.scss';
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { fetchItems } from '../../api/categoryItemApi'
 
 const ItemListPage = () => {
   const [items, setItems] = useState([]);
@@ -17,30 +17,16 @@ const ItemListPage = () => {
   const [error, setError] = useState(null);
   const itemsPerPage = 10;
 
-  const fetchItems = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await axios.get(`http://localhost:8081/api/items/listPage`, {
-        params: {
-          page: currentPage - 1,
-          category: activeCategory,
-          sort: activeSortButton,
-          size: itemsPerPage
-        }
-      });
-      setItems(response.data.content || []);
-      setTotalElements(response.data.totalElements || 0);
-    } catch (error) {
-      console.error("상품 목록을 불러오는데 실패했습니다.", error);
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
+  const { id } = useParams();
+  const [page, setPage] = useParams(page);
+  const [size, setSize] = useParams(size);
+
+
+
 
   useEffect(() => {
-    fetchItems();
+    fetchItems(id,page,size);
   }, [currentPage, activeCategory, activeSortButton]);
 
   const handleAddCart = (id, event) => {
