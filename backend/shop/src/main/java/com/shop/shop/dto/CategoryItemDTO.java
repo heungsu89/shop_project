@@ -51,6 +51,6 @@ public class CategoryItemDTO {
         this.delFlag = categoryItem.getItem().isDelFlag();
         this.dueDate = categoryItem.getItem().getDueDate();
         this.salesVolume = categoryItem.getItem().getSalesVolume();
-        this.uploadFileNames = (categoryItem.getItem().getImages() == null) ? "default.png" : categoryItem.getItem().getImages().get(0).getFileName();
+        this.uploadFileNames = (categoryItem.getItem().getImages() == null || categoryItem.getItem().getImages().isEmpty()) ? "default.png" : categoryItem.getItem().getImages().get(0).getFileName();
     }
 }
