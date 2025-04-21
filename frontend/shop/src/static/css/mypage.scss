@@ -1,7 +1,7 @@
 .innerWrap.mypage {border-color: var(--charcoal-grey);}
 
 .mypageWrap{display: flex;
-    .myContainer{flex: 1;min-height: 800px;overflow: hidden;}
+    .myContainer{flex: 1;min-height: 800px;overflow: hidden;max-width: 1000px; margin: 0 auto;}
     .myPageComponent{
         display: flex;flex-direction: column;padding: 40px 0 100px;gap: 40px 0;
         .papgeTitle{font-size: var(--h3);}

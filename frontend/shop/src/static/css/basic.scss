@@ -47,13 +47,9 @@ input[type=number]{width: 100%;font-family: inherit;font-size: var(--text-base);
 }
 
 /** 테이블 너비 */
-$itemNumber : 50px;
-$itemID : 50px;
-$itemDiscountRate : 80px;
-$itemPriceInfo : 140px;
-$itemTotalScore : 80px;
-$itemDate : 140px;
-$itemSalesVolume : 50px;
+$tbw50 : 50px;
+$tbw80 : 80px;
+$tbw140 : 140px;
 
 /** 테이블 디자인*/
 .tablePage{
@@ -77,17 +73,19 @@ $itemSalesVolume : 50px;
         }
       }
       .itemTr{display: flex;flex:1;;
-        .itemNumber{width: $itemNumber;flex:0 0 $itemNumber;}
-        .itemID{width: $itemNumber;flex:0 0 $itemNumber;}
-        .itemDiscountRate{width: $itemDiscountRate;flex:0 0 $itemDiscountRate;}
-        .itemPriceInfo{width: $itemPriceInfo;flex:0 0 $itemPriceInfo; flex-direction: column;
+        .itemNumber{width: $tbw50 ;flex:0 0 $tbw50 ;}
+        .itemID{width: $tbw50 ;flex:0 0 $tbw50 ;}
+        .itemDiscountRate{width: $tbw80;flex:0 0 $tbw80;}
+        .itemPriceInfo{width: $tbw140;flex:0 0 $tbw140; flex-direction: column;
           span{display: block;}
           .itemOriginalPrice{text-decoration: line-through;}
         }
-        .itemTotalScore{width: $itemTotalScore;flex:0 0 $itemTotalScore;}
-        .itemDate{width: $itemDate;flex:0 0 $itemDate;}
-        .itemSalesVolume{width: $itemSalesVolume;flex:0 0 $itemSalesVolume;}
-        .itemDelFlag{width: $itemDate;flex:0 0 $itemDate;
+        .itemMemberName{width: $tbw80;flex: 0 0 $tbw80;}
+        .itemMemberShip{width: $tbw80;flex: 0 0 $tbw80;color: var(--slate-blue);}
+        .itemTotalScore{width: $tbw140;flex:0 0 $tbw140;}
+        .itemDate{width: $tbw140;flex:0 0 $tbw140;}
+        .itemSalesVolume{width: $tbw50;flex:0 0 $tbw50;}
+        .itemDelFlag{width: $tbw80;flex:0 0 $tbw80;
           &.deleted{color: var(--Pointer);}
           &.active{color: var(--slate-blue);}
         }

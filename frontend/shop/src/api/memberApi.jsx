@@ -51,7 +51,35 @@ export const memberEmailSearch = async (email) => {
 
 /** 회원 정보 수정 */
 export const modifyMember = async(member) => {
-    // const res = await jwtAxios.put(`${host}/modify`, member);
-    // return res.data;
+  try{
+    const res = await axios.put(`${host}/modify`, member);
+    return res.data;
+  }catch(error){
+    throw error;
   }
+}
+
+/** 회원  */
+export const memberList = async(page,size) =>{
+  const p = page ? page : 0;
+  const s = size ? size : 10;
+  try{
+    const res = await axios.get(`${host}/listPage?page=${page}&size=${size}`);
+    console.log(res.data)
+    return res.data;
+  }catch(error){
+    throw error;
+  }
+}
+
+/** 모든 회원 리스트 불러오기 */
+export const getMemberById = async(id) =>{
+  try{
+    const res = await axios.get(`${host}/id/${id}`);
+    console.log(res.data)
+    return res.data;
+  }catch(error){
+    throw error;
+  }
+}
   

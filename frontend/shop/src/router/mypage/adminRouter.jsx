@@ -7,6 +7,9 @@ const OrderListComponent = lazy(() => import("../../Components/mypage/admin/orde
 const ProductComponent = lazy(() => import("../../Components/mypage/admin/product/ProductCompornt"));
 const ProductListComponent = lazy(()=>import("../../Components/mypage/admin/product/ProductListComponent"));
 const ProductFormComponent = lazy(() => import("../../Components/mypage/admin/product/ProductFormComponent"));
+const MemberCompenet = lazy(() => import("../../Components/mypage/admin/member/MemberCompoenet"));
+const MemberListCompenet = lazy(() => import("../../Components/mypage/admin/member/MemberListCompoenet"));
+const MemberModifyCompoenet = lazy(() => import("../../Components/mypage/admin/member/MemberModifyCompoenet"));
 const CategoryCompoenet = lazy(() => import("../../Components/mypage/admin/category/CategoryCompoenet"));
 const BoardListComponent = lazy(() => import("../../Components/mypage/admin/board/BoardListComponent"));
 const InquiryListComponent = lazy(() => import("../../Components/mypage/admin/inquiry/InquiryListCompoenet"));
@@ -42,11 +45,31 @@ const adminRouter = () => {
               )
             },
             {
-              path: "modify/:id", // <-- 수정할 상품 ID
+              path: "modify/:id",
               element: (
                 <Suspense fallback={<Loading />}><ProductFormComponent /></Suspense>
               )
             }
+          ]
+        },
+        {
+          path: "member",
+          element : (
+            <Suspense fallback={<Loading />}><MemberCompenet /></Suspense>
+          ),
+          children:[
+            {
+              index : true,
+              element : (
+                <Suspense fallback={<Loading />}><MemberListCompenet /></Suspense>
+              )
+            },
+            {
+              path : "modify/:id",
+              element : (
+                <Suspense fallback={<Loading />}><MemberModifyCompoenet /></Suspense>
+              )
+            },
           ]
         },
         {

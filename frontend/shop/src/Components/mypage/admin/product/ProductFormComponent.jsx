@@ -124,8 +124,9 @@ const ProductFormComponent = () => {
         dto.uploadFileNames = existingImageNames; // 서버에 남길 이미지명만 담기
       
         await updateProduct({ id, itemDTO: dto, files: filesToUpload });
-        alert('상품 수정이 완료되었습니다.');
         moveToPath('/admin/mypage/product/');
+        alert('상품 수정이 완료되었습니다.');
+        
       }else{
         registerProduct({itemDTO: dto, categoryId :selectedCategoryId,files: filesToUpload })
         moveToPath('/admin/mypage/product/');

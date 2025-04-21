@@ -1,13 +1,11 @@
-
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { NavLink, Link } from "react-router-dom";
 import { getFormattedPrice } from "../../../../util/priecUtil";
 import { formatDateToDot } from "../../../../util/dateUtil";
 import { productList } from "../../../../api/productApi";
-import Pagination from "../../../Pagination"
-import defaultImg from "../../../../static/images/default.png"
+import Pagination from "../../../Pagination";
+import defaultImg from "../../../../static/images/default.png";
 
 const ProductListComponent = () =>{
     const [productData, setData] = useState({});
