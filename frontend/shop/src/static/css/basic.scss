@@ -57,38 +57,40 @@ $itemSalesVolume : 50px;
 
 /** 테이블 디자인*/
 .tablePage{
-  display:flex;flex-direction: column;gap: 20px 0;
+  display:flex;flex-direction: column;gap: 20px 0;overflow-y: auto;
   .itemSubMenu{display: flex;justify-content: space-between;align-items: center;gap: 30px;}
-  .itemTable{display: block;
-    th,td{display: flex;justify-content: center;flex: 1;align-items: center;}
-    th{align-items:center;}
-    td{padding: 10px;}
-    .itemThead{display: flex; height: 42px;border-top:solid 1px var(--charcoal-grey);border-bottom:solid 1px var(--charcoal-grey);}
-    .itemTbody{display: flex; flex-direction: column;
-      .itemTr{border-bottom: $boredrStyle}
-      .itemInfo{justify-content: flex-start;
-        .itemImg{width: 80px; aspect-ratio: 3/4; border: solid 1px var(--charcoal-grey); margin-right: 10px;
-          img{width: 100%;height: 100%; object-fit: cover;}
-        }
-        .itemDetailInfo{display: flex; flex-direction: column; gap: 10px;
-          a{text-decoration: underline;color: var(--slate-blue);}
+  .itemTableWrap{overflow-y: auto;
+    .itemTable{display: block;width: 100%; min-width: min-content;
+      th,td{display: flex;justify-content: center;flex: 1;align-items: center;}
+      th{align-items:center;}
+      td{padding: 10px;}
+      .itemThead{display: flex; height: 42px;border-top:solid 1px var(--charcoal-grey);border-bottom:solid 1px var(--charcoal-grey);}
+      .itemTbody{display: flex; flex-direction: column;
+        .itemTr{border-bottom: $boredrStyle}
+        .itemInfo{justify-content: flex-start;
+          .itemImg{width: 80px;flex: 0 0 80px;aspect-ratio: 3/4; border: solid 1px var(--charcoal-grey); margin-right: 10px;
+            img{width: 100%;height: 100%; object-fit: cover;}
+          }
+          .itemDetailInfo{display: flex; flex-direction: column; gap: 10px; min-width: 400px;
+            a{text-decoration: underline;color: var(--slate-blue);}
+          }
         }
       }
-    }
-    .itemTr{display: flex;flex:1;;
-      .itemNumber{width: $itemNumber;flex:0 0 $itemNumber;}
-      .itemID{width: $itemNumber;flex:0 0 $itemNumber;}
-      .itemDiscountRate{width: $itemDiscountRate;flex:0 0 $itemDiscountRate;}
-      .itemPriceInfo{width: $itemPriceInfo;flex:0 0 $itemPriceInfo; flex-direction: column;
-        span{display: block;}
-        .itemOriginalPrice{text-decoration: line-through;}
-      }
-      .itemTotalScore{width: $itemTotalScore;flex:0 0 $itemTotalScore;}
-      .itemDate{width: $itemDate;flex:0 0 $itemDate;}
-      .itemSalesVolume{width: $itemSalesVolume;flex:0 0 $itemSalesVolume;}
-      .itemDelFlag{width: $itemDate;flex:0 0 $itemDate;
-        &.deleted{color: var(--Pointer);}
-        &.active{color: var(--slate-blue);}
+      .itemTr{display: flex;flex:1;;
+        .itemNumber{width: $itemNumber;flex:0 0 $itemNumber;}
+        .itemID{width: $itemNumber;flex:0 0 $itemNumber;}
+        .itemDiscountRate{width: $itemDiscountRate;flex:0 0 $itemDiscountRate;}
+        .itemPriceInfo{width: $itemPriceInfo;flex:0 0 $itemPriceInfo; flex-direction: column;
+          span{display: block;}
+          .itemOriginalPrice{text-decoration: line-through;}
+        }
+        .itemTotalScore{width: $itemTotalScore;flex:0 0 $itemTotalScore;}
+        .itemDate{width: $itemDate;flex:0 0 $itemDate;}
+        .itemSalesVolume{width: $itemSalesVolume;flex:0 0 $itemSalesVolume;}
+        .itemDelFlag{width: $itemDate;flex:0 0 $itemDate;
+          &.deleted{color: var(--Pointer);}
+          &.active{color: var(--slate-blue);}
+        }
       }
     }
   }

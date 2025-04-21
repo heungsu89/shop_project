@@ -37,9 +37,8 @@ const AddressSearch = ({ onComplete }) => {
   return (
     <ul className="addressSearch">
       <li className="search">
-        <input type="text" name="zip_code" placeholder="우편번호" value={localAddress.zip_code} readOnly
-        />
-        <button type="button" onClick={handleSearch}>주소검색</button>
+        <input type="text" name="zip_code" placeholder="우편번호" value={localAddress.zip_code} readOnly/>
+        <button type="button" className='btn black' onClick={handleSearch}>주소검색</button>
       </li>
       <li>
         <input type="text" name="default_address" placeholder="기본주소" value={localAddress.default_address} readOnly/>

@@ -83,7 +83,7 @@ const LoginComponent = () => {
 
     <div className="loginLinks">
       <button
-        className="bigBtn bold"
+        className="btn bigBtn bold black"
         type="button"
         onClick={handleClickLogin}
       >LOGIN

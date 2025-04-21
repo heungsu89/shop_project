@@ -158,7 +158,7 @@ const SignupForm = ({ onBack, snsAgree }) => {
 
       <div className='inputWrap'>
         <div className="inputTitle"><span className='point'>[필수]</span>아이디</div>
-        <div className="inputBox"><input name="email" value={form.email} onChange={handleChange} placeholder="이메일 입력" type="email" /><button type="button" onClick={userEmailSearch}>중복확인</button></div>
+        <div className="inputBox"><input name="email" value={form.email} onChange={handleChange} placeholder="이메일 입력" type="email" /><button type="button" className='btn black' onClick={userEmailSearch}>중복확인</button></div>
       </div>
       <div className='inputWrap'>
         <div className="inputTitle"><span className='point'>[필수]</span>비밀번호</div>
@@ -177,7 +177,7 @@ const SignupForm = ({ onBack, snsAgree }) => {
         <AddressSearch onComplete={handleAddressComplete} />
       </div>
 
-      <button className='btn bigBtn bold' onClick={handleSubmit}>완료</button>
+      <button className='btn bigBtn black bold' onClick={handleSubmit}>완료</button>
     </div>
   );
 };

@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { createCategory, categoryList, categoryModify, categoryDelete } from '../../../../api/categoryApi';
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { useDroppable, useDraggable } from '@dnd-kit/core';
-
-
 
 const DroppableRoot = ({ children }) => {
     const { setNodeRef, isOver } = useDroppable({
@@ -53,12 +51,16 @@ const DraggableCategory = ({ category, onEdit, onDelete }) => {
             {category.categoryName}
             </div>
     
-            <button onClick={(e) => {
+            <button
+            className='btn black'
+            onClick={(e) => {
             e.stopPropagation();
             onEdit(category.id, category.categoryName);
             }}>분류명 수정</button>
     
-            <button onClick={(e) => {
+            <button
+            className='btn line'
+            onClick={(e) => {
             e.stopPropagation();
             onDelete(category.id);
             }}>삭제</button>
@@ -84,10 +86,17 @@ const CategoryComponent = () => {
     const [form, setForm] = useState({ categoryName: '', parentId: null, viewStatus: false });
     const [editingId, setEditingId] = useState(null);
     const [editingName, setEditingName] = useState('');
+    const inputRef = useRef(null);
   
     useEffect(() => {
       fetchCategories();
     }, []);
+
+    useEffect(() => {
+      if (editingId !== null && inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, [editingId]);
   
     const fetchCategories = () => {
       categoryList().then(data => setCategories(data));
@@ -111,7 +120,7 @@ const CategoryComponent = () => {
       createCategory(form).then(() => {
         setForm({ categoryName: '', parentId: null, viewStatus: false });
         fetchCategories();
-        window.dispatchEvent(new Event('categoryUpdated')); // ✅ 이벤트 발생
+        window.dispatchEvent(new Event('categoryUpdataed')); // ✅ 이벤트 발생
       });
     };
   
@@ -208,7 +217,7 @@ const CategoryComponent = () => {
                   placeholder="분류명을 입력해주세요."
                   type="text"
                 />
-                <button type="button" onClick={handleSubmit}>분류등록</button>
+                <button type="button" className='btn black' onClick={handleSubmit}>분류등록</button>
               </div>
             </div>
           </div>
@@ -224,9 +233,9 @@ const CategoryComponent = () => {
                         <DroppableCategory key={data.id} category={data}>
                         {editingId === data.id ? (
                             <div className="categoryItem">
-                            <input type="text" value={editingName} onChange={handleEditChange} />
-                            <button onClick={() => handleEditSave(data.id)}>저장</button>
-                            <button onClick={handleEditCancel}>취소</button>
+                            <input type="text" value={editingName} onChange={handleEditChange}  ref={inputRef}/>
+                            <button className='btn black' onClick={() => handleEditSave(data.id)}>저장</button>
+                            <button className='btn line' onClick={handleEditCancel}>취소</button>
                             </div>
                         ) : (
                             <>
