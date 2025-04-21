@@ -32,7 +32,7 @@ const ProductListComponent = () =>{
 
     return(
         <>
-        <h2 className="papgeTitle">상품</h2>
+        <h2 className="pageTitle">상품</h2>
         <div className="pageContainer">
             <div className="borderSection filter">
                 <strong>등록된 상품 갯수 : {productData?.totalElements || 0}개</strong>
@@ -119,9 +119,9 @@ const ProductListComponent = () =>{
                                     <div className="itemImg">
                                         <img
                                         src={
-                                            item.uploadFileNames?.[0]
+                                            item.uploadFileNames?.length > 0
                                             ? `http://localhost:8081/upload/${item.uploadFileNames[0]}`
-                                            : {defaultImg}
+                                            : defaultImg
                                         }
                                         alt={item.name}
                                         />

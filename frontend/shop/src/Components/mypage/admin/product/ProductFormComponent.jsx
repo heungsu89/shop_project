@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import CategorySelector from '../../../CategorySelector';
 import ImageUploadComponent from '../../../ImageUploadComponent';
 import EditorComponent from '../../../EditorComponent';
@@ -23,6 +24,7 @@ const DEFAULT_FORM = {
 const ProductFormComponent = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
+  const navigate = useNavigate();
   const [form, setForm] = useState(DEFAULT_FORM);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [images, setImages] = useState([null, null, null, null]);
@@ -124,12 +126,12 @@ const ProductFormComponent = () => {
         dto.uploadFileNames = existingImageNames; // 서버에 남길 이미지명만 담기
       
         await updateProduct({ id, itemDTO: dto, files: filesToUpload });
-        moveToPath('/admin/mypage/product/');
+        navigate(-1);
         alert('상품 수정이 완료되었습니다.');
         
       }else{
         registerProduct({itemDTO: dto, categoryId :selectedCategoryId,files: filesToUpload })
-        moveToPath('/admin/mypage/product/');
+        navigate(-1);
       }
       
     } catch (err) {

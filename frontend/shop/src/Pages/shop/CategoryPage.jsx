@@ -1,147 +1,187 @@
 import React, { useState, useEffect } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getCategories } from "../../api/categoryApi";
+import { useParams } from "react-router-dom";
 import BasicLayout from "../../layout/BasicLayout";
 import { fetchItems } from "../../api/categoryItemApi";
 import "../../static/css/shop.scss";
 import "../../static/css/siderbar.scss";
-
+import defaultImg from "../../static/images/default.png";
+import Pagination from "../../Components/Pagination";
+import { getFormattedPrice } from "../../util/priecUtil";
+import { getCookie, removeCookie } from "../../util/cookieUtil";
+import { wishAdd } from "../../api/wishApi";
 
 const ItemListPage = () => {
-  const navigate = useNavigate();
+  const loginState = useSelector(state => state.loginSlice);
+  const isLoggedIn = loginState && loginState.email !== '';
+  const [memberInfo, setInfo] = useState(null);
+  const { categoryId } = useParams();
+  const [currentCategory, setCurrentCategory] = useState(null);
+  const [childCategorys, setChildCategorys] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
-
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [totalElements, setTotalElements] = useState(0);
-
-
-  const category = searchParams.get("category") || "1"; // 기본값 '1'
   const page = parseInt(searchParams.get("page") || "0", 10);
   const size = parseInt(searchParams.get("size") || "9", 10);
-  
-  // API 호출
+
   useEffect(() => {
-    fetchItems(category, page, size).then(data => {
-      setItems(data.content);
-      setTotalElements(data.totalElements);
+
+
+
+    const fetchCategory = async () => {
+      const currentCategory = await getCategories(categoryId);
+      setCurrentCategory(currentCategory);
+  
+      if (currentCategory?.parentId) {
+        // 자식이면, 부모를 다시 조회해서 형제들(child)을 얻어옴
+        const parentCategory = await getCategories(currentCategory.parentId);
+        setChildCategorys(parentCategory.child);
+      } else {
+        // 부모일 경우, 그대로 사용
+        setChildCategorys(currentCategory.child);
+      }
+    };
+  
+    fetchCategory();
+
+
+
+
+
+
+
+
+
+
+
+
+
+    fetchItems(categoryId, page, size).then(data => {
+      setItems(data);
     });
-  }, [category, page, size]);
+    if (isLoggedIn) {
+      const info = getCookie("member");
+      setInfo(info);
+    } else {
+      setInfo(null);
+    }
+  }, [categoryId, page, size,isLoggedIn ]);
 
+  
+  const handleAddCart = (itemId,e) => {
+    e.stopPropagation();
+    e.preventDefault(); 
 
-  const handleAddCart = (id, event) => {
-    event.stopPropagation();
-    console.log("장바구니 추가:", id);
+    if(isLoggedIn){
+      console.log(memberInfo?.memberId)
+      // wishAdd(memberInfo?.memberId,itemId)
+      console.log("장바구니 추가:");
+    }else{
+      alert('로그인을 하셔야 사용이 가능합니다.');
+    }
   };
 
-  const handleAddWishlist = (id, event) => {
-    event.stopPropagation();
-    console.log("관심상품 추가:", id);
+  const handleAddWishlist = async (itemId, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  
+    if (!isLoggedIn) {
+      alert("로그인을 하셔야 사용이 가능합니다.");
+      return;
+    }
+  
+    try {
+      const res = await wishAdd(memberInfo?.memberId, itemId);
+      if (res === "삭제됨") {
+        console.log("위시리스트에서 삭제됨");
+        // UI에서도 위시 제거 처리 가능
+      } else {
+        console.log("위시리스트에 추가됨");
+      }
+    } catch (err) {
+      console.error("처리 중 오류", err);
+    }
   };
-
-  const handleCategoryClick = (cat) => {
-    updateParams({ category: cat, page: 1 });
-  };
-
-  const handleSortButtonClick = (sortType) => {
-    updateParams({ sort: sortType, page: 1 });
-  };
-
-  const totalPages = Math.ceil(totalElements / size);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <BasicLayout>
       <div className="itemListContainer">
         <div className="itemListSection">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="itemCard"
-              onClick={() => navigate(`/item/${item.id}`)}
-              style={{ cursor: "pointer" }}
-            >
-              <div className="itemImageWrapper">
-                <img
-                  src={`/images/${item.uploadFileNames?.[0] || "default.png"}`}
-                  alt={item.name}
-                  className="itemImage"
-                />
-                <div className="itemButtonGroup">
-                  <button onClick={(e) => handleAddWishlist(item.id, e)}>WISH</button>
-                  <button onClick={(e) => handleAddCart(item.id, e)}>CART</button>
-                </div>
-              </div>
-              <div className="itemInfo">
-                <div className="itemName">{item.name}</div>
-                <div className="space">
-                  <div className="itemSalePrice">
-                    {Math.floor(item.price * (1 - item.discountRate / 100))}KR
+        {items?.content?.length > 0 ? (
+          items?.content?.map((item,idx) =>{
+            const priceInfo = getFormattedPrice( item.price,item.discountRate);
+            return(
+              <NavLink to={`/item/${item.itemId}`}
+                key={item.itemId}
+                className="itemCard"
+              >
+                <div className="itemImageWrapper">
+                  <img
+                    src={
+                        item.uploadFileNames !== "default.png"?
+                        `http://localhost:8081/upload/${item.uploadFileNames}`
+                        : defaultImg
+                    }
+                    alt={item.itemName}
+                    />
+                  <div className="itemButtonGroup">
+                    <button onClick={(e) => handleAddWishlist(item.itemId,e)}>WISH</button>
+                    <button onClick={(e) => handleAddCart(item.itemId,e)}>CART</button>
                   </div>
-                  <div className="itemOriginalPrice">{item.price}KWR</div>
-                  <div className="itemDiscount">{item.discountRate}%</div>
                 </div>
-              </div>
-            </div>
-          ))}
+                <div className="itemInfo">
+                  <div className="itemName">{item.itemName}</div>
+                  <div className="space">
+                    <span className="itemSalePrice">
+                      {priceInfo.discounted}KRE
+                    </span>
+                    <span className="itemOriginalPrice">{priceInfo.original}</span>
+                    <span className="itemDiscount">{priceInfo.discountRate}</span>
+                  </div>
+                </div>
+              </NavLink>
+          )})
+        ) : (
+          <div>등록된 상품이 없습니다.</div>
+        )}
         </div>
 
         <aside className="itemSidebar">
           <div className="innerSiedbarWrap">
-            <h1 className="categoryTitle">SHOP</h1>
+            <h2 className="categoryTitle">SHOP</h2>
 
             <div className="searchBox">
               <input type="text" placeholder="SEARCH TEXT" />
-              <button>SEARCH</button>
+              <button type="button" className="btn black">SEARCH</button>
             </div>
 
-            {/* <div className="categoryBox">
+            <nav>
               <ul className="categoryList">
-                {["OUTWEAR", "TOP", "KNITWEAR", "BOTTOM", "ACC"].map((cat) => (
-                  <li
-                    key={cat}
-                    className={category === cat ? "active" : ""}
-                    onClick={() => handleCategoryClick(cat)}
-                  >
-                    {cat}
+                {childCategorys?.map((category) => (
+                  <li key={category.categoryId}>
+                    <NavLink 
+                    to={`/shop/category/${category.categoryId}?page=${page}&size=${size}`}
+                    className={({ isActive }) => (isActive ? 'active' : '')}
+                    >
+                      {category.categoryName}
+                    </NavLink>
                   </li>
                 ))}
               </ul>
-            </div> */}
+            </nav>
 
-            {/* <div className="paginationSection">
-              <div className="totalCount">TOTAL {totalElements}</div>
+
+            <div className="paginationSection">
+              <div className="totalCount">TOTAL : {items.totalElements}</div>
               <div className="sortButtons">
-                {["NEWEST", "PRICE HIGH", "PRICE LOW"].map((type) => (
-                  <button
-                    key={type}
-                    className={sort === type ? "active" : ""}
-                    onClick={() => handleSortButtonClick(type)}
-                  >
-                    <span>{type}</span>
-                  </button>
-                ))}
+                <button type="button" className="btn line">NEWEST</button>
+                <button type="button" className="btn line">PRICE HIGH</button>
+                <button type="button" className="btn line">PRICE LOW</button>
               </div>
+              <Pagination pageInfo={items}/>
+            </div>
 
-              <div className="pageLinks">
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <Link
-                    key={i + 1}
-                    to={`?page=${i + 1}&category=${category}&sort=${sort}`}
-                    className={page === i + 1 ? "current" : ""}
-                  >
-                    {i + 1}
-                  </Link>
-                ))}
-                {page < totalPages && (
-                  <Link to={`?page=${page + 1}&category=${category}&sort=${sort}`}>
-                    NEXT
-                  </Link>
-                )}
-              </div>
-            </div> */}
           </div>
         </aside>
       </div>

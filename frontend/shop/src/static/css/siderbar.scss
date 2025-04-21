@@ -1,88 +1,68 @@
-  .itemSidebar {width: 520px; flex: 0 0 520px;padding: 0 40px;
-      .innerSiedbarWrap{
-          // padding-top:120px;
-          position: sticky;
-          top: 120px;
-          right: 0;;
-          height: calc( 100vh - 120px);
-          background-color: white;
-          display: flex;
-          flex-direction: column;
-          align-items: end;
-
-      }
-
-      .paginationSection{
-          margin-top: auto;
-          font-size: large;
-      }
-  }
-
-
-  .searchBox {
-      padding: 20px 0;
-      display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-  }
-
-  .searchBox input::placeholder {
-      text-align: right;
-  }
-
-
-  .categoryList li {
-      text-align: end;    
-      margin-bottom: 10px;
-      font-size: var(--h4);
-  }
-
-  .categoryList li.active {
-      text-decoration: underline; 
-      font-weight: 700; 
-    }
-    
-  .paginationSection  {
-
-    .totalCount{
-      font-size: var(--h3);
-      font-weight: bold;
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 20px;
-    }
-    
-    .sortButtons {
-      display: flex;
-      justify-content: flex-end; 
-      flex-direction: row; 
-      gap: 10px;
-      margin-bottom: 20px;
-      font-size: var(--h5); 
-    }
-    .sortButtons button {
-      padding: 5px 10px; 
-      background-color: white;
-      color: var(--deep-onyx); 
-      border: 1px solid var(--deep-onyx);
-      cursor: pointer;
-      height: 35px;
-      border-radius: 3px;
-    }
-    
-    .sortButtons button.active {
-      background-color: var(--deep-onyx);
-      color: white;
-      border: 1px solid var(--deep-onyx);
-    }
-      .pageLinks {
-      display: flex;
-      justify-content: flex-end; 
-      gap: 15px;
-      }
-
-      .pageLinks a.current {
-          font-weight: 400;
-          text-decoration: underline;
+  .itemSidebar {width: 520px; flex: 0 0 520px;padding: 40px;
+      .innerSiedbarWrap{position: sticky;top:120px; right: 0;display: flex;flex-direction: column;align-items: end; height: calc(100vh - 160px);
+        .categoryTitle{font-size: var(--h1);}
+        .searchBox {display: flex;gap: 10px;margin: 20px 0 40px;
+          input::placeholder {
+              text-align: right;
+          }
         }
+        .categoryList{
+          li {text-align: end;margin-bottom: 10px;font-size: var(--h3);
+            a.active {text-decoration: underline;}
+          }
+        }
+        .paginationSection{display: flex; flex-direction: column; align-items: end; margin-top: auto;
+          .totalCount{font-size:var(--h4);font-weight: bold;}
+          .sortButtons{display: flex; gap: 10px;margin: 12px 0 6px;}
+        }
+
+
+      }
   }
+
+
+    
+  // .paginationSection  {
+
+  //   .totalCount{
+  //     font-size: var(--h3);
+  //     font-weight: bold;
+  //     display: flex;
+  //     justify-content: flex-end;
+  //     margin-bottom: 20px;
+  //   }
+    
+  //   .sortButtons {
+  //     display: flex;
+  //     justify-content: flex-end; 
+  //     flex-direction: row; 
+  //     gap: 10px;
+  //     margin-bottom: 20px;
+  //     font-size: var(--h5); 
+  //   }
+  //   .sortButtons button {
+  //     padding: 5px 10px; 
+  //     background-color: white;
+  //     color: var(--deep-onyx); 
+  //     border: 1px solid var(--deep-onyx);
+  //     cursor: pointer;
+  //     height: 35px;
+  //     border-radius: 3px;
+  //   }
+    
+  //   .sortButtons button.active {
+  //     background-color: var(--deep-onyx);
+  //     color: white;
+  //     border: 1px solid var(--deep-onyx);
+  //   }
+  //     .pageLinks {
+  //     display: flex;
+  //     justify-content: flex-end; 
+  //     gap: 15px;
+  //     }
+
+  //     .pageLinks a.current {
+  //         font-weight: 400;
+  //         text-decoration: underline;
+  //       }
+  // }

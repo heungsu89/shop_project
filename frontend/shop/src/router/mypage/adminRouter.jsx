@@ -4,7 +4,7 @@ const Loading = () => <div>Loading....</div>;
 
 const AdminMainPage = lazy(() => import("../../Pages/myPage/admin/AdminMainPage"));
 const OrderListComponent = lazy(() => import("../../Components/mypage/admin/order/OrderListComponent"));
-const ProductComponent = lazy(() => import("../../Components/mypage/admin/product/ProductCompornt"));
+const ProductComponent = lazy(() => import("../../Components/mypage/admin/product/ProductComponent"));
 const ProductListComponent = lazy(()=>import("../../Components/mypage/admin/product/ProductListComponent"));
 const ProductFormComponent = lazy(() => import("../../Components/mypage/admin/product/ProductFormComponent"));
 const MemberCompenet = lazy(() => import("../../Components/mypage/admin/member/MemberCompoenet"));

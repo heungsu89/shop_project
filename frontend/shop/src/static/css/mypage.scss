@@ -4,7 +4,7 @@
     .myContainer{flex: 1;min-height: 800px;overflow: hidden;max-width: 1200px; margin: 0 auto;}
     .myPageComponent{
         display: flex;flex-direction: column;padding: 40px 0 100px;gap: 40px 0;
-        .papgeTitle{font-size: var(--h3);}
+        .pageTitle{font-size: var(--h3);}
         .pageContainer{display: flex;flex-direction: column;gap: 40px 0;
             /** 카테고리(분류) 관련*/
             .categoryItemWrap{
@@ -28,8 +28,11 @@
             .btnsWrap{display: flex;gap: 8px 18px;flex-wrap: wrap;
                 >div{display: flex; gap: 0 4px;}
             }
+
+            
         }
     }
+    .itemSubMenu{display: flex; justify-content: space-between;}
 }
 
 

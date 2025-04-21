@@ -8,6 +8,12 @@ const AppInit = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+  }, []);
+
+  useEffect(() => {
     const member = getCookie("member");
     if (member) {
       dispatch(login(member)); // 이제 JSON.parse 필요 없음

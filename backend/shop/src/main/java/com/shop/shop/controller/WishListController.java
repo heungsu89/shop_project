@@ -26,9 +26,13 @@ public class WishListController {
 
     // 관심 등록
     @PostMapping("/add")
-    public ResponseEntity<WishListDTO> registerInterest(@RequestBody WishListDTO wishListDTO) {
-        WishListDTO savedWishList = wishListService.registerInterest(wishListDTO);
-        return ResponseEntity.ok(savedWishList);
+    public ResponseEntity<?> registerInterest(@RequestBody WishListDTO wishListDTO) {
+        WishListDTO result = wishListService.registerInterest(wishListDTO);
+
+        if (result == null) {
+            return ResponseEntity.ok("삭제됨");
+        }
+        return ResponseEntity.ok(result);
     }
 
     // 특정 회원 관심 목록 조회
@@ -43,8 +47,7 @@ public class WishListController {
     public ResponseEntity<Page<WishListDTO>> getWishListByMember(
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<WishListDTO> wishList = wishListService.getWishListByMemberId(pageable, memberId);
         return ResponseEntity.ok(wishList);
@@ -60,7 +63,8 @@ public class WishListController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("result", "fail", "error", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("result", "fail", "error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("result", "fail", "error", e.getMessage()));
         }
     }
 
@@ -74,7 +78,8 @@ public class WishListController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("result", "fail", "error", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("result", "fail", "error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("result", "fail", "error", e.getMessage()));
         }
     }
 }

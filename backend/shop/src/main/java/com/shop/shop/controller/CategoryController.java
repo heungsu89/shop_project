@@ -50,18 +50,27 @@ public class CategoryController {
     @GetMapping("/listPage")
     public ResponseEntity<Page<Category>> getAllCategoryWithPage(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Category> category = categoryService.getAllCategory(pageable);
         return ResponseEntity.ok(category);
     }
 
-    // 특정 카테고리 조회
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable Long id) {
+    public ResponseEntity<CategoryDTO> getCategory(@PathVariable("id") Long id) {
+        // 먼저 부모 카테고리에서 시도
         Category category = categoryRepository.findOneParentCategory(id);
-        return ResponseEntity.ok(category);
+
+        // 부모가 아니면 일반 findById로 조회 시도
+        if (category == null) {
+            category = categoryRepository.findById(id).orElse(null);
+        }
+
+        if (category == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(new CategoryDTO(category));
     }
 
     // 특정 카테고리 조회 (페이징)
@@ -69,8 +78,7 @@ public class CategoryController {
     public ResponseEntity<Page<Category>> getCategoryWithPage(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Category> category = categoryService.getAllItemsFromCategory(pageable, id);
         return ResponseEntity.ok(category);
@@ -100,11 +108,11 @@ public class CategoryController {
     @PostMapping("/addCategoryItem/{itemId}/{categoryId}")
     public ResponseEntity<Map<String, String>> registerCategoryItem(
             @PathVariable("itemId") Long itemId,
-            @PathVariable("categoryId") Long categoryId
-    ) {
+            @PathVariable("categoryId") Long categoryId) {
         try {
             Item item = itemRepository.findById(itemId).orElseThrow(() -> new RuntimeException("해당 상품이 존재하지 않습니다."));
-            CategoryItemDTO categoryItemDTO = categoryItemService.registerCategoryItem(item, categoryId); // 카테고리에 해당 아이템 등록
+            CategoryItemDTO categoryItemDTO = categoryItemService.registerCategoryItem(item, categoryId); // 카테고리에 해당
+                                                                                                          // 아이템 등록
             Map<String, String> response = Map.of("result", "success");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -116,9 +124,8 @@ public class CategoryController {
     // 모든 카테고리 상품 조회(페이징)
     @GetMapping("/categoryItemPage")
     public ResponseEntity<Page<CategoryItemDTO>> getAllCategoryItem(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CategoryItemDTO> categoryItemDTOPage = categoryItemService.getAllCategoryItem(pageable);
         return ResponseEntity.ok(categoryItemDTOPage);
@@ -129,12 +136,10 @@ public class CategoryController {
     public ResponseEntity<Page<CategoryItemDTO>> getALLCategoryItemById(
             @PathVariable Long id,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<CategoryItemDTO> categoryItemDTOPage = categoryItemService.getAllItemsFromCategoryItem(pageable, id);
         return ResponseEntity.ok(categoryItemDTOPage);
     }
-
 
 }

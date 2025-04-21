@@ -1,7 +1,8 @@
 package com.shop.shop.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.shop.shop.domain.category.Category;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,27 +17,34 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CategoryDTO {
 
-    @Column(name = "category_id")
     private Long categoryId;
-
-    @Column(name = "category_name")
     private String categoryName;
-
-    @Column(name = "parent_id")
     private Long parentId;
-
-    @Column(name = "child_id")
-    private List<Long> childId;
-
-    @Column(name = "view_status")
     private boolean viewStatus;
 
-    // 엔티티를 DTO 로 변환하는 생성자
+    // 자식 카테고리를 DTO 리스트로 포함
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<CategoryDTO> child;
+
     public CategoryDTO(Category category) {
         this.categoryId = category.getId();
         this.categoryName = category.getCategoryName();
-        this.parentId = (category.getParent() != null) ? category.getParent().getId() : null;
-        this.childId = category.getChild().stream().map(Category::getId).collect(Collectors.toList());
+        this.parentId = category.getParent() != null ? category.getParent().getId() : null;
         this.viewStatus = category.isViewStatus();
+
+        // 자식 카테고리 DTO 변환 (카테고리 아이템은 포함하지 않음)
+        if (category.getChild() != null && !category.getChild().isEmpty()) {
+            this.child = category.getChild().stream()
+                    .map(childCategory -> {
+                        CategoryDTO dto = new CategoryDTO();
+                        dto.setCategoryId(childCategory.getId());
+                        dto.setCategoryName(childCategory.getCategoryName());
+                        dto.setViewStatus(childCategory.isViewStatus());
+                        dto.setParentId(childCategory.getParent() != null ? childCategory.getParent().getId() : null);
+                        dto.setChild(null); // 자식의 자식까지는 포함하지 않도록 설정
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+        }
     }
 }

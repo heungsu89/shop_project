@@ -18,17 +18,18 @@ import java.util.List;
 @Repository
 public interface CategoryItemRepository extends JpaRepository<CategoryItem, Long> {
 
-//    @EntityGraph(attributePaths = {"item"})
-//    @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId") // 삭제 된거 제외
-//    CategoryDTO getItemsFromCategory(@Param("categoryId") Long categoryId);
+    // @EntityGraph(attributePaths = {"item"})
+    // @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId")
+    // // 삭제 된거 제외
+    // CategoryDTO getItemsFromCategory(@Param("categoryId") Long categoryId);
 
     // categoryId 에 속한 모든 데이터 가져오기
-    @EntityGraph(attributePaths = {"item"})
+    @EntityGraph(attributePaths = { "item" })
     @Query("SELECT ci FROM CategoryItem ci ORDER BY ci.id DESC")
     Page<CategoryItem> findAllWithItem(Pageable pageable);
 
     // categoryId 에 속한 모든 데이터 가져오기
-    @EntityGraph(attributePaths = {"item"})
+    @EntityGraph(attributePaths = { "item" })
     @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId OR ci.category.parent.id = :categoryId ORDER BY ci.id DESC")
     Page<CategoryItem> findAllPageByCategoryId(Pageable pageable, @Param("categoryId") Long categoryId);
 

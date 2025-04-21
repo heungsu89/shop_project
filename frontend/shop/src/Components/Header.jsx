@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
-import Logo from '../static/svg/logo.svg?react';
-import LogoutComponent from './member/LogoutComponent';
 import { getCookie, removeCookie } from "../util/cookieUtil";
 import { categoryList } from '../api/categoryApi';
+import Logo from '../static/svg/logo.svg?react';
+import LogoutComponent from './member/LogoutComponent';
 
 const Header = ({ isMypage }) => {
   const navigate = useNavigate();
@@ -58,10 +58,10 @@ const Header = ({ isMypage }) => {
           <ul className="cartegory">
             {categories.map((cat) => (
                 <li key={cat.id}>
-                  <Link to={`/shop/category/${cat.id}`}>{cat.categoryName}</Link>
+                  <Link to={`/shop/category/${cat.id}?page=0&size=9`}>{cat.categoryName}</Link>
                 </li>
               ))}
-            <li><Link to="/shop">SHOP</Link></li>
+            {/* <li><Link to="/shop">SHOP</Link></li> */}
             <li><Link to="/magazine">MAGAZINE</Link></li>
             <li><Link to="/event">EVENT</Link></li>
           </ul>

@@ -8,9 +8,9 @@ export const fetchItems = async (id,page,size) => {
     const s = size ? size : 9;
     try{
       const res =  await axios.get(`${host}categoryItemPage/${id}?page=${page}&size=${size}`)
-      console.log("조회 성공")
+      console.log(res.data)
       return res.data;
     }catch(error){
       throw error;
     }
-  };
+};
