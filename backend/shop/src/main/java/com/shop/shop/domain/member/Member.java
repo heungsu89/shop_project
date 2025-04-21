@@ -56,6 +56,8 @@ public class Member {
         this.password = password;
     }
 
+    public void changeMemberName(String memberName) {this.memberName = memberName;}
+
     public void changeMemberShip(MemberShip memberShip) {
         this.memberShip = memberShip;
     }

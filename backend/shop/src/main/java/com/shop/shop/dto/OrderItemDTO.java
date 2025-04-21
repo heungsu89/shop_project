@@ -18,6 +18,10 @@ public class OrderItemDTO {
     private Long itemId;
     private Long itemOptionId;
     private Long orderId;
+    private String optionName;
+    private String optionValue;
+    private Long itemImageId;
+    private String imageName;
 
     public OrderItemDTO(OrderItem orderItem) {
         if (orderItem != null) {
@@ -26,6 +30,10 @@ public class OrderItemDTO {
             this.itemId = (orderItem.getItem() != null) ? orderItem.getItem().getId() : null;
             this.itemOptionId = (orderItem.getItemOption() != null) ? orderItem.getItemOption().getId() : null;
             this.orderId = (orderItem.getOrder() != null) ? orderItem.getOrder().getId() : null;
+            this.optionName = (orderItem.getItemOption().getOptionName() != null) ? orderItem.getItemOption().getOptionName() : null;
+            this.optionValue = (orderItem.getItemOption().getOptionValue() != null) ? orderItem.getItemOption().getOptionValue() : null;
+            this.itemImageId = (orderItem.getItemImage() != null) ? orderItem.getItemImage().getId() : null;
+            this.imageName = (orderItem.getItemImage().getFileName() != null) ? orderItem.getItemImage().getFileName() : null;
         }
     }
     

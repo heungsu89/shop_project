@@ -11,6 +11,6 @@ public interface ItemOptionRepository extends JpaRepository<ItemOption, Long> {
     List<ItemOption> findByItemId(Long itemId);
 
     // ItemOption 조회
-    @Query("SELECT io FROM ItemOption io WHERE io.itemId IN :itemIds")
+    @Query("SELECT io FROM ItemOption io WHERE io.itemId IN :itemIds ORDER BY io.id DESC")
     List<ItemOption> findByItemIds(@Param("itemIds") List<Long> itemIds);
 }

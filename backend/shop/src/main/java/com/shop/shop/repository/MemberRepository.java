@@ -17,22 +17,22 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 권한과 함께 회원 조회
     @EntityGraph(attributePaths = {"memberRoleList"})
-    @Query("select m from Member m where m.email = :email AND m.delFlag = false")
+    @Query("select m from Member m where m.email = :email AND m.delFlag = false ORDER BY m.id DESC")
     Member getWithRoles(@Param("email") String email);
 
     // 권환과 함께 회원 조회(페이징)
     @EntityGraph(attributePaths = {"memberRoleList"})
-    @Query("select m from Member m")
+    @Query("select m from Member m ORDER BY m.id DESC")
     Page<Member> findAllMemberPage(Pageable pageable);
 
     // 이메일로 조회
 //    @EntityGraph(attributePaths = {"memberRoleList"})
-    @Query("select m from Member m where m.email = :email AND m.delFlag = false")
+    @Query("select m from Member m where m.email = :email AND m.delFlag = false ORDER BY m.id DESC")
     Member findByEmail(@Param("email") String email);
 
     // 이름으로 회원 조회
     @EntityGraph(attributePaths = {"memberRoleList"})
-    @Query("select m from Member m where m.memberName = :memberName AND m.delFlag = false")
+    @Query("select m from Member m where m.memberName = :memberName AND m.delFlag = false ORDER BY m.id DESC")
     List<Member> findAllByMemberName(@Param("memberName") String memberName);
 
     // 회원 여부 검사

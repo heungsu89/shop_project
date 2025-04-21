@@ -261,6 +261,7 @@ public class MemberServiceImpl implements MemberService {
 
         searchMember.changePassword(memberDTO.getPassword());
         searchMember.changePhoneNumber(memberDTO.getPhoneNumber());
+        searchMember.changeMemberName(memberDTO.getMemberName());
         searchMember.changeWtrSns(memberDTO.isWtrSns());
         searchMember.changeStockMileage(memberDTO.getStockMileage()); // 마일리지 값은 항상 존재
         // 수정 페이지에서 마일리지 잔고를 수정 가능하며 기본값은 현재 마일리지로 값이 대입되어 있어야함

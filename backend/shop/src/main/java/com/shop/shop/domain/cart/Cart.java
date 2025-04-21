@@ -36,7 +36,7 @@ public class Cart {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_image_id")
-    private ItemImage itemImage; // 선택한 옵션을 저장
+    private ItemImage itemImage; // 선택한 이미지를 저장
 
     private int qty;
 

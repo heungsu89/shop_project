@@ -1,6 +1,7 @@
 package com.shop.shop.controller;
 
 import com.shop.shop.domain.category.Category;
+import com.shop.shop.domain.category.CategoryItem;
 import com.shop.shop.domain.item.Item;
 import com.shop.shop.dto.CategoryDTO;
 import com.shop.shop.dto.CategoryItemDTO;
@@ -47,12 +48,12 @@ public class CategoryController {
 
     // 카테고리 모두 조회(페이징)
     @GetMapping("/listPage")
-    public ResponseEntity<Page<List<Category>>> getAllCategoryWithPage(
+    public ResponseEntity<Page<Category>> getAllCategoryWithPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<List<Category>> category = categoryService.getAllCategory(pageable);
+        Page<Category> category = categoryService.getAllCategory(pageable);
         return ResponseEntity.ok(category);
     }
 
@@ -111,4 +112,29 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    // 모든 카테고리 상품 조회(페이징)
+    @GetMapping("/categoryItemPage")
+    public ResponseEntity<Page<CategoryItemDTO>> getAllCategoryItem(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CategoryItemDTO> categoryItemDTOPage = categoryItemService.getAllCategoryItem(pageable);
+        return ResponseEntity.ok(categoryItemDTOPage);
+    }
+
+    // 특정 카테고리 상품 조회(페이징)
+    @GetMapping("/categoryItemPage/{id}")
+    public ResponseEntity<Page<CategoryItemDTO>> getALLCategoryItemById(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CategoryItemDTO> categoryItemDTOPage = categoryItemService.getAllItemsFromCategoryItem(pageable, id);
+        return ResponseEntity.ok(categoryItemDTOPage);
+    }
+
+
 }

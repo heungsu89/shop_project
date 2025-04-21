@@ -8,6 +8,7 @@ public class MemberModifyDTO {
 
     private String email;
     private String password;
+    private String memberName;
     private String phoneNumber;
     private boolean wtrSns;
     private String zip_code;

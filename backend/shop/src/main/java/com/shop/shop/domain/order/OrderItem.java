@@ -2,6 +2,7 @@ package com.shop.shop.domain.order;
 
 import com.shop.shop.domain.cart.Cart;
 import com.shop.shop.domain.item.Item;
+import com.shop.shop.domain.item.ItemImage;
 import com.shop.shop.domain.item.ItemOption;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,12 +33,16 @@ public class OrderItem {
     @JoinColumn(name = "item_option_id")
     private ItemOption itemOption;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_image_id")
+    private ItemImage itemImage;
+
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
     // 주문상품 생성
-    public static OrderItem createdOrderItem(int qty, Item item, Order order, ItemOption itemOption) {
+    public static OrderItem createdOrderItem(int qty, Item item, Order order, ItemOption itemOption, ItemImage itemImage) {
         OrderItem orderItem = new OrderItem();
         int orderPrice = item.getPrice() * qty;
 
@@ -45,6 +50,7 @@ public class OrderItem {
         orderItem.changeQty(qty);
         orderItem.changeItem(item);
         orderItem.changeItemOption(itemOption);
+        orderItem.changeItemImage(itemImage);
         orderItem.changeOrder(order);
 
         itemOption.removeStock(qty);
@@ -60,6 +66,7 @@ public class OrderItem {
         orderItem.changeQty(cart.getQty());
         orderItem.changeItem(cart.getItem());
         orderItem.changeItemOption(cart.getItemOption());
+        orderItem.changeItemImage(cart.getItemImage());
         orderItem.changeOrder(order);
 
         cart.getItemOption().removeStock(cart.getQty());
@@ -120,6 +127,11 @@ public class OrderItem {
     // itemOption 수정
     public void changeItemOption(ItemOption itemOption) {
         this.itemOption = itemOption;
+    }
+
+    // itemImage 수정
+    public void changeItemImage(ItemImage itemImage) {
+        this.itemImage = itemImage;
     }
 
 }

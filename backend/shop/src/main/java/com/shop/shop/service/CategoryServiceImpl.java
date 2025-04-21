@@ -93,8 +93,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     // 모든 카테고리 페이징 조회 - 목록+이미지
     @Override
-    public Page<List<Category>> getAllCategory(Pageable pageable) {
-        Page<List<Category>> categoryPage = categoryRepository.findAllParentCategoryWithPage(pageable);
+    public Page<Category> getAllCategory(Pageable pageable) {
+        Page<Category> categoryPage = categoryRepository.findAllParentCategoryWithPage(pageable);
 
         return categoryPage;
     }

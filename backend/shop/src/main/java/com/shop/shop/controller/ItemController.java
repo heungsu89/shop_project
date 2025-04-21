@@ -2,12 +2,14 @@ package com.shop.shop.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shop.shop.domain.cart.WishList;
+import com.shop.shop.domain.category.Category;
 import com.shop.shop.domain.category.CategoryItem;
 import com.shop.shop.domain.item.Item;
 import com.shop.shop.dto.CategoryDTO;
 import com.shop.shop.dto.CategoryItemDTO;
 import com.shop.shop.dto.ItemDTO;
 import com.shop.shop.dto.WishListDTO;
+import com.shop.shop.repository.CategoryRepository;
 import com.shop.shop.repository.WishListRepository;
 import com.shop.shop.service.*;
 import com.shop.shop.util.CustomFileUtil;
@@ -34,6 +36,7 @@ public class ItemController {
 
     private final CustomFileUtil fileUtil;
     private final ItemService itemService;
+    private final CategoryRepository categoryRepository;
     private final CategoryItemService categoryItemService;
     private final ItemServiceImpl itemServiceImpl;
 
@@ -99,6 +102,10 @@ public class ItemController {
             // JSON 을 ItemDTO 로 변환
             ObjectMapper objectMapper = new ObjectMapper();
             ItemDTO itemDTO = objectMapper.readValue(itemJson, ItemDTO.class);
+            if (categoryId == null) {
+                throw new RuntimeException("등록하려는 카테고리Id를 입력해주세요.");
+            }
+            Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("해당 카테고리를 찾을 수 없습니다."));
 
             // 파일 처리
             if (files != null && !files.isEmpty()) {

@@ -3,7 +3,10 @@ package com.shop.shop.service;
 import com.shop.shop.domain.cart.Cart;
 import com.shop.shop.domain.delivery.Delivery;
 import com.shop.shop.domain.delivery.DeliveryStatus;
+import com.shop.shop.domain.item.ItemOption;
 import com.shop.shop.domain.member.Member;
+import com.shop.shop.domain.member.MemberRole;
+import com.shop.shop.domain.member.MemberShip;
 import com.shop.shop.domain.order.Order;
 import com.shop.shop.domain.order.OrderItem;
 import com.shop.shop.domain.order.OrderStatus;
@@ -37,10 +40,10 @@ public class OrderServiceImpl implements OrderService {
         Member member = memberRepository.findById(orderDTO.getMemberId())
                 .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
         List<Cart> cartList = cartRepository.findAllCartListByMemberId(orderDTO.getMemberId());
+//        ItemOption itemOption = itemOptionRepository.findById()
         if (cartList == null || cartList.isEmpty()) {
             throw new RuntimeException("장바구니에 상품이 없습니다.");
         }
-        System.out.println("CartList: " + cartList);
 
         Delivery delivery = new Delivery();
         if (orderDTO.getPaymentMethod() == PaymentMethod.CARD) {
@@ -74,22 +77,31 @@ public class OrderServiceImpl implements OrderService {
         // 먼저 order를 저장한 후, order의 id를 참조하는 orderItem 저장
         Order savedOrder = orderRepository.save(order); // order의 id가 생성된 후에 orderItem 저장 가능
 
+        int totalAmount = 0;
         List<OrderItem> orderItemList = new ArrayList<>();
         for (Cart cart : cartList) {
-//            ItemOption itemOption = itemOptionRepository.findById(cart.getItemOption().getId()).orElseThrow(() -> new RuntimeException("해당 옵션을 찾을 수 없습니다."));
             OrderItem orderItem = new OrderItem();
-            orderItem.changeOrderPrice(cart.getItem().getPrice() * cart.getQty());
+            orderItem.changeOrderPrice(cart.getItemOption().getOptionPrice() * cart.getQty());
             orderItem.changeQty(cart.getQty());
             orderItem.changeItem(cart.getItem());
             orderItem.changeItemOption(cart.getItemOption());
+            orderItem.changeItemImage(cart.getItemImage());
             orderItem.changeOrder(savedOrder);
             OrderItem savedOrderItem = orderItemRepository.save(orderItem);
             orderItem.getItemOption().removeStock(cart.getQty());
             orderItemList.add(savedOrderItem);
+            totalAmount += cart.getItemOption().getOptionPrice() * cart.getQty();
         }
 
+        order.changeTotalAmount(totalAmount);
+
         // Order와 OrderItem을 함께 저장
-        Order saved1Order = orderRepository.save(savedOrder);  // Order와 연관된 OrderItem들이 함께 저장됩니다.
+        Order saved1Order = orderRepository.save(savedOrder);
+
+//        System.out.println(member.getMemberShip());
+//        switch (member.getMemberShip()) {
+//
+//        }
 
         return new OrderDTO(saved1Order, orderItemList);
     }

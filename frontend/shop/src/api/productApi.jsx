@@ -8,6 +8,7 @@ export const productList = async(page,size)=>{
     const s = size ? size : 5;
     try{
         const res = await axios.get(`${host}/listPage?page=${p}&size=${s}`);
+        console.log(res.data);
         return res.data;
     }catch(error){
         throw error;

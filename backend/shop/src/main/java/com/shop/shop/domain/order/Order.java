@@ -83,6 +83,10 @@ public class Order {
         this.recipient_detailed_address = recipient_detailed_address;
     }
 
+    public void changeTotalAmount(int totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
     public void changeOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }

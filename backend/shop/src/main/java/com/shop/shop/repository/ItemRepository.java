@@ -18,12 +18,12 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     // item 기본정보 + 이미지 목록 (옵션x)
     @EntityGraph(attributePaths = {"images"})
-    @Query("SELECT i FROM Item i WHERE i.delFlag = false")
+    @Query("SELECT i FROM Item i WHERE i.delFlag = false ORDER BY i.id DESC")
     // 삭제 된거 제외
     Page<Item> findAllWithImages(Pageable pageable);
 
     // ItemInfo (ElementCollection) 조회
-    @Query("SELECT i.id, ii.infoKey, ii.infoValue FROM Item i JOIN i.info ii WHERE i.id IN :itemIds")
+    @Query("SELECT i.id, ii.infoKey, ii.infoValue FROM Item i JOIN i.info ii WHERE i.id IN :itemIds ORDER BY i.id DESC")
     List<Object[]> findInfoByItemIds(@Param("itemIds") List<Long> itemIds);
 
 //    // 아이템 이미지, 옵션을 함께 불러오는 메서드

@@ -58,6 +58,7 @@ public class ItemServiceImpl implements ItemService {
                 .delFlag(false)
                 .dueDate(LocalDateTime.now())
                 .salesVolume(0)
+                .categoryId(categoryId)
                 .build();
 
         // 아이템 저장
