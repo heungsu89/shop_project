@@ -10,7 +10,7 @@ const Privacy = lazy(() => import("../Pages/footer/PrivacyPolicyPage"));
 const Terms =  lazy(() => import("../Pages/footer/TermsPage"));
 const Shop = lazy(()=>import("../Pages/shop/ItemListPage"))
 const CategoryPage = lazy(() => import("../Pages/shop/CategoryPage"));
-
+const CategorCopyPage = lazy(() => import("../Pages/shop/CategoryCopyPage"));
 // 🔸 이건 라우터 설정만 담은 객체
 const rootRouter = createBrowserRouter([
   {
@@ -27,6 +27,10 @@ const rootRouter = createBrowserRouter([
       {
         path: "category/:categoryId", // /shop/category/123
         element: <Suspense fallback={Loading}><CategoryPage/></Suspense>
+      },
+      {
+        path: "categoryCopy/:categoryId", // /shop/category/123
+        element: <Suspense fallback={Loading}><CategorCopyPage/></Suspense>
       }
     ]
   },
