@@ -16,7 +16,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     // 모든 부모 카테고리 조회
     @EntityGraph(attributePaths = {"child"})
-    @Query("SELECT c FROM Category c WHERE c.parent IS NULL AND c.viewStatus = false")
+    @Query("SELECT c FROM Category c WHERE c.parent IS NULL AND c.viewStatus = false ORDER BY c.id DESC")
     List<Category> findAllParentCategory();
 
     // 모든 부모 카테고리 조회 (페이징)

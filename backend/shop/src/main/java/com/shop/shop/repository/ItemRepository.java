@@ -23,7 +23,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     Page<Item> findAllWithImages(Pageable pageable);
 
     // ItemInfo (ElementCollection) 조회
-    @Query("SELECT i.id, ii.infoKey, ii.infoValue FROM Item i JOIN i.info ii WHERE i.id IN :itemIds ORDER BY i.id DESC")
+    @Query("SELECT i.id, ii.infoKey, ii.infoValue FROM Item i JOIN i.info ii WHERE i.id IN :itemIds")
     List<Object[]> findInfoByItemIds(@Param("itemIds") List<Long> itemIds);
 
 //    // 아이템 이미지, 옵션을 함께 불러오는 메서드1
