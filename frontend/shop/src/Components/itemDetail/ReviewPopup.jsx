@@ -63,7 +63,7 @@ const ReviewPopup = ({ onClose, onSave }) => {
           <div className="imagePreview">
             {images.map((image, index) => (
               <div key={index} className="previewImage">
-                <img src={image} alt={`preview-${index}`} style={{ maxWidth: '50px', maxHeight: '50px' }} />
+                <img src={image} alt={`preview-${index}`} />
               </div>
             ))}
           </div>

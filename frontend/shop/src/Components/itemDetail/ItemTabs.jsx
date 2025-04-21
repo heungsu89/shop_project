@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import ItemShippingRefund from '../../Pages/shop/ItemShippingRefund';
 import ItemQnA from '../../Pages/shop/ItemQnA'
+import ItemDetails from '../../Pages/shop/ItemDetails';
+import ItemReview from '../../Pages/shop/ItemReview';
 
 const ItemTabs = () => {
   const [activeTab, setActiveTab] = useState('DETAILS');
@@ -39,10 +41,10 @@ const ItemTabs = () => {
       </div>
 
       <div className="tabContent">
-        {activeTab === 'DETAILS' && <ItemDetails />}
-        {activeTab === 'REVIEWS' && <ItemReviews />}
-        {activeTab === 'Q&A' && <ItemQnA />}
-        {activeTab === 'SHIPPING & REFUNDS' && <ItemShippingRefund />}
+        {activeTab === 'DETAILS' && <ItemDetails/>}
+        {activeTab === 'REVIEWS' && <ItemReview/>}
+        {activeTab === 'Q&A' && <ItemQnA/>}
+        {activeTab === 'SHIPPING & REFUNDS' && <ItemShippingRefund/>}
       </div>
     </div>
   )
