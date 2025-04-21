@@ -56,9 +56,7 @@ const Header = ({ isMypage }) => {
 
         <nav className="gnb">
           <ul className="cartegory">
-            {categories
-              .filter(cat => cat.categoryName !== '테스트') // "테스트" 카테고리 필터링
-              .map((cat) => (
+            {categories.map((cat) => (
                 <li key={cat.id}>
                   <Link to={`/shop/category/${cat.id}`}>{cat.categoryName}</Link>
                 </li>
