@@ -5,6 +5,7 @@ import Pagination from "../../../Pagination";
 import defaultImg from "../../../../static/images/default.png";
 import { useSearchParams } from 'react-router-dom';
 import { getFormattedPrice } from "../../../../util/priecUtil";
+import { formatDateToDot } from "../../../../util/dateUtil";
 
 const MileageComponent = () => {
   const { id } = useParams();
@@ -38,7 +39,10 @@ const handleChange = (id) => {
                         <tr className="itemTr">
                             <th className="itemNumber">번호</th>
                             <th className="itemInfo">상품</th>
+                            <th className="itemDiscountRate">할인율</th>
                             <th className="itemPriceInfo">가격</th>
+                            <th className="itemTotalScore">평점</th>
+                            <th className="itemDate">등록일</th>
                             <th className='itemWish'>관심</th>
                         </tr>
                     </thead>
@@ -65,9 +69,23 @@ const handleChange = (id) => {
                                         <p className="itemName">{item.itemName}</p>
                                     </div>
                                   </td>
-                                  <td className="itemPriceInfo">{
-                                    getFormattedPrice(item.itemPrice, 0).discounted
-                                    }KRE</td>
+                                  <td className="itemDiscountRate">{item.itemDiscountRate}%</td>
+                                  <td className="itemPriceInfo">{item.discountRate > 0 ? (
+                                        <>
+                                        <span className="itemOriginalPrice">
+                                            {getFormattedPrice(item.itemPrice, 0).original}원
+                                        </span>
+                                        <span className="itemPrice">
+                                            {getFormattedPrice(item.itemPrice, item.itemDiscountRate).discounted}원
+                                        </span>
+                                        </>
+                                    ) : (
+                                        <span className="itemPrice">
+                                        {getFormattedPrice(item.itemPrice, 0).original}원
+                                        </span>
+                                    )}</td>
+                                  <td className="itemTotalScore">{item.itemScore}</td>
+                                  <td className="itemDate">{formatDateToDot(item.dueDate)}</td>
                                   <td className='itemWish'>
                                     <button type="button" className='btn' onClick={handleChange(item.wishListId)}>관심해제</button>
                                   </td>
@@ -76,7 +94,7 @@ const handleChange = (id) => {
                         })
                         ) : (
                             <tr>
-                                <td colSpan={4}>관심으로 등록한 상품이 없습니다.</td>
+                                <td colSpan={7}>관심으로 등록한 상품이 없습니다.</td>
                             </tr>
                         )}
                     </tbody>

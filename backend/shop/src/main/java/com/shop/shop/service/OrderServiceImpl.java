@@ -34,11 +34,22 @@ public class OrderServiceImpl implements OrderService {
     private final ItemOptionRepository itemOptionRepository;
     private final MileageService mileageService;
 
+    // 주문서 작성준비
+    @Override
+    public OrderDTO preparingOrder(OrderDTO orderDTO) {
+//        Member member = memberRepository.findById(orderDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+//        List<Cart> cartList = cartRepository.findAllCartListByMemberId(orderDTO.getMemberId());
+//        if (cartList == null || cartList.isEmpty()) {
+//            throw new RuntimeException("장바구니에 상품이 없습니다.");
+//        }
+//        order
+        return null;
+    }
+
     // 주문서 작성(등록)
     @Override
     public OrderDTO createOrder(OrderDTO orderDTO) {
-        Member member = memberRepository.findById(orderDTO.getMemberId())
-                .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+        Member member = memberRepository.findById(orderDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
         List<Cart> cartList = cartRepository.findAllCartListByMemberId(orderDTO.getMemberId());
         if (cartList == null || cartList.isEmpty()) {
             throw new RuntimeException("장바구니에 상품이 없습니다.");
