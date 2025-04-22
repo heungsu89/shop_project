@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import Pagination from "../../../Pagination";
 import defaultImg from "../../../../static/images/default.png";
 import { useSearchParams } from 'react-router-dom';
+import { getFormattedPrice } from "../../../../util/priecUtil";
 
 const MileageComponent = () => {
   const { id } = useParams();
@@ -21,50 +22,33 @@ const MileageComponent = () => {
     wishList(id,page,size).then(setData);
   }
   
+const handleChange = (id) => {
+    
+}
+
+  
   return(
     <>
-    <h2 className="pageTitle">마일리지</h2>
+    <h2 className="pageTitle">관심상품</h2>
     <div className="pageContainer">
-        <div>
-
-        </div>
-        <div className="borderSection filter">
-            <div className='inputWrap'>
-                <div className="inputBox">
-                    <input name=""
-                    // value={form.categoryName}
-                    // onChange={handleChange}
-                    placeholder="시작일"
-                    type="text"
-                    />
-                    ~
-                    <input name=""
-                    // value={form.categoryName}
-                    // onChange={handleChange}
-                    placeholder="종료일"
-                    type="text"
-                    />
-                    <button className="btn black" type="button">검색</button>
-                </div>
-            </div>
-        </div>
         <div className="tablePage">
             <div className="itemTableWrap">
                 <table className="itemTable">
                     <thead className="itemThead">
                         <tr className="itemTr">
-                            <th className="itemDate">일자</th>
-                            <th className="itemInfo">주문</th>
-                            <th className="itemMileage">적립&사용</th>
-                            <th className="itemMileage">마일리지</th>
+                            <th className="itemNumber">번호</th>
+                            <th className="itemInfo">상품</th>
+                            <th className="itemPriceInfo">가격</th>
+                            <th className='itemWish'>관심</th>
                         </tr>
                     </thead>
                     <tbody className="itemTbody">
                     {wishData?.content?.length > 0 ? (
                         wishData.content.map((item, index) => {
+                            const displayIndex = wishData.totalElements - (page * size + index);
                             return (
                                 <tr className="itemTr" key={item.id}>
-                                  <td className="itemDate">일자</td>
+                                  <td className="itemNumber">{displayIndex}</td>
                                   <td className="itemInfo">
                                     <div className="itemImg">
                                         <img
@@ -77,18 +61,22 @@ const MileageComponent = () => {
                                         />
                                     </div>
                                     <div className="itemDetailInfo">
-                                        <p>{item.itemName}</p>
-                                        <p className="itemPrice">{item.itemPrice}</p>
+                                        <p>상품 아이디 : {item.itemId}</p>
+                                        <p className="itemName">{item.itemName}</p>
                                     </div>
                                   </td>
-                                  <td className="itemMileage">적립&사용</td>
-                                  <td className="itemMileage">마일리지</td>
+                                  <td className="itemPriceInfo">{
+                                    getFormattedPrice(item.itemPrice, 0).discounted
+                                    }KRE</td>
+                                  <td className='itemWish'>
+                                    <button type="button" className='btn' onClick={handleChange(item.wishListId)}>관심해제</button>
+                                  </td>
                                 </tr>
                             );
                         })
                         ) : (
                             <tr>
-                                <td colSpan={4}>마일리지 적립 및 사용 이력이 없습니다.</td>
+                                <td colSpan={4}>관심으로 등록한 상품이 없습니다.</td>
                             </tr>
                         )}
                     </tbody>

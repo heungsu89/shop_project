@@ -92,6 +92,7 @@ $tbw140 : 140px;
           &.deleted{color: var(--Pointer);}
           &.active{color: var(--slate-blue);}
         }
+        .itemWish{width: $tbw140;flex:0 0 $tbw140;}
       }
     }
   }

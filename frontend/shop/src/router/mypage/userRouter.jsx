@@ -5,7 +5,9 @@ const UserMainPage = lazy(() => import("../../Pages/myPage/user/UserMainPage"));
 const OrderComponent = lazy(() => import("../../Components/mypage/user/order/OrderComponent"));
 const InquiryComponent = lazy(() => import("../../Components/mypage/user/inquiry/InquiryComponent"));
 const MileageComponent = lazy(() => import("../../Components/mypage/user/mileage/MileageComponent"));
+const MileageListComponent = lazy(() => import("../../Components/mypage/user/mileage/MileageListComponent"));
 const WishCompoent = lazy(() => import("../../Components/mypage/user/wish/WishCompoent"));
+const WishListCompoent = lazy(() => import("../../Components/mypage/user/wish/WishListCompoent"));
 const ProfileComponent = lazy(() => import("../../Components/mypage/user/profile/ProfileComponent"));
 
 
@@ -30,19 +32,31 @@ const uesrRouter = () => {
                     ),
                 },
                 {
-                    path: "mileage",
+                    path: "mileage/:id",
                     element: (
                         <Suspense fallback={<Loading />}><MileageComponent /></Suspense>
                     ),
+                    children: [
+                        {
+                            index: true,  // <- 기본 라우트
+                            element: <Suspense fallback={<Loading />}><MileageListComponent /></Suspense>
+                        },
+                    ]
                 },
                 {
-                    path: "wish",
+                    path: "wish/:id",
                     element: (
                         <Suspense fallback={<Loading />}><WishCompoent /></Suspense>
                     ),
+                    children: [
+                        {
+                            index: true,  // <- 기본 라우트
+                            element: <Suspense fallback={<Loading />}><WishListCompoent /></Suspense>
+                        },
+                    ]
                 },
                 {
-                    path: "profile",
+                    path: "profile/:id",
                     element: (
                         <Suspense fallback={<Loading />}><ProfileComponent /></Suspense>
                     ),

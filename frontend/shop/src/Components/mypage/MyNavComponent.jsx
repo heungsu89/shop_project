@@ -48,14 +48,14 @@ const MyNav = ({ memberInfo }) => {
         </div>
           <nav className="userNav">
             <ul>
-              <li><NavLink to="order">주문</NavLink></li>
-              <li><NavLink to="inquiry">문의</NavLink></li>
-              <li><NavLink to={`product${pageParam}`}>상품</NavLink></li>
-              <li><NavLink to="category">분류</NavLink></li>
-              <li><NavLink to="member">회원</NavLink></li>
-              <li><NavLink to="event">이벤트</NavLink></li>
-              <li><NavLink to="magazine">메거진</NavLink></li>
-              <li><NavLink to="adminInfo">관리자정보</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="order">주문</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="inquiry">문의</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`product/${pageParam}`}>상품</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="category">분류</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="member">회원</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="event">이벤트</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="magazine">메거진</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="adminInfo">관리자정보</NavLink></li>
             </ul>
           </nav>
         </div>
@@ -68,11 +68,11 @@ const MyNav = ({ memberInfo }) => {
           </div>
             <nav className="userNav">
               <ul>
-                <li><NavLink to="order">주문</NavLink></li>
-                <li><NavLink to="inquiry">문의</NavLink></li>
-                <li><NavLink to="mileage">마일리지</NavLink></li>
-                <li><NavLink to="wish">관심상품</NavLink></li>
-                <li><NavLink to="profile">개인정보</NavLink></li>
+                <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="order">주문</NavLink></li>
+                <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="inquiry">문의</NavLink></li>
+                <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`mileage/${userInfo?.memberId}?page=0&size=10`}>마일리지</NavLink></li>
+                <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`wish/${userInfo?.memberId}?page=0&size=10`}>관심상품</NavLink></li>
+                <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`profile/${userInfo?.memberId}`}>개인정보</NavLink></li>
               </ul>
             </nav>
           </div>

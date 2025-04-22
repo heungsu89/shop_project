@@ -3,14 +3,10 @@ import { NavLink } from "react-router-dom";
 
 const OrderListComponent =()=>{
     return(
-        <div>
-            <h2>주문</h2>
-            <div>
-                <div className="filter">
-                    
-                </div>
-            </div>
-        </div>
+        <>
+        <h2 className="pageTitle">주문</h2>
+        <div className="pageContainer"></div>
+        </>
     )
 }
 export default OrderListComponent;

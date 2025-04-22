@@ -3,6 +3,7 @@ import { Suspense, lazy } from "react";
 const Loading = () => <div>Loading....</div>;
 
 const AdminMainPage = lazy(() => import("../../Pages/myPage/admin/AdminMainPage"));
+const OrderComponent = lazy(() => import("../../Components/mypage/admin/order/OrderComponent"));
 const OrderListComponent = lazy(() => import("../../Components/mypage/admin/order/OrderListComponent"));
 const ProductComponent = lazy(() => import("../../Components/mypage/admin/product/ProductComponent"));
 const ProductListComponent = lazy(()=>import("../../Components/mypage/admin/product/ProductListComponent"));
@@ -12,6 +13,7 @@ const MemberListCompenet = lazy(() => import("../../Components/mypage/admin/memb
 const MemberModifyCompoenet = lazy(() => import("../../Components/mypage/admin/member/MemberModifyCompoenet"));
 const CategoryCompoenet = lazy(() => import("../../Components/mypage/admin/category/CategoryCompoenet"));
 const BoardListComponent = lazy(() => import("../../Components/mypage/admin/board/BoardListComponent"));
+const InquiryComponent = lazy(() => import("../../Components/mypage/admin/inquiry/InquiryCompoenet"));
 const InquiryListComponent = lazy(() => import("../../Components/mypage/admin/inquiry/InquiryListCompoenet"));
 
 const adminRouter = () => {
@@ -25,8 +27,14 @@ const adminRouter = () => {
         {
           path: "order",
           element: (
-            <Suspense fallback={<Loading />}><OrderListComponent /></Suspense>
+            <Suspense fallback={<Loading />}><OrderComponent /></Suspense>
           ),
+          children: [
+            {
+              index: true,  // <- 기본 라우트
+              element: <Suspense fallback={<Loading />}><OrderListComponent /></Suspense>
+            },
+          ]
         },
         {
           path: "product",
@@ -93,8 +101,14 @@ const adminRouter = () => {
         {
           path: "inquiry",
           element: (
-            <Suspense fallback={<Loading />}><InquiryListComponent /></Suspense>
+            <Suspense fallback={<Loading />}><InquiryComponent /></Suspense>
           ),
+          children: [
+            {
+              index: true,  // <- 기본 라우트
+              element: <Suspense fallback={<Loading />}><InquiryListComponent /></Suspense>
+            },
+          ]
         },
       ],
     },
