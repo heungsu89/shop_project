@@ -105,7 +105,6 @@ const MemberModifyComponent = () => {
                 <option value="SILVER">SILVER</option>
                 <option value="GOLD">GOLD</option>
                 <option value="PLATINUM">PLATINUM</option>
-                <option value="EMERALD">EMERALD</option>
               </select>
             </div>
 
