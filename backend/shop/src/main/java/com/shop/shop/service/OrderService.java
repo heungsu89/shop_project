@@ -9,9 +9,11 @@ import java.util.List;
 
 public interface OrderService {
 
+
     public List<OrderDTO> findAllByMemberId(Long memberId);
     public Page<OrderDTO> findAllByMemberId(Pageable pageable, Long memberId);
     public OrderDTO findByDeliveryId(Long deliveryId);
+    public OrderDTO preparingOrder(OrderDTO orderDTO);
     public OrderDTO createOrder(OrderDTO orderDTO);
     public List<OrderDTO> findByDuringPeriod(LocalDateTime orderDate1, LocalDateTime orderDate2);
     public Page<OrderDTO> findByDuringPeriod(Pageable pageable, LocalDateTime orderDate1, LocalDateTime orderDate2);
