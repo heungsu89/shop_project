@@ -4,6 +4,7 @@ import com.shop.shop.domain.delivery.Delivery;
 import com.shop.shop.domain.item.ItemImage;
 import com.shop.shop.domain.item.ItemOption;
 import com.shop.shop.domain.member.Member;
+import com.shop.shop.domain.member.MileageStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +34,11 @@ public class Order {
 
     private LocalDateTime orderDate;
     private int totalAmount;
+
+    @Enumerated(EnumType.STRING)
+    private MileageStatus mileageStatus;
+
+    private int mileageAmount;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;

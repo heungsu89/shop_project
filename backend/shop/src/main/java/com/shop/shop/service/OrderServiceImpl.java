@@ -77,49 +77,60 @@ public class OrderServiceImpl implements OrderService {
         Order savedOrder = orderRepository.save(order); // order의 id가 생성된 후에 orderItem 저장 가능
 
         int totalAmount = 0;
+        int totalDiscountAmount = 0;
         List<OrderItem> orderItemList = new ArrayList<>();
         for (Cart cart : cartList) {
             OrderItem orderItem = new OrderItem();
             orderItem.changeOrderPrice(cart.getItemOption().getOptionPrice() * cart.getQty());
             orderItem.changeQty(cart.getQty());
+            orderItem.changeDiscountRate(cart.getItem().getDiscountRate());
+            orderItem.changeDiscountPrice((int)((cart.getItemOption().getOptionPrice() * cart.getQty()) * (1 - (cart.getItem().getDiscountRate() / 100))));
             orderItem.changeItem(cart.getItem());
             orderItem.changeItemOption(cart.getItemOption());
-            orderItem.changeItemImage(cart.getItemImage());
+            orderItem.changeItemImage((cart.getItemImage() != null) ? cart.getItemImage() : null);
             orderItem.changeOrder(savedOrder);
             OrderItem savedOrderItem = orderItemRepository.save(orderItem);
             orderItem.getItemOption().removeStock(cart.getQty());
             orderItemList.add(savedOrderItem);
             totalAmount += cart.getItemOption().getOptionPrice() * cart.getQty();
+            totalDiscountAmount += (int)((cart.getItemOption().getOptionPrice() * cart.getQty()) * (1 - (cart.getItem().getDiscountRate() / 100)));
         }
-
         order.changeTotalAmount(totalAmount);
 
         // Order와 OrderItem을 함께 저장
         Order saved1Order = orderRepository.save(savedOrder);
 
-        System.out.println(member.getMemberShip());
-        int mileageAmount;
+        int addMileageAmount;
         switch (member.getMemberShip()) {
-            case BRONZE : mileageAmount = (int)(totalAmount * 0.01);
-            case SILVER : mileageAmount = (int)(totalAmount * 0.02);
-            case GOLD : mileageAmount = (int)(totalAmount * 0.03);
-            case PLATINUM : mileageAmount = (int)(totalAmount * 0.05);
-            default : mileageAmount = 0;
+            case BRONZE: addMileageAmount = (int) (totalDiscountAmount * 0.01); break;
+            case SILVER: addMileageAmount = (int) (totalDiscountAmount * 0.02); break;
+            case GOLD: addMileageAmount = (int) (totalDiscountAmount * 0.03); break;
+            case PLATINUM: addMileageAmount = (int) (totalDiscountAmount * 0.05); break;
+            default: addMileageAmount = 0; break;
         }
+        // 마일리지 내역 생성
+        createMileageByMemberShip(addMileageAmount, member, order);
 
-        // 마일리지 상태에 따라 추가 / 사용
-        createMileageByMemberShip(mileageAmount, orderDTO.getMileageStatus(), member, order);
+        // 마일리지 상태가 REDEEM(사용)이라면
+        if (orderDTO.getMileageStatus() == MileageStatus.REDEEM) {
+            Member memberMileage = memberRepository.findById(orderDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+            if (order.getMileageAmount() <= memberMileage.getStockMileage()) {
+                memberMileage.minusMileage(order.getMileageAmount());
+            } else {
+                throw new RuntimeException("마일리지 보유량이 부족합니다.");
+            }
+        }
 
         return new OrderDTO(saved1Order, orderItemList);
     }
 
     // 회원 등급별 마일리지 생성
-    public void createMileageByMemberShip(int amount, MileageStatus mileageStatus, Member member, Order order) {
+    public void createMileageByMemberShip(int amount, Member member, Order order) {
 
         // 마일리지 수치 설정
         Mileage mileage = Mileage.builder()
                 .amount(amount)
-                .mileageStatus(mileageStatus)
+                .mileageStatus(MileageStatus.NO_REDEEM)
                 .mileageDate(LocalDateTime.now())
                 .member(member)
                 .order(order)
@@ -127,16 +138,9 @@ public class OrderServiceImpl implements OrderService {
         // 마일리지 내역 생성
         mileageService.createMileage(new MileageDTO(mileage));
 
-        // 마일리지 상태가 사용(EARN)이면 마일리지 추가 / 사용(REDEEM)면 마일리지 감소
-        if (mileageStatus == MileageStatus.EARN) {
-            member.addMileage(amount);
-            memberRepository.save(member);
-        } else if (mileageStatus == MileageStatus.REDEEM) {
-            member.minusMileage(amount);
-            memberRepository.save(member);
-        } else {
-            throw new RuntimeException("올바른 마일리지 상태가 아닙니다.");
-        }
+        // 회원 마일리지량 증가
+        member.addMileage(amount);
+        memberRepository.save(member);
     }
 
     // 회원 이메일로 주문 모두 조회

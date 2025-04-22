@@ -8,6 +8,7 @@ import com.shop.shop.domain.member.Member;
 import jakarta.persistence.Column;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -24,6 +25,9 @@ public class WishListDTO {
     private Long itemId;
     private String itemName;
     private int itemPrice;
+    private int itemDiscountRate;
+    private float itemScore;
+    private LocalDateTime dueDate;
     private String itemImage;
 
     private Long[] deleteId;
@@ -36,6 +40,9 @@ public class WishListDTO {
         this.itemId = item.getId();
         this.itemName = item.getName();
         this.itemPrice = item.getPrice();
+        this.itemDiscountRate = item.getDiscountRate();
+        this.itemScore = item.getTotalScore();
+        this.dueDate = item.getDueDate();
         this.itemImage = extractItemImage(item);
     }
 
