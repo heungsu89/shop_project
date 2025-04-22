@@ -50,8 +50,10 @@ public class CustomSecurityConfig {
                         .requestMatchers("/api/wish/**").permitAll()
                         .requestMatchers("/api/order/**").permitAll()
                         .requestMatchers("/api/mileage/**").permitAll()
-                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/eventList/**").permitAll()
+                        .requestMatchers("/api/magazineList/**").permitAll()
                         .requestMatchers("/api/delivery/**").permitAll()
+                        .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/upload/**").permitAll() // ✅ 추가된 라인
                         .requestMatchers("/api/admin/**").hasAnyRole("MANAGER", "ADMIN")
                         .anyRequest().authenticated()

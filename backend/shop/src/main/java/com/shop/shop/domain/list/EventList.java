@@ -30,6 +30,7 @@ public class EventList {
 
     private LocalDateTime date;
     private int viewCount;
+    private boolean delFlag;
 
     // image 외래키
     // OneToMany - 게시글 하나에 여러 이미지 가능
@@ -62,12 +63,24 @@ public class EventList {
         this.title = title;
     }
 
+    public void changeWriter(String writer) {
+        this.writer = writer;
+    }
+
     public void changeContent(String content) {
         this.content = content;
     }
 
     public void changeViewCount(int viewCount) {
         this.viewCount = viewCount;
+    }
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
+
+    public void changeDelFlag(boolean delFlag) {
+        this.delFlag = delFlag;
     }
 
 }
