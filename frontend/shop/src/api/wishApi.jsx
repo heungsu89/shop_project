@@ -12,14 +12,15 @@ export const wishAdd = async (id,itemId)=>{
       const res = await axios.post(`${host}/add`, data, {
         headers: {'Content-Type': 'application/json'}
       });
-      console.log('관심 등록 성공:', res.data);
       return res.data;
     } catch (error) {
       console.error('관심 등록 실패:', error.response?.data || error.message);
       throw error;
     }
 }
-export const wishList = async (id) => {
+
+
+export const getwishList = async (id) => {
     try {
         const res = await axios.get(`${host}/page/${id}`);
         return res.data;

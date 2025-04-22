@@ -27,35 +27,35 @@ const adminRouter = () => {
         {
           path: "order",
           element: (
-            <Suspense fallback={<Loading />}><OrderComponent /></Suspense>
+            <OrderComponent />
           ),
           children: [
             {
               index: true,  // <- 기본 라우트
-              element: <Suspense fallback={<Loading />}><OrderListComponent /></Suspense>
+              element: <OrderListComponent />
             },
           ]
         },
         {
           path: "product",
           element: (
-            <Suspense fallback={<Loading />}><ProductComponent /></Suspense>
+            <ProductComponent />
           ),
           children:[
             {
               index: true,  // <- 기본 라우트
-              element: <Suspense fallback={<Loading />}><ProductListComponent /></Suspense>
+              element: <ProductListComponent />
             },
             {
               path: "add",
               element :(
-                <Suspense fallback={<Loading />}><ProductFormComponent /></Suspense>
+                <ProductFormComponent />
               )
             },
             {
               path: "modify/:id",
               element: (
-                <Suspense fallback={<Loading />}><ProductFormComponent /></Suspense>
+                <ProductFormComponent />
               )
             }
           ]
@@ -63,19 +63,19 @@ const adminRouter = () => {
         {
           path: "member",
           element : (
-            <Suspense fallback={<Loading />}><MemberComponent /></Suspense>
+            <MemberComponent />
           ),
           children:[
             {
               index : true,
               element : (
-                <Suspense fallback={<Loading />}><MemberListCompenet /></Suspense>
+                <MemberListCompenet />
               )
             },
             {
               path : "modify/:id",
               element : (
-                <Suspense fallback={<Loading />}><MemberModifyCompoenet /></Suspense>
+                <MemberModifyCompoenet />
               )
             },
           ]
@@ -83,30 +83,30 @@ const adminRouter = () => {
         {
           path: "category",
           element: (
-            <Suspense fallback={<Loading />}><CategoryCompoenet /></Suspense>
+            <CategoryCompoenet />
           ),
         },
         {
           path: "user",
           element: (
-            <Suspense fallback={<Loading />}><CategoryCompoenet /></Suspense>
+            <CategoryCompoenet />
           ),
         },
         {
           path: "board",
           element: (
-            <Suspense fallback={<Loading />}><BoardListComponent /></Suspense>
+            <BoardListComponent />
           ),
         },
         {
           path: "inquiry",
           element: (
-            <Suspense fallback={<Loading />}><InquiryComponent /></Suspense>
+            <InquiryComponent />
           ),
           children: [
             {
               index: true,  // <- 기본 라우트
-              element: <Suspense fallback={<Loading />}><InquiryListComponent /></Suspense>
+              element: <InquiryListComponent />
             },
           ]
         },

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { wishList } from "../../../../api/wishApi";
+import { getwishList } from "../../../../api/wishApi";
 import { useParams } from 'react-router-dom';
 import Pagination from "../../../Pagination";
 import defaultImg from "../../../../static/images/default.png";
@@ -20,7 +20,7 @@ const MileageComponent = () => {
   }, [page, size, id]);
 
   const fetchList = () => {
-    wishList(id,page,size).then(setData);
+    getwishList(id,page,size).then(setData);
   }
   
 const handleChange = (id) => {

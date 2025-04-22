@@ -3,36 +3,22 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import memberRouter from "./memberRouter";
 import adminRouter from "./mypage/adminRouter";
 import userRouter from "./mypage/userRouter";
+import ProductRouter from "./product/ProductRouter";
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../Pages/main/MainPage"));
+const Product = lazy(() => import("../Pages/product/ProductPage"));
 const Guide = lazy(() => import("../Pages/footer/GuidePage"));
 const Privacy = lazy(() => import("../Pages/footer/PrivacyPolicyPage"));
 const Terms =  lazy(() => import("../Pages/footer/TermsPage"));
-const Shop = lazy(()=>import("../Pages/shop/ItemListPage"))
-const CategoryPage = lazy(() => import("../Pages/shop/CategoryPage"));
-const CategorCopyPage = lazy(() => import("../Pages/shop/CategoryCopyPage"));
 const rootRouter = createBrowserRouter([
   {
     path: "/",
     element: <Suspense fallback={Loading}><Main/></Suspense>
   },
   {
-    path: "shop",
-    children: [
-      {
-        index: true, // /shop
-        element: <Suspense fallback={Loading}><Shop/></Suspense>
-      },
-      {
-        path: "category/:categoryId", // /shop/category/123
-        element: <Suspense fallback={Loading}><CategoryPage/></Suspense>
-      },
-      {
-        path: "categoryCopy/:categoryId", // /shop/category/123
-        element: <Suspense fallback={Loading}><CategorCopyPage/></Suspense>
-      }
-    ]
+    path: "product",
+    children: ProductRouter()
   },
   {
     path: "guide",

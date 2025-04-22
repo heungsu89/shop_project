@@ -1,6 +1,6 @@
-.itemListContainer {display: flex;
-  .itemListSection {flex: 1;width: 100%;padding: 40px 0;
-    ul{display: grid;grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));gap: 60px 0;}
+.productWrap {display: flex;
+  .productContainer {flex: 1;width: 100%;padding: 40px 0;
+    ul{display: grid;grid-template-columns: repeat(3, minmax(300px, 1fr));gap: 60px 0;}
     
     .itemCard {position: relative;
       a{display: block;}
