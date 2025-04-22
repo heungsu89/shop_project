@@ -21,7 +21,9 @@
 }
 
 a{color: inherit;
-  &:focus{outline: 1px solid var(--charcoal-grey);}
+  &:focus-visible {
+    outline: 1px solid var(--charcoal-grey); // 키보드 탭으로 접근 시만 outline
+  }
   &:active{outline: none;}
 }
 button{font-family:inherit;background: none;border:none;
@@ -49,14 +51,15 @@ input[type=number]{width: 100%;font-family: inherit;font-size: var(--text-base);
 /** 테이블 너비 */
 $tbw50 : 50px;
 $tbw80 : 80px;
+$tbw120 : 120px;
 $tbw140 : 140px;
 
 /** 테이블 디자인*/
 .tablePage{
-  display:flex;flex-direction: column;gap: 20px 0;overflow-y: auto;
+  display:flex;flex-direction: column;gap: 20px 0;
   .itemSubMenu{display: flex;justify-content: space-between;align-items: center;gap: 30px;}
   .itemTableWrap{overflow-y: auto;
-    .itemTable{display: block;width: 100%; min-width: min-content;
+    .itemTable{display: block;width: 100%; min-width: 1000px; 
       th,td{display: flex;justify-content: center;flex: 1;align-items: center;}
       th{align-items:center;}
       td{padding: 10px;}
@@ -67,12 +70,12 @@ $tbw140 : 140px;
           .itemImg{width: 80px;flex: 0 0 80px;aspect-ratio: 3/4; border: solid 1px var(--charcoal-grey); margin-right: 10px;
             img{width: 100%;height: 100%; object-fit: cover;}
           }
-          .itemDetailInfo{display: flex; flex-direction: column; gap: 10px; min-width: 400px;
+          .itemDetailInfo{display: flex; flex-direction: column; gap: 10px; flex-wrap: wrap;
             a{text-decoration: underline;color: var(--slate-blue);}
           }
         }
       }
-      .itemTr{display: flex;flex:1;;
+      .itemTr{display: flex;flex:1; flex-wrap: wrap;
         .itemNumber{width: $tbw50 ;flex:0 0 $tbw50 ;}
         .itemID{width: $tbw50 ;flex:0 0 $tbw50 ;}
         .itemDiscountRate{width: $tbw80;flex:0 0 $tbw80;}
@@ -82,8 +85,8 @@ $tbw140 : 140px;
         }
         .itemMemberName{width: $tbw80;flex: 0 0 $tbw80;}
         .itemMemberShip{width: $tbw80;flex: 0 0 $tbw80;color: var(--slate-blue);}
-        .itemTotalScore{width: $tbw140;flex:0 0 $tbw140;}
-        .itemDate{width: $tbw140;flex:0 0 $tbw140;}
+        .itemTotalScore{width: $tbw80;flex:0 0 $tbw80;}
+        .itemDate{width: $tbw120;flex:0 0 $tbw120;}
         .itemSalesVolume{width: $tbw50;flex:0 0 $tbw50;}
         .itemDelFlag{width: $tbw80;flex:0 0 $tbw80;
           &.deleted{color: var(--Pointer);}

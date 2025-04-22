@@ -1,33 +1,33 @@
-import { Link, useSearchParams, useNavigate, useParams } from "react-router-dom";
-import BasicLayout from "../../layout/BasicLayout";
-import '../../static/css/shop.scss';
-import '../../static/css/siderbar.scss';
 import React, { useState, useEffect } from "react";
-import { fetchItems } from '../../api/categoryItemApi'
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import BasicLayout from "../../layout/BasicLayout";
+import { fetchItems } from "../../api/categoryItemApi";
+import "../../static/css/shop.scss";
+import "../../static/css/siderbar.scss";
+
 
 const ItemListPage = () => {
-  const [items, setItems] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(() => new URLSearchParams(window.location.search).get('category') || "OUTWEAR");
-  const [activeSortButton, setActiveSortButton] = useState(() => new URLSearchParams(window.location.search).get('sort') || "NEWEST");
-  const [totalElements, setTotalElements] = useState(0);
-  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const itemsPerPage = 10;
+  const [totalElements, setTotalElements] = useState(0);
 
 
-  const { id } = useParams();
-  const [page, setPage] = useParams(page);
-  const [size, setSize] = useParams(size);
-
-
-
-
+  const category = searchParams.get("category") || "1"; // 기본값 '1'
+  const page = parseInt(searchParams.get("page") || "0", 10);
+  const size = parseInt(searchParams.get("size") || "9", 10);
+  
+  // API 호출
   useEffect(() => {
-    fetchItems(id,page,size);
-  }, [currentPage, activeCategory, activeSortButton]);
+    fetchItems(category, page, size).then(data => {
+      setItems(data.content);
+      setTotalElements(data.totalElements);
+    });
+  }, [category, page, size]);
+
 
   const handleAddCart = (id, event) => {
     event.stopPropagation();
@@ -39,15 +39,15 @@ const ItemListPage = () => {
     console.log("관심상품 추가:", id);
   };
 
-  const handleCategoryClick = (category) => {
-    setActiveCategory(category);
-    setSearchParams({ page: 1, category: category, sort: activeSortButton });
+  const handleCategoryClick = (cat) => {
+    updateParams({ category: cat, page: 1 });
   };
 
   const handleSortButtonClick = (sortType) => {
-    setActiveSortButton(sortType);
-    setSearchParams({ page: 1, category: activeCategory, sort: sortType });
+    updateParams({ sort: sortType, page: 1 });
   };
+
+  const totalPages = Math.ceil(totalElements / size);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -57,16 +57,21 @@ const ItemListPage = () => {
       <div className="itemListContainer">
         <div className="itemListSection">
           {items.map((item) => (
-            <div key={item.id} className="itemCard" onClick={() => navigate(`/item/${item.id}`)} style={{ cursor: 'pointer' }}>
+            <Link to={`detail/${item.id}`}
+              key={item.id}
+              className="itemCard"
+              // onClick={() => navigate(`/item/${item.id}`)}
+              style={{ cursor: "pointer" }}
+            >
               <div className="itemImageWrapper">
                 <img
-                  src={`/images/${item.uploadFileNames?.[0] || 'default.png'}`}
+                  src={`/images/${item.uploadFileNames?.[0] || "default.png"}`}
                   alt={item.name}
                   className="itemImage"
                 />
                 <div className="itemButtonGroup">
-                  <button onClick={(event) => handleAddWishlist(item.id, event)}>WISH</button>
-                  <button onClick={(event) => handleAddCart(item.id, event)}>CART</button>
+                  <button onClick={(e) => handleAddWishlist(item.id, e)}>WISH</button>
+                  <button onClick={(e) => handleAddCart(item.id, e)}>CART</button>
                 </div>
               </div>
               <div className="itemInfo">
@@ -75,43 +80,44 @@ const ItemListPage = () => {
                   <div className="itemSalePrice">
                     {Math.floor(item.price * (1 - item.discountRate / 100))}KR
                   </div>
-                  <div className="itemOriginalPrice">{item.price}KR</div>
+                  <div className="itemOriginalPrice">{item.price}KWR</div>
                   <div className="itemDiscount">{item.discountRate}%</div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 
         <aside className="itemSidebar">
           <div className="innerSiedbarWrap">
             <h1 className="categoryTitle">SHOP</h1>
+
             <div className="searchBox">
               <input type="text" placeholder="SEARCH TEXT" />
               <button>SEARCH</button>
             </div>
 
-            <div className="categoryBox">
+            {/* <div className="categoryBox">
               <ul className="categoryList">
                 {["OUTWEAR", "TOP", "KNITWEAR", "BOTTOM", "ACC"].map((cat) => (
                   <li
                     key={cat}
-                    className={activeCategory === cat ? 'active' : ''}
+                    className={category === cat ? "active" : ""}
                     onClick={() => handleCategoryClick(cat)}
                   >
                     {cat}
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
 
-            <div className="paginationSection">
+            {/* <div className="paginationSection">
               <div className="totalCount">TOTAL {totalElements}</div>
               <div className="sortButtons">
                 {["NEWEST", "PRICE HIGH", "PRICE LOW"].map((type) => (
                   <button
                     key={type}
-                    className={activeSortButton === type ? "active" : ""}
+                    className={sort === type ? "active" : ""}
                     onClick={() => handleSortButtonClick(type)}
                   >
                     <span>{type}</span>
@@ -120,29 +126,27 @@ const ItemListPage = () => {
               </div>
 
               <div className="pageLinks">
-                {Array.from({ length: Math.ceil(totalElements / itemsPerPage) }, (_, i) => (
+                {Array.from({ length: totalPages }, (_, i) => (
                   <Link
                     key={i + 1}
-                    to={`?page=${i + 1}${activeCategory !== 'OUTWEAR' ? `&category=${activeCategory}` : ''}${activeSortButton !== 'NEWEST' ? `&sort=${activeSortButton}` : ''}`}
-                    className={currentPage === i + 1 ? 'current' : ''}
+                    to={`?page=${i + 1}&category=${category}&sort=${sort}`}
+                    className={page === i + 1 ? "current" : ""}
                   >
                     {i + 1}
                   </Link>
                 ))}
-                {currentPage < Math.ceil(totalElements / itemsPerPage) && (
-                  <Link
-                    to={`?page=${currentPage + 1}${activeCategory !== 'OUTWEAR' ? `&category=${activeCategory}` : ''}${activeSortButton !== 'NEWEST' ? `&sort=${activeSortButton}` : ''}`}
-                  >
+                {page < totalPages && (
+                  <Link to={`?page=${page + 1}&category=${category}&sort=${sort}`}>
                     NEXT
                   </Link>
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
         </aside>
       </div>
     </BasicLayout>
-  )
-}
+  );
+};
 
 export default ItemListPage;
