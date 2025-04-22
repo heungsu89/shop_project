@@ -4,13 +4,12 @@ import com.shop.shop.domain.cart.Cart;
 import com.shop.shop.domain.delivery.Delivery;
 import com.shop.shop.domain.delivery.DeliveryStatus;
 import com.shop.shop.domain.item.ItemOption;
-import com.shop.shop.domain.member.Member;
-import com.shop.shop.domain.member.MemberRole;
-import com.shop.shop.domain.member.MemberShip;
+import com.shop.shop.domain.member.*;
 import com.shop.shop.domain.order.Order;
 import com.shop.shop.domain.order.OrderItem;
 import com.shop.shop.domain.order.OrderStatus;
 import com.shop.shop.domain.order.PaymentMethod;
+import com.shop.shop.dto.MileageDTO;
 import com.shop.shop.dto.OrderDTO;
 import com.shop.shop.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     private final CartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
     private final ItemOptionRepository itemOptionRepository;
+    private final MileageService mileageService;
 
     // 주문서 작성(등록)
     @Override
@@ -40,7 +40,6 @@ public class OrderServiceImpl implements OrderService {
         Member member = memberRepository.findById(orderDTO.getMemberId())
                 .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
         List<Cart> cartList = cartRepository.findAllCartListByMemberId(orderDTO.getMemberId());
-//        ItemOption itemOption = itemOptionRepository.findById()
         if (cartList == null || cartList.isEmpty()) {
             throw new RuntimeException("장바구니에 상품이 없습니다.");
         }
@@ -98,12 +97,46 @@ public class OrderServiceImpl implements OrderService {
         // Order와 OrderItem을 함께 저장
         Order saved1Order = orderRepository.save(savedOrder);
 
-//        System.out.println(member.getMemberShip());
-//        switch (member.getMemberShip()) {
-//
-//        }
+        System.out.println(member.getMemberShip());
+        int mileageAmount;
+        switch (member.getMemberShip()) {
+            case BRONZE : mileageAmount = (int)(totalAmount * 0.01);
+            case SILVER : mileageAmount = (int)(totalAmount * 0.02);
+            case GOLD : mileageAmount = (int)(totalAmount * 0.03);
+            case PLATINUM : mileageAmount = (int)(totalAmount * 0.05);
+            default : mileageAmount = 0;
+        }
+
+        // 마일리지 상태에 따라 추가 / 사용
+        createMileageByMemberShip(mileageAmount, orderDTO.getMileageStatus(), member, order);
 
         return new OrderDTO(saved1Order, orderItemList);
+    }
+
+    // 회원 등급별 마일리지 생성
+    public void createMileageByMemberShip(int amount, MileageStatus mileageStatus, Member member, Order order) {
+
+        // 마일리지 수치 설정
+        Mileage mileage = Mileage.builder()
+                .amount(amount)
+                .mileageStatus(mileageStatus)
+                .mileageDate(LocalDateTime.now())
+                .member(member)
+                .order(order)
+                .build();
+        // 마일리지 내역 생성
+        mileageService.createMileage(new MileageDTO(mileage));
+
+        // 마일리지 상태가 사용(EARN)이면 마일리지 추가 / 사용(REDEEM)면 마일리지 감소
+        if (mileageStatus == MileageStatus.EARN) {
+            member.addMileage(amount);
+            memberRepository.save(member);
+        } else if (mileageStatus == MileageStatus.REDEEM) {
+            member.minusMileage(amount);
+            memberRepository.save(member);
+        } else {
+            throw new RuntimeException("올바른 마일리지 상태가 아닙니다.");
+        }
     }
 
     // 회원 이메일로 주문 모두 조회
@@ -115,7 +148,6 @@ public class OrderServiceImpl implements OrderService {
         if (orderList == null || orderList.isEmpty()) {
             throw new RuntimeException("해당 회원의 주문이 존재하지 않습니다.");
         }
-//        List<OrderItem> orderItemList = orderItemRepository.findAllById(orderList.get(0).getId())
 
         return orderList.stream().map(OrderDTO::new).collect(Collectors.toList());
     }

@@ -1,6 +1,7 @@
 package com.shop.shop.dto;
 
 import com.shop.shop.domain.delivery.DeliveryStatus;
+import com.shop.shop.domain.member.MileageStatus;
 import com.shop.shop.domain.order.Order;
 import com.shop.shop.domain.order.OrderItem;
 import com.shop.shop.dto.OrderItemDTO;
@@ -39,6 +40,7 @@ public class OrderDTO {
     private LocalDateTime endDate;
 
     private DeliveryStatus deliveryStatus;
+    private MileageStatus mileageStatus;
 
     private List<OrderItemDTO> orderItemList = new ArrayList<>();
 

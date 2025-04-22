@@ -69,6 +69,12 @@ public class Member {
     public void changeStockMileage(int stockMileage) {
         this.stockMileage = stockMileage;
     }
+    public void addMileage(int amount) {
+        this.stockMileage += amount;
+    }
+    public void minusMileage(int amount) {
+        this.stockMileage += amount;
+    }
 
     public void changeWtrSns(boolean wtrSns) {
         this.wtrSns = wtrSns;
