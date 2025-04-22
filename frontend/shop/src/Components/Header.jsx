@@ -58,7 +58,7 @@ const Header = ({ isMypage }) => {
           <ul className="cartegory">
             {categories.map((cat) => (
                 <li key={cat.id}>
-                  <Link to={`/shop/category/${cat.id}?page=0&size=9`}>{cat.categoryName}</Link>
+                  <Link to={`/product/list/${cat.id}?page=0&size=9`}>{cat.categoryName}</Link>
                 </li>
               ))}
             {/* <li><Link to="/shop">SHOP</Link></li> */}
