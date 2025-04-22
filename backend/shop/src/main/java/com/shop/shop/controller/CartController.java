@@ -22,11 +22,9 @@ public class CartController {
     private final CartService cartService;
 
     // 회원Id를 기준으로 장바구니에 상품 등록
-    @PostMapping("/add/{optionId}")
-    public ResponseEntity<CartDTO> registerCart(
-            @RequestBody CartDTO cartDTO,
-            @PathVariable("optionId") Long optionId) {
-        CartDTO registerCart = cartService.registerCart(cartDTO, optionId);
+    @PostMapping("/add")
+    public ResponseEntity<CartDTO> registerCart(@RequestBody CartDTO cartDTO) {
+        CartDTO registerCart = cartService.registerCart(cartDTO);
         return ResponseEntity.ok(registerCart);
     }
 

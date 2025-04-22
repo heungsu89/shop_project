@@ -26,11 +26,16 @@ public class CartServiceImpl implements CartService {
     private final ItemImageRepository itemImageRepository;
 
     // 장바구니 등록하기
-    public CartDTO registerCart(CartDTO cartDTO, Long optionId) {
+    @Override
+    public CartDTO registerCart(CartDTO cartDTO) {
         Member member = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
         Item item = itemRepository.findById(cartDTO.getItemId()).orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
-        ItemOption option = itemOptionRepository.findById(optionId).orElseThrow(() -> new IllegalArgumentException("해당 옵션이 존재하지 않습니다."));
+        ItemOption option = itemOptionRepository.findById(cartDTO.getOptionId()).orElseThrow(() -> new IllegalArgumentException("해당 옵션이 존재하지 않습니다."));
         List<ItemImage> images = itemImageRepository.findByItemId(cartDTO.getItemId());
+
+        if (cartDTO.getQty() > option.getStockQty()) {
+            throw new RuntimeException("재고량이 부족합니다!");
+        }
 
         ItemImage itemImage = null;
         if (images != null && !images.isEmpty()) {

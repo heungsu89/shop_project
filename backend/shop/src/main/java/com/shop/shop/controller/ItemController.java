@@ -1,16 +1,11 @@
 package com.shop.shop.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.shop.shop.domain.cart.WishList;
 import com.shop.shop.domain.category.Category;
-import com.shop.shop.domain.category.CategoryItem;
 import com.shop.shop.domain.item.Item;
-import com.shop.shop.dto.CategoryDTO;
-import com.shop.shop.dto.CategoryItemDTO;
-import com.shop.shop.dto.ItemDTO;
-import com.shop.shop.dto.WishListDTO;
+import com.shop.shop.domain.item.ItemOption;
+import com.shop.shop.dto.*;
 import com.shop.shop.repository.CategoryRepository;
-import com.shop.shop.repository.WishListRepository;
 import com.shop.shop.service.*;
 import com.shop.shop.util.CustomFileUtil;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +30,9 @@ import java.util.Map;
 public class ItemController {
 
     private final CustomFileUtil fileUtil;
-    private final ItemService itemService;
     private final CategoryRepository categoryRepository;
     private final CategoryItemService categoryItemService;
+    private final ItemService itemService;
     private final ItemServiceImpl itemServiceImpl;
 
     // 페이징 목록 조회
@@ -88,7 +83,13 @@ public class ItemController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("result", "fail", "error", e.getMessage()));
         }
+    }
 
+    // 특정 아이템의 옵션 모두 조회
+    @GetMapping("/itemOption/{itemId}")
+    public ResponseEntity<List<ItemOptionDTO>> getItemOptions(@PathVariable Long itemId) {
+        List<ItemOptionDTO> itemOptionDTOList = itemService.getItemOptionByItemId(itemId);
+        return ResponseEntity.ok(itemOptionDTOList);
     }
 
     // 아이템 등록

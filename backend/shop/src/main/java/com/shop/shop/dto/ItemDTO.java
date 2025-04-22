@@ -85,6 +85,7 @@ public class ItemDTO {
         this.options = (options != null && !options.isEmpty())
                 ? options.stream()
                 .map(option -> new ItemOptionDTO(
+                        option.getId(),
                         option.getOptionName(),
                         option.getOptionValue(),
                         option.getOptionPrice(),
@@ -111,6 +112,7 @@ public class ItemDTO {
         this.options = (options != null && !options.isEmpty())
                 ? options.stream()
                 .map(option -> new ItemOptionDTO(
+                        option.getId(),
                         option.getOptionName(),
                         option.getOptionValue(),
                         option.getOptionPrice(),

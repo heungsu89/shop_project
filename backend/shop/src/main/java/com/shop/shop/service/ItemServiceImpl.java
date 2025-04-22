@@ -189,6 +189,18 @@ public class ItemServiceImpl implements ItemService {
 //        });r
     }
 
+    // 특정 아이템 옵션 조회
+    @Override
+    public List<ItemOptionDTO> getItemOptionByItemId(Long itemId) {
+        List<ItemOption> itemOptionList = itemOptionRepository.findByItemId(itemId);
+        if (itemOptionList == null || itemOptionList.isEmpty()) {
+            throw new RuntimeException("해당 아이템에 대한 옵션이 조회되지 않습니다.");
+        }
+        List<ItemOptionDTO> itemOptionDTOList = itemOptionList.stream().map(ItemOptionDTO::new).toList();
+        return itemOptionDTOList;
+    }
+
+    // 아이템 수정
     @Override
     public ItemDTO updateItem(Long id, ItemDTO itemDTO, List<MultipartFile> files) {
         Item item = itemRepository.findById(id).orElseThrow();

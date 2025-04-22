@@ -7,7 +7,7 @@ import java.util.List;
 public interface CartService {
 
     // 회원Id를 기준으로 장바구니에 상품 등록
-    public CartDTO registerCart(CartDTO cartDTO, Long optionId);
+    public CartDTO registerCart(CartDTO cartDTO);
 
     // 회원Id를 기준으로 장바구니 목록 조회
     public List<CartDTO> getCartList(Long memberId);
