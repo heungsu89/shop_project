@@ -26,13 +26,17 @@ const ItemListPage = () => {
   const size = parseInt(searchParams.get("size") || "9", 10);
 
   useEffect(() => {
+    console.log("memberInfo 갱신됨:", memberInfo);
+  }, [memberInfo]);
+
+  useEffect(() => {
 
 
 
     const fetchCategory = async () => {
       const currentCategory = await getCategories(categoryId);
       setCurrentCategory(currentCategory);
-  
+      
       if (currentCategory?.parentId) {
         // 자식이면, 부모를 다시 조회해서 형제들(child)을 얻어옴
         const parentCategory = await getCategories(currentCategory.parentId);
@@ -41,20 +45,10 @@ const ItemListPage = () => {
         // 부모일 경우, 그대로 사용
         setChildCategorys(currentCategory.child);
       }
+    
     };
   
     fetchCategory();
-
-
-
-
-
-
-
-
-
-
-
 
 
     fetchItems(categoryId, page, size).then(data => {
@@ -63,6 +57,7 @@ const ItemListPage = () => {
     if (isLoggedIn) {
       const info = getCookie("member");
       setInfo(info);
+      
     } else {
       setInfo(null);
     }
@@ -103,45 +98,51 @@ const ItemListPage = () => {
       console.error("처리 중 오류", err);
     }
   };
+ 
+
 
   return (
     <BasicLayout>
       <div className="itemListContainer">
         <div className="itemListSection">
+         
         {items?.content?.length > 0 ? (
-          items?.content?.map((item,idx) =>{
-            const priceInfo = getFormattedPrice( item.price,item.discountRate);
-            return(
-              <NavLink to={`/item/${item.itemId}`}
-                key={item.itemId}
-                className="itemCard"
-              >
-                <div className="itemImageWrapper">
-                  <img
-                    src={
-                        item.uploadFileNames !== "default.png"?
-                        `http://localhost:8081/upload/${item.uploadFileNames}`
-                        : defaultImg
-                    }
-                    alt={item.itemName}
-                    />
-                  <div className="itemButtonGroup">
-                    <button onClick={(e) => handleAddWishlist(item.itemId,e)}>WISH</button>
-                    <button onClick={(e) => handleAddCart(item.itemId,e)}>CART</button>
+          <ul>
+            {items?.content?.map((item,idx) =>{
+              const priceInfo = getFormattedPrice( item.price,item.discountRate);
+              return(
+                <li className="itemCard">
+                <NavLink to={`/item/${item.itemId}`}
+                  key={item.itemId}
+                >
+                  <div className="itemImageWrapper">
+                    <img
+                      src={
+                          item.uploadFileNames !== "default.png"?
+                          `http://localhost:8081/upload/${item.uploadFileNames}`
+                          : defaultImg
+                      }
+                      alt={item.itemName}
+                      />
+                    <div className="itemButtonGroup">
+                      <button onClick={(e) => handleAddWishlist(item.itemId,e)}>WISH</button>
+                      <button onClick={(e) => handleAddCart(item.itemId,e)}>CART</button>
+                    </div>
                   </div>
-                </div>
-                <div className="itemInfo">
-                  <div className="itemName">{item.itemName}</div>
-                  <div className="space">
-                    <span className="itemSalePrice">
-                      {priceInfo.discounted}KRE
-                    </span>
-                    <span className="itemOriginalPrice">{priceInfo.original}</span>
-                    <span className="itemDiscount">{priceInfo.discountRate}</span>
+                  <div className="itemInfo">
+                    <div className="itemName">{item.itemName}</div>
+                    <div className="space">
+                      <span className="itemSalePrice">
+                        {priceInfo.discounted}KRE
+                      </span>
+                      <span className="itemOriginalPrice">{priceInfo.original}</span>
+                      <span className="itemDiscount">{priceInfo.discountRate}</span>
+                    </div>
                   </div>
-                </div>
-              </NavLink>
-          )})
+                </NavLink>
+              </li>
+          )})}
+          </ul>
         ) : (
           <div>등록된 상품이 없습니다.</div>
         )}

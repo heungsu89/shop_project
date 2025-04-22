@@ -1,13 +1,16 @@
 .itemListContainer {display: flex;
-  .itemListSection {flex: 1;padding: 40px 0;display: grid;grid-template-columns: repeat(3, 1fr);gap: 60px 0;
-    .itemCard {position: relative;display: flex;flex-direction: column;
+  .itemListSection {flex: 1;width: 100%;padding: 40px 0;
+    ul{display: grid;grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));gap: 60px 0;}
+    
+    .itemCard {position: relative;
+      a{display: block;}
       .itemImageWrapper{aspect-ratio: 3/4; position: relative;overflow: hidden;
-        img{width: 100%;height: 100%;object-fit: cover;}
+        img{object-fit: cover;width:100%;height: 100%;}
         .itemButtonGroup{display: flex;position: absolute; top:5px; right: 5px;z-index: 30;
           button{font-size: 12px;padding: 5px;}
         }
       }
-      .itemInfo{display: flex;gap: 10px;justify-content: space-between;align-items: center;padding : 6px 12px; font-size: var(--h5);
+      .itemInfo{display: flex; flex-wrap: wrap; gap: 10px;justify-content: space-between;   align-items: center;padding : 6px 12px; font-size: var(--h5);
         .itemName{margin-right: 10px;white-space: nowrap;}
         .space{display: flex;gap: 8px;align-items: center;
           .itemOriginalPrice,

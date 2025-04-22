@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import memberRouter from "./memberRouter";
 import adminRouter from "./mypage/adminRouter";
+import userRouter from "./mypage/userRouter";
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../Pages/main/MainPage"));
@@ -11,7 +12,6 @@ const Terms =  lazy(() => import("../Pages/footer/TermsPage"));
 const Shop = lazy(()=>import("../Pages/shop/ItemListPage"))
 const CategoryPage = lazy(() => import("../Pages/shop/CategoryPage"));
 const CategorCopyPage = lazy(() => import("../Pages/shop/CategoryCopyPage"));
-// 🔸 이건 라우터 설정만 담은 객체
 const rootRouter = createBrowserRouter([
   {
     path: "/",
@@ -54,6 +54,10 @@ const rootRouter = createBrowserRouter([
     path: "admin",
     children: adminRouter()
   },
+  {
+    path: "user",
+    children: userRouter()
+  }
 ]);
 
 const Root = () => {

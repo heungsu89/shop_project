@@ -1,33 +1,84 @@
-import { NavLink } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
+import { getMemberById, modifyMember} from '../../api/memberApi';
 
-const MyNav = () => {
+const MyNav = ({ memberInfo }) => {
   const pageParam = `/?page=0&size=10`;
+  const [ userInfo, setUserInfo ] = useState(null);
+  const [ isUser, setIsUSer ] = useState({});
+  const isAdmin = Array.isArray(memberInfo?.roleNames) && memberInfo.roleNames.includes("ADMIN");
 
+  useEffect(() => {
+    setUserInfo(memberInfo);
+
+  }, [memberInfo]);
+
+
+  useEffect(() => {
+    if(!userInfo?.memberId) return;
+    getMemberById(userInfo?.memberId)
+      .then((data) => {
+        setIsUSer(data);
+        console.log("isUser", isUser);
+      })
+
+  }, [userInfo]);
+
+
+  // {isAdmin ? (
+  //   <>
+  //     <strong>관리자</strong>
+  //     <p>오늘도 화이팅하세요.</p>
+  //   </>
+  // ) : (
+  //   <>
+  //     <strong>권한 없음</strong>
+  //     <p></p>
+  //   </>
+  // )}
 
   return (
     <aside className='myNavWrap'>
+      {isAdmin ? (
       <div className="asideNav">
         <h2>ADMIN</h2>
         <div className="userRollInfo">
           <strong>관리자</strong>
           <p>오늘도 화이팅하세요.</p>
         </div>
-
-        <nav className="userNav">
-          <ul>
-            <li><NavLink to="/admin/mypage/order">주문</NavLink></li>
-            <li><NavLink to="/admin/mypage/inquiry">문의</NavLink></li>
-            <li><NavLink to={`/admin/mypage/product${pageParam}`}>상품</NavLink></li>
-            <li><NavLink to="/admin/mypage/category">분류</NavLink></li>
-            <li><NavLink to="/admin/mypage/member">회원</NavLink></li>
-            <li><NavLink to="/admin/mypage/event">이벤트</NavLink></li>
-            <li><NavLink to="/admin/mypage/magazine">메거진</NavLink></li>
-            <li><NavLink to="/admin/mypage/adminInfo">관리자정보</NavLink></li>
-          </ul>
-        </nav>
-      </div>
+          <nav className="userNav">
+            <ul>
+              <li><NavLink to="order">주문</NavLink></li>
+              <li><NavLink to="inquiry">문의</NavLink></li>
+              <li><NavLink to={`product${pageParam}`}>상품</NavLink></li>
+              <li><NavLink to="category">분류</NavLink></li>
+              <li><NavLink to="member">회원</NavLink></li>
+              <li><NavLink to="event">이벤트</NavLink></li>
+              <li><NavLink to="magazine">메거진</NavLink></li>
+              <li><NavLink to="adminInfo">관리자정보</NavLink></li>
+            </ul>
+          </nav>
+        </div>
+        ) : (
+          <div className="asideNav">
+          <h2>MYPAGE</h2>
+          <div className="userRollInfo">
+            <strong>{isUser.memberShip}</strong>
+            <p>{isUser.memberName}님 안녕하세요!</p>
+          </div>
+            <nav className="userNav">
+              <ul>
+                <li><NavLink to="order">주문</NavLink></li>
+                <li><NavLink to="inquiry">문의</NavLink></li>
+                <li><NavLink to="mileage">마일리지</NavLink></li>
+                <li><NavLink to="wish">관심상품</NavLink></li>
+                <li><NavLink to="profile">개인정보</NavLink></li>
+              </ul>
+            </nav>
+          </div>
+      )}
     </aside>
-  )
+  );
 };
 
 export default MyNav;

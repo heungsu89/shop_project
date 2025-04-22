@@ -118,7 +118,7 @@ const CategoryComponent = () => {
 
   return (
     <div className="myPageComponent">
-      <h2 className="papgeTitle">분류</h2>
+      <h2 className="pageTitle">분류</h2>
       <div className="pageContainer">
 
         <div className="borderSection">

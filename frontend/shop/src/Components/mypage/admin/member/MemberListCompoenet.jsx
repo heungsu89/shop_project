@@ -28,7 +28,7 @@ const MemberListCompenet = () =>{
 
     return(
         <>
-        <h2 className="papgeTitle">회원</h2>
+        <h2 className="pageTitle">회원</h2>
         <div className="pageContainer">
             <div className="borderSection filter">
                 <strong>회원수 : {memberData?.totalElements || 0}명</strong>

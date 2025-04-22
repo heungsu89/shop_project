@@ -2,7 +2,6 @@ import { useState, useEffect, use } from 'react';
 import { useParams } from 'react-router-dom';
 import { getMemberById, modifyMember} from '../../../../api/memberApi';
 import { formatDateToDot } from '../../../../util/dateUtil';
-import useCustomLogin from '../../../../hooks/useCustomLogin';
 import '../../../../static/css/signup.scss';
 import AddressSearch from '../../../AddressSearch';
 

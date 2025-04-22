@@ -7,4 +7,5 @@ const ProductComponent = () =>{
         </div>
     )
 }
+
 export default ProductComponent;
