@@ -2,7 +2,6 @@ import { useState, useEffect, use } from 'react';
 import { useParams } from 'react-router-dom';
 import { getMemberById, modifyMember} from '../../../../api/memberApi';
 import { formatDateToDot } from '../../../../util/dateUtil';
-import useCustomLogin from '../../../../hooks/useCustomLogin';
 import '../../../../static/css/signup.scss';
 import AddressSearch from '../../../AddressSearch';
 
@@ -106,7 +105,6 @@ const MemberModifyComponent = () => {
                 <option value="SILVER">SILVER</option>
                 <option value="GOLD">GOLD</option>
                 <option value="PLATINUM">PLATINUM</option>
-                <option value="EMERALD">EMERALD</option>
               </select>
             </div>
 

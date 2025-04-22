@@ -12,7 +12,7 @@ const ItemDetails = ({ itemId }) => {
       try {
         const response = await fetch(`/api/items/${itemId}`);
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`status: ${response.status}`);
         }
         const data = await response.json();
         setItemDescription(data.item_description);
@@ -29,7 +29,7 @@ const ItemDetails = ({ itemId }) => {
   }, [itemId]);
 
   if (loading) {
-    return <div>로딩 중...</div>;
+    return <div>로딩 중</div>;
   }
 
   if (error) {

@@ -7,7 +7,7 @@ const OrderListComponent = lazy(() => import("../../Components/mypage/admin/orde
 const ProductComponent = lazy(() => import("../../Components/mypage/admin/product/ProductComponent"));
 const ProductListComponent = lazy(()=>import("../../Components/mypage/admin/product/ProductListComponent"));
 const ProductFormComponent = lazy(() => import("../../Components/mypage/admin/product/ProductFormComponent"));
-const MemberCompenet = lazy(() => import("../../Components/mypage/admin/member/MemberCompoenet"));
+const MemberComponent = lazy(() => import("../../Components/mypage/admin/member/MemberComponent"));
 const MemberListCompenet = lazy(() => import("../../Components/mypage/admin/member/MemberListCompoenet"));
 const MemberModifyCompoenet = lazy(() => import("../../Components/mypage/admin/member/MemberModifyCompoenet"));
 const CategoryCompoenet = lazy(() => import("../../Components/mypage/admin/category/CategoryCompoenet"));
@@ -55,7 +55,7 @@ const adminRouter = () => {
         {
           path: "member",
           element : (
-            <Suspense fallback={<Loading />}><MemberCompenet /></Suspense>
+            <Suspense fallback={<Loading />}><MemberComponent /></Suspense>
           ),
           children:[
             {

@@ -38,11 +38,11 @@ const Header = ({ isMypage }) => {
   const handleLogout = () => {
     removeCookie("member");
     localStorage.removeItem("isLoggedIn");
-    navigate("/login");
+    navigate("/");
   };
 
   /** 관리자, 일반유저 인지 따라 링크 다르게 하기 */
-  const mypageLink = memberInfo?.roleNames?.includes("ADMIN") ? "/admin/mypage" : "/mypage";
+  const mypageLink = memberInfo?.roleNames?.includes("ADMIN") ? "/admin/mypage" : "/user/mypage";
 
   return (
     <header className="header">
@@ -72,7 +72,8 @@ const Header = ({ isMypage }) => {
             {/* 로그인 상태 여부에 따라 링크 변환 */}
             <li><Link to="/search">SEARCH</Link></li>
             <li><Link to={isLoggedIn ? "/cart" : "/member/login"}>CART</Link></li>
-            <li><Link to={isLoggedIn ? mypageLink : "/member/login"}>MYPAGE</Link></li>
+            <li><Link to={
+              isLoggedIn ? mypageLink : "/member/login"}>MYPAGE</Link></li>
             {isLoggedIn ? (
               <li><LogoutComponent /></li>
             ) : (

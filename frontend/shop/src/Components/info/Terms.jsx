@@ -1,6 +1,7 @@
+import '../../static/css/information.scss';
 const Terms = () =>{
     return(
-        <>
+        <div className="informationWrap">
             <strong>전자상거래(인터넷사이버몰) 표준약관<br/>
             표준약관 제10023호 (2015.6.26.개정)</strong>
 
@@ -165,7 +166,7 @@ const Terms = () =>{
             <strong>제24조 (재판권 및 준거법)</strong>
             ① “몰”과 이용자 간에 발생한 전자상거래 분쟁에 관한 소송은 제소 당시의 이용자의 주소에의하고, 주소가 없는 경우에는 거소를 관할하는 지방법원의 전속관할로 합니다. 다만, 제소당시 이용자의 주소 또는 거소가 분명하지 않거나 외국 거주자의 경우에는 민사소송법상의관할법원에 제기합니다.<br/>
             ② “몰”과 이용자 간에 제기된 전자상거래 소송에는 한국법을 적용합니다.
-            </>
+        </div>
     )
 }
 export default Terms;
