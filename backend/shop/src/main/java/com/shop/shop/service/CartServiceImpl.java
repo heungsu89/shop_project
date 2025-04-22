@@ -31,15 +31,18 @@ public class CartServiceImpl implements CartService {
         Item item = itemRepository.findById(cartDTO.getItemId()).orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
         ItemOption option = itemOptionRepository.findById(optionId).orElseThrow(() -> new IllegalArgumentException("해당 옵션이 존재하지 않습니다."));
         List<ItemImage> images = itemImageRepository.findByItemId(cartDTO.getItemId());
+
         ItemImage itemImage = null;
-        if (images != null || !images.isEmpty()) {
+        if (images != null && !images.isEmpty()) {
             itemImage = images.get(0);
         }
 
         Cart duplicatePrevention = cartRepository.findByMemberIdAndItemId(member.getId(), item.getId());
 
+        // 존재한다면 삭제 후 null값 반환
         if (duplicatePrevention != null) {
-            throw new RuntimeException("이미 등록된 상품입니다.");
+            cartRepository.deleteById(duplicatePrevention.getId());
+            return null;
         }
 
         Cart cart = new Cart();

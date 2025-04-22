@@ -23,6 +23,8 @@ public class OrderItem {
     private Long id;
 
     private int orderPrice;
+    private int discountRate;
+    private int discountPrice;
     private int qty;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,10 +49,16 @@ public class OrderItem {
         int orderPrice = item.getPrice() * qty;
 
         orderItem.changeOrderPrice(orderPrice);
+        orderItem.changeDiscountRate(item.getDiscountRate());
+        orderItem.changeDiscountPrice(orderPrice * (1 - (item.getDiscountRate() / 100)));
         orderItem.changeQty(qty);
         orderItem.changeItem(item);
         orderItem.changeItemOption(itemOption);
-        orderItem.changeItemImage(itemImage);
+        if (itemImage != null) {
+            orderItem.changeItemImage(itemImage);
+        }else {
+            orderItem.changeItemImage(null);
+        }
         orderItem.changeOrder(order);
 
         itemOption.removeStock(qty);
@@ -63,10 +71,17 @@ public class OrderItem {
         int orderPrice = cart.getItem().getPrice() * cart.getQty();
 
         orderItem.changeOrderPrice(orderPrice);
+        orderItem.changeDiscountRate(cart.getItem().getDiscountRate());
+        orderItem.changeDiscountPrice(orderPrice * (1 - (cart.getItem().getDiscountRate() / 100)));
         orderItem.changeQty(cart.getQty());
         orderItem.changeItem(cart.getItem());
         orderItem.changeItemOption(cart.getItemOption());
-        orderItem.changeItemImage(cart.getItemImage());
+        if (cart.getItemImage() != null) {
+            orderItem.changeItemImage(cart.getItemImage());
+        } else {
+            orderItem.changeItemImage(null);
+        }
+
         orderItem.changeOrder(order);
 
         cart.getItemOption().removeStock(cart.getQty());
@@ -132,6 +147,16 @@ public class OrderItem {
     // itemImage 수정
     public void changeItemImage(ItemImage itemImage) {
         this.itemImage = itemImage;
+    }
+
+    // discountRate 수정
+    public void changeDiscountRate(int discountRate) {
+        this.discountRate = discountRate;
+    }
+
+    // discountPrice 수정
+    public void changeDiscountPrice(int discountPrice) {
+        this.discountPrice = discountPrice;
     }
 
 }

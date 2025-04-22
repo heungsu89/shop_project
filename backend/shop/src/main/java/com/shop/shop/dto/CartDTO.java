@@ -47,8 +47,10 @@ public class CartDTO {
         this.itemName = cart.getItem().getName();
         this.itemPrice = cart.getItem().getPrice();
 
-        this.imageId = cart.getItemImage().getId();
-        this.imageName = cart.getItemImage().getFileName();
+        if (cart.getItemImage() != null) {
+            this.imageId = cart.getItemImage().getId();
+            this.imageName = cart.getItemImage().getFileName();
+        }
 
         if (cart.getItemOption() != null) {
             this.optionId = cart.getItemOption().getId();
