@@ -4,6 +4,7 @@ import com.shop.shop.domain.item.Item;
 import com.shop.shop.domain.list.ReviewImage;
 import com.shop.shop.domain.list.ReviewList;
 import com.shop.shop.domain.member.Member;
+import com.shop.shop.domain.member.MemberRole;
 import com.shop.shop.dto.OrderDTO;
 import com.shop.shop.dto.ReviewListDTO;
 import com.shop.shop.repository.ItemRepository;
@@ -39,9 +40,11 @@ public class ReviewListServiceImpl implements ReviewListService {
         Member member = memberRepository.findById(reviewListDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
         Item item = itemRepository.findById(reviewListDTO.getItemId()).orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
         // 상품 구매내역이 있는지 체크하는 메서드(구매자만 리뷰글 작성 가능)
-        boolean checkPurchaseStatus = checkPurchaseStatus(member.getId(), item.getId());
-        if (!checkPurchaseStatus) {
-            throw new RuntimeException("해당 상품을 구매한 내역이 없습니다. 따라서 리뷰글을 작성할 수 없습니다.");
+        if (member.getMemberRoleList().get(0) == MemberRole.USER) {
+            boolean checkPurchaseStatus = checkPurchaseStatus(member.getId(), item.getId());
+            if (!checkPurchaseStatus) {
+                throw new RuntimeException("해당 상품을 구매한 내역이 없습니다. 따라서 리뷰글을 작성할 수 없습니다.");
+            }
         }
         ReviewList reviewList = ReviewList.builder()
                 .member(member)
@@ -117,8 +120,11 @@ public class ReviewListServiceImpl implements ReviewListService {
         if (reviewListPage == null || reviewListPage.isEmpty()) {
             throw new RuntimeException("조회된 리뷰 리스트가 없습니다.");
         }
-        Page<ReviewListDTO> reviewListDTOPage = reviewListPage.map(ReviewListDTO::new);
-        return reviewListDTOPage;
+
+        return reviewListPage.map(review -> {
+            List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReviewId(review.getId());
+            return new ReviewListDTO(reviewImageList, review);
+        });
     }
 
     // 리뷰 리스트 + 이미지 모두 조회(페이징) 삭제 미포함
@@ -128,14 +134,22 @@ public class ReviewListServiceImpl implements ReviewListService {
         if (reviewListPage == null || reviewListPage.isEmpty()) {
             throw new RuntimeException("조회된 리뷰 리스트가 없습니다.");
         }
-        Page<ReviewListDTO> reviewListDTOPage = reviewListPage.map(ReviewListDTO::new);
-        return reviewListDTOPage;
+        return reviewListPage.map(review -> {
+            List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReviewId(review.getId());
+            return new ReviewListDTO(reviewImageList, review);
+        });
     }
 
     // 리뷰 리스트 수정
     @Override
-    public ReviewListDTO editReviewList(Long reviewListId, ReviewListDTO reviewListDTO, List<MultipartFile> files) {
-        ReviewList reviewList = reviewListRepository.findById(reviewListId).orElseThrow(() -> new RuntimeException("해당 리뷰 리스트를 찾을 수 없습니다."));
+    public ReviewListDTO editReviewList(ReviewListDTO reviewListDTO, List<MultipartFile> files) {
+        Member member = memberRepository.findById(reviewListDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+        ReviewList reviewList = reviewListRepository.findById(reviewListDTO.getReviewId()).orElseThrow(() -> new RuntimeException("해당 리뷰를 찾을 수 없습니다."));
+        if (member.getMemberRoleList().get(0) == MemberRole.USER) {
+            if (reviewList.getMember().getId() != member.getId()) {
+                throw new RuntimeException("해당 리뷰글 작성자가 아닙니다. 따라서 리뷰글을 수정할 수 없습니다.");
+            }
+        }
         reviewList.changeTitle(reviewListDTO.getTitle());
         reviewList.changeWriter(reviewListDTO.getWriter());
         reviewList.changeContent(reviewListDTO.getContent());
@@ -143,6 +157,11 @@ public class ReviewListServiceImpl implements ReviewListService {
         reviewList.clearList();
 
         ReviewList editReviewList = reviewListRepository.save(reviewList);
+
+//        List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReviewId(reviewList.getId());
+//        if (reviewImageList != null && !reviewImageList.isEmpty()) {
+//            reviewImageRepository.deleteAll(reviewImageList);
+//        }
 
         List<ReviewImage> images = null;
 
@@ -166,8 +185,14 @@ public class ReviewListServiceImpl implements ReviewListService {
 
     // 특정 리뷰 리스트 삭제(논리적)
     @Override
-    public void deleteReviewList(Long reviewListId) {
-        ReviewList reviewList = reviewListRepository.findById(reviewListId).orElseThrow(() -> new RuntimeException("해당 리뷰 리스트를 찾을 수 없습니다."));
+    public void deleteReviewList(ReviewListDTO reviewListDTO) {
+        Member member = memberRepository.findById(reviewListDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+        ReviewList reviewList = reviewListRepository.findById(reviewListDTO.getReviewId()).orElseThrow(() -> new RuntimeException("해당 리뷰를 찾을 수 없습니다."));
+        if (member.getMemberRoleList().get(0) == MemberRole.USER) {
+            if (reviewList.getMember().getId() != member.getId()) {
+                throw new RuntimeException("해당 리뷰글 작성자가 아닙니다. 따라서 리뷰글을 삭제할 수 없습니다.");
+            }
+        }
         reviewList.changeDelFlag(true);
         reviewListRepository.save(reviewList);
     }

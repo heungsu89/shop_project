@@ -43,9 +43,9 @@ public class ReviewList {
     private Item item;
 
     // 아이템 이미지
-    // 저장, 병합(수장), 삭제
+    // 저장, 병합(수정), 삭제
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "review_list_id")
+    @JoinColumn(name = "review_id")
     @Builder.Default
     private List<ReviewImage> images = new ArrayList<>();
 

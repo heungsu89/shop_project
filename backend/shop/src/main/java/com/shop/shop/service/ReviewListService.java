@@ -14,7 +14,7 @@ public interface ReviewListService {
     public ReviewListDTO getReviewListWithReviewImages(Long reviewListId);
     public Page<ReviewListDTO> getReviewListPage(Pageable pageable);
     public Page<ReviewListDTO> getReviewListPageWithDelFlag(Pageable pageable);
-    public ReviewListDTO editReviewList(Long reviewListId, ReviewListDTO reviewListDTO, List<MultipartFile> files);
-    public void deleteReviewList(Long reviewListId);
+    public ReviewListDTO editReviewList(ReviewListDTO reviewListDTO, List<MultipartFile> files);
+    public void deleteReviewList(ReviewListDTO reviewListDTO);
 
 }

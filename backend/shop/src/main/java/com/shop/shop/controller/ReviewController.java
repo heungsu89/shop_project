@@ -126,6 +126,8 @@ public class ReviewController {
             @RequestParam(value = "files", required = false) List<MultipartFile> files
     ) {
         ReviewListDTO reviewListDTO = new ReviewListDTO();
+        reviewListDTO.setMemberId(memberId);
+        reviewListDTO.setReviewId(reviewListId);
         reviewListDTO.setTitle(title);
         reviewListDTO.setWriter(writer);
         reviewListDTO.setContent(content);
@@ -138,16 +140,16 @@ public class ReviewController {
             reviewListDTO.setUploadFileNames(uploadFileNames);
         }
 
-        ReviewListDTO editedReviewListDTO = reviewListService.editReviewList(reviewListId, reviewListDTO, files);
+        ReviewListDTO editedReviewListDTO = reviewListService.editReviewList(reviewListDTO, files);
 
         return ResponseEntity.ok(editedReviewListDTO);
     }
 
     // 특정 리뷰 리스트 삭제(논리적)
-    @DeleteMapping("/{reviewListId}")
-    public ResponseEntity<?> deleteReviewList(@PathVariable("reviewListId") Long reviewListId) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteReviewList(@RequestBody ReviewListDTO reviewListDTO) {
         try {
-            reviewListService.deleteReviewList(reviewListId);
+            reviewListService.deleteReviewList(reviewListDTO);
             Map<String, String> response = Map.of("result", "success");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
