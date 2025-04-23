@@ -89,8 +89,6 @@ public class ReviewListServiceImpl implements ReviewListService {
         }
         int listIndex = 0;
         for (OrderDTO targetOrder : orderDTO) {
-            log.info("targetOrder.getId(): " + targetOrder.getId());
-            log.info("targetOrder.getOrderItemList(): " + targetOrder.getOrderItemList());
             if (targetOrder.getOrderItemList() == null || targetOrder.getOrderItemList().isEmpty()) {
                 throw new RuntimeException("주문 상품을 조회할 수 없습니다.");
             } else {
@@ -157,11 +155,6 @@ public class ReviewListServiceImpl implements ReviewListService {
         reviewList.clearList();
 
         ReviewList editReviewList = reviewListRepository.save(reviewList);
-
-//        List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReviewId(reviewList.getId());
-//        if (reviewImageList != null && !reviewImageList.isEmpty()) {
-//            reviewImageRepository.deleteAll(reviewImageList);
-//        }
 
         List<ReviewImage> images = null;
 
