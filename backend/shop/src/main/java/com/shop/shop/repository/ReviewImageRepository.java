@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface ReviewImageRepository extends JpaRepository<ReviewImage, Long> {
 
+    // 리뷰Id를 기준으로 기뷰 이미지 가져오가
     @Query("SELECT ri FROM ReviewImage ri WHERE ri.reviewId = :reviewId")
     public List<ReviewImage> findAllByReviewId(@Param("reviewId") Long reviewId);
 

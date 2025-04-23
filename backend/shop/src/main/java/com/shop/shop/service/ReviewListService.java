@@ -10,6 +10,7 @@ import java.util.List;
 public interface ReviewListService {
 
     public ReviewListDTO createReviewList(ReviewListDTO reviewListDTO, List<MultipartFile> files);
+    public boolean checkPurchaseStatus(Long memberId, Long itemId);
     public ReviewListDTO getReviewListWithReviewImages(Long reviewListId);
     public Page<ReviewListDTO> getReviewListPage(Pageable pageable);
     public Page<ReviewListDTO> getReviewListPageWithDelFlag(Pageable pageable);

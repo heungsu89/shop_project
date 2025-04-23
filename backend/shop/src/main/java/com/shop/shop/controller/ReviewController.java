@@ -1,7 +1,9 @@
 package com.shop.shop.controller;
 
+import com.shop.shop.dto.CheckDTO;
 import com.shop.shop.dto.ReviewListDTO;
 import com.shop.shop.repository.ReviewListRepository;
+import com.shop.shop.service.OrderService;
 import com.shop.shop.service.ReviewListService;
 import com.shop.shop.util.CustomFileUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class ReviewController {
     private final ReviewListRepository reviewListRepository;
     private final ReviewListService reviewListService;
     private final CustomFileUtil fileUtil;
+    private final OrderService orderService;
 
     // 리뷰 리스트 등록
     @PostMapping("/add")
@@ -57,6 +60,19 @@ public class ReviewController {
         ReviewListDTO createdReviewListDTO = reviewListService.createReviewList(reviewListDTO, files);
 
         return ResponseEntity.ok(createdReviewListDTO);
+    }
+
+    // 회원Id와 상품Id를 기준으로 구매여부(주문내역) 확인
+    @GetMapping("/checkPurchaseStatus")
+    public ResponseEntity<?> checkPurchaseStatus(@RequestBody CheckDTO checkDTO) {
+        boolean checkResult = reviewListService.checkPurchaseStatus(checkDTO.getMemberId(), checkDTO.getItemId());
+        if (checkResult) {
+            Map<String, String> response = Map.of("result", "true");
+            return ResponseEntity.ok(response);
+        } else {
+            Map<String, String> response = Map.of("result", "false");
+            return ResponseEntity.ok(response);
+        }
     }
 
     // 특정 리뷰 리스트 조회

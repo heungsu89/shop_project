@@ -23,16 +23,17 @@ public interface CategoryItemRepository extends JpaRepository<CategoryItem, Long
     // // 삭제 된거 제외
     // CategoryDTO getItemsFromCategory(@Param("categoryId") Long categoryId);
 
-    // categoryId 에 속한 모든 데이터 가져오기
+    // categoryId를 기준으로 상위 카테고리 상품 모두 가져오기
     @EntityGraph(attributePaths = { "item" })
     @Query("SELECT ci FROM CategoryItem ci ORDER BY ci.id DESC")
     Page<CategoryItem> findAllWithItem(Pageable pageable);
 
-    // categoryId 에 속한 모든 데이터 가져오기
+    // categoryId 에 속한 상위/하위의 모든 데이터 가져오기
     @EntityGraph(attributePaths = { "item" })
     @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId OR ci.category.parent.id = :categoryId ORDER BY ci.id DESC")
     Page<CategoryItem> findAllPageByCategoryId(Pageable pageable, @Param("categoryId") Long categoryId);
 
+    // categoryId를 기준으로 모두 조회
     @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId ORDER BY ci.id DESC")
     List<CategoryItem> findAllByCategoryId(@Param("categoryId") Long categoryId);
 

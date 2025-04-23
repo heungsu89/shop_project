@@ -4,6 +4,7 @@ import com.shop.shop.domain.item.Item;
 import com.shop.shop.domain.list.ReviewImage;
 import com.shop.shop.domain.list.ReviewList;
 import com.shop.shop.domain.member.Member;
+import com.shop.shop.dto.OrderDTO;
 import com.shop.shop.dto.ReviewListDTO;
 import com.shop.shop.repository.ItemRepository;
 import com.shop.shop.repository.MemberRepository;
@@ -11,6 +12,7 @@ import com.shop.shop.repository.ReviewImageRepository;
 import com.shop.shop.repository.ReviewListRepository;
 import com.shop.shop.util.CustomFileUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class ReviewListServiceImpl implements ReviewListService {
 
     private final MemberRepository memberRepository;
@@ -28,12 +31,18 @@ public class ReviewListServiceImpl implements ReviewListService {
     private final ReviewListRepository reviewListRepository;
     private final ReviewImageRepository reviewImageRepository;
     private final CustomFileUtil fileUtil;
+    private final OrderService orderService;
 
     // 리뷰 리스트 등록
     @Override
     public ReviewListDTO createReviewList(ReviewListDTO reviewListDTO, List<MultipartFile> files) {
         Member member = memberRepository.findById(reviewListDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
         Item item = itemRepository.findById(reviewListDTO.getItemId()).orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
+        // 상품 구매내역이 있는지 체크하는 메서드(구매자만 리뷰글 작성 가능)
+        boolean checkPurchaseStatus = checkPurchaseStatus(member.getId(), item.getId());
+        if (!checkPurchaseStatus) {
+            throw new RuntimeException("해당 상품을 구매한 내역이 없습니다. 따라서 리뷰글을 작성할 수 없습니다.");
+        }
         ReviewList reviewList = ReviewList.builder()
                 .member(member)
                 .item(item)
@@ -64,6 +73,30 @@ public class ReviewListServiceImpl implements ReviewListService {
         }
 
         return new ReviewListDTO(savedReviewList);
+    }
+
+    // 해당 상품을 구매한 적이 있는지 확인하는 메서드(회원Id, 상품Id를 기준으로)
+    @Override
+    public boolean checkPurchaseStatus(Long memberId, Long itemId) {
+        List<OrderDTO> orderDTO = orderService.findAllByMemberId(memberId);
+        boolean checkStatus = false;
+        if (orderDTO == null || orderDTO.isEmpty()) {
+//            checkStatus = false;
+            throw new RuntimeException("해당 회원의 주문 내역이 조회되지 않습니다."); // 이 부분 회의 필요
+        }
+        int listIndex = 0;
+        for (OrderDTO targetOrder : orderDTO) {
+            log.info("targetOrder.getId(): " + targetOrder.getId());
+            log.info("targetOrder.getOrderItemList(): " + targetOrder.getOrderItemList());
+            if (targetOrder.getOrderItemList() == null || targetOrder.getOrderItemList().isEmpty()) {
+                throw new RuntimeException("주문 상품을 조회할 수 없습니다.");
+            } else {
+                if (targetOrder.getOrderItemList().get(listIndex).getItemId() == itemId) {
+                    checkStatus = true;
+                }
+            }
+        }
+        return checkStatus;
     }
 
     // 특정 리뷰 리스트 조회

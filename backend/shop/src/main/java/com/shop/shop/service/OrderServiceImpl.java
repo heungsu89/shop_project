@@ -167,7 +167,7 @@ public class OrderServiceImpl implements OrderService {
         memberRepository.save(member);
     }
 
-    // 회원 이메일로 주문 모두 조회
+    // 회원Id를 기준으로 주문 모두 조회
     @Override
     public List<OrderDTO> findAllByMemberId(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
@@ -177,10 +177,13 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("해당 회원의 주문이 존재하지 않습니다.");
         }
 
-        return orderList.stream().map(OrderDTO::new).collect(Collectors.toList());
+        return orderList.stream().map(order -> {
+                    List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+                    return new OrderDTO(order, items);
+                }).collect(Collectors.toList());
     }
 
-    // 회원 이메일로 주문 모두 조회(페이징)
+    // 회원Id를 기준으로 주문 모두 조회(페이징)
     @Override
     public Page<OrderDTO> findAllByMemberId(Pageable pageable, Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
@@ -190,7 +193,10 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("해당 회원의 주문이 존재하지 않습니다.");
         }
 
-        return orderList.map(OrderDTO::new);
+        return orderList.map(order -> {
+            List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+            return new OrderDTO(order, items);
+        });
     }
 
     // 배송Id를 기준으로 주문 내역 조회
@@ -211,7 +217,10 @@ public class OrderServiceImpl implements OrderService {
         if (duringPeriodList == null || duringPeriodList.isEmpty()) {
             throw new RuntimeException("해당 기간동안 조회되는 데이터가 없습니다.");
         }
-        return duringPeriodList.stream().map(OrderDTO::new).collect(Collectors.toList());
+        return duringPeriodList.stream().map(order -> {
+            List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+            return new OrderDTO(order, items);
+        }).collect(Collectors.toList());
     }
 
     // 특정 기간동안 데이터 조회(페이징)
@@ -221,7 +230,10 @@ public class OrderServiceImpl implements OrderService {
         if (duringPeriodList == null || duringPeriodList.isEmpty()) {
             throw new RuntimeException("해당 기간동안 조회되는 데이터가 없습니다.");
         }
-        return duringPeriodList.map(OrderDTO::new);
+        return duringPeriodList.map(order -> {
+            List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+            return new OrderDTO(order, items);
+        });
     }
 
     // 특정 기간동안 특정회원의 데이터 조회
@@ -231,7 +243,10 @@ public class OrderServiceImpl implements OrderService {
         if (duringPeriodFromMemberEmail == null || duringPeriodFromMemberEmail.isEmpty()) {
             throw new RuntimeException("해당 회뭔의 해당 기간동안 조회되는 데이터가 없습니다.");
         }
-        return duringPeriodFromMemberEmail.stream().map(OrderDTO::new).collect(Collectors.toList());
+        return duringPeriodFromMemberEmail.stream().map(order -> {
+            List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+            return new OrderDTO(order, items);
+        }).collect(Collectors.toList());
     }
 
     // 특정 기간동안 특정회원의 데이터 조회(페이징)
@@ -241,7 +256,10 @@ public class OrderServiceImpl implements OrderService {
         if (duringPeriodFromMemberEmail == null || duringPeriodFromMemberEmail.isEmpty()) {
             throw new RuntimeException("해당 회뭔의 해당 기간동안 조회되는 데이터가 없습니다.");
         }
-        return duringPeriodFromMemberEmail.map(OrderDTO::new);
+        return duringPeriodFromMemberEmail.map(order -> {
+            List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+            return new OrderDTO(order, items);
+        });
     }
 
     // 배송지 수정
