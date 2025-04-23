@@ -12,9 +12,18 @@ const MemberComponent = lazy(() => import("../../Components/mypage/admin/member/
 const MemberListCompenet = lazy(() => import("../../Components/mypage/admin/member/MemberListCompoenet"));
 const MemberModifyCompoenet = lazy(() => import("../../Components/mypage/admin/member/MemberModifyCompoenet"));
 const CategoryCompoenet = lazy(() => import("../../Components/mypage/admin/category/CategoryCompoenet"));
-const BoardListComponent = lazy(() => import("../../Components/mypage/admin/board/BoardListComponent"));
 const InquiryComponent = lazy(() => import("../../Components/mypage/admin/inquiry/InquiryCompoenet"));
 const InquiryListComponent = lazy(() => import("../../Components/mypage/admin/inquiry/InquiryListCompoenet"));
+
+const EventComponent = lazy(() => import("../../Components/mypage/admin/event/EventComponent"));
+const EventListComponent = lazy(() => import("../../Components/mypage/admin/event/EventListComponent"));
+const EventFormComponent = lazy(() => import("../../Components/mypage/admin/event/EventFormComponent"));
+
+const MagazineComponent = lazy(() => import("../../Components/mypage/admin/magazine/MagazineComponent"));
+const MagazineListComponent = lazy(() => import("../../Components/mypage/admin/magazine/MagazineListComponent"));
+const MagazineFormComponent = lazy(() => import("../../Components/mypage/admin/magazine/MagazineFormComponent"));
+
+
 
 const adminRouter = () => {
   return [
@@ -93,10 +102,52 @@ const adminRouter = () => {
           ),
         },
         {
-          path: "board",
+          path: "event",
           element: (
-            <BoardListComponent />
+            <EventComponent />
           ),
+          children:[
+            {
+              index: true,  // <- 기본 라우트
+              element: <EventListComponent />
+            },
+            {
+              path: "add",
+              element :(
+                <EventFormComponent />
+              )
+            },
+            {
+              path: "modify/:id",
+              element: (
+                <EventFormComponent />
+              )
+            }
+          ]
+        },
+        {
+          path: "Magazine",
+          element: (
+            <MagazineComponent />
+          ),
+          children:[
+            {
+              index: true,  // <- 기본 라우트
+              element: <MagazineListComponent />
+            },
+            {
+              path: "add",
+              element :(
+                <MagazineFormComponent />
+              )
+            },
+            {
+              path: "modify/:id",
+              element: (
+                <MagazineFormComponent />
+              )
+            }
+          ]
         },
         {
           path: "inquiry",

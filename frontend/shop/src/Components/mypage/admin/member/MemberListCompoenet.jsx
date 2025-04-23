@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { NavLink, Link } from "react-router-dom";
 import { memberList } from "../../../../api/memberApi";
 import { formatDateToDot } from "../../../../util/dateUtil";
-import Pagination from "../../Pagination";
+import Pagination from "../../../Pagination";
 
 const MemberListCompenet = () =>{
     const [memberData, setData] = useState({});

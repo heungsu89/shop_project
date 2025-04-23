@@ -6,6 +6,7 @@ import userRouter from "./mypage/userRouter";
 import ProductRouter from "./product/ProductRouter";
 import cartRouter from "./cart/cartRouter";
 import magazineRouter from "./magazine/magazineRouter"; 
+import eventRouter from "./event/eventRotuer";
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../Pages/main/MainPage"));
@@ -53,6 +54,10 @@ const rootRouter = createBrowserRouter([
   {
     path: "magazine",
     children: magazineRouter(), 
+  },
+  {
+    path: "event",
+    children: eventRouter(), 
   },
 ]);
 

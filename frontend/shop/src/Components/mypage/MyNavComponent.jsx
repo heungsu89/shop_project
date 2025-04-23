@@ -53,8 +53,8 @@ const MyNav = ({ memberInfo }) => {
               <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`product/${pageParam}`}>상품</NavLink></li>
               <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="category">분류</NavLink></li>
               <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="member">회원</NavLink></li>
-              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="event">이벤트</NavLink></li>
-              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="magazine">메거진</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="event?page=0&size=10">이벤트</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="magazine?page=0&size=10">메거진</NavLink></li>
               <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="adminInfo">관리자정보</NavLink></li>
             </ul>
           </nav>

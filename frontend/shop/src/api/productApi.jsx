@@ -33,9 +33,7 @@ export const registerProduct = async ({ itemDTO, categoryId, files }) => {
   });
   try{
     const res = await axios.post(`${host}/add`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      }
+      headers: {'Content-Type': 'multipart/form-data'}
     });
     alert("상품등록완료")
     return res.data;
