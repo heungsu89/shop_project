@@ -34,7 +34,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private MileageStatus mileageStatus;
 
-//    private int mileageAmount;
+    private int addMileageAmount;
     private int usingMileage;
 
     @Enumerated(EnumType.STRING)
@@ -97,17 +97,12 @@ public class Order {
         this.mileageStatus = mileageStatus;
     }
 
-//    public void changeMileageAmount(int mileageAmount) {
-//        this.mileageAmount = mileageAmount;
-//    }
+    public void changeAddMileageAmount(int addMileageAmount) {
+        this.addMileageAmount = addMileageAmount;
+    }
 
     public void changeUsingMileage(int usingMileage) {
         this.usingMileage = usingMileage;
     }
-
-//    // 옵션 추가
-//    public void addOrderItem(OrderItem orderItem) {
-//        this.orderItems.add(orderItem);
-//    }
 
 }

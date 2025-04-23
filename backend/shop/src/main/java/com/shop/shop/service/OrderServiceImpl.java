@@ -71,7 +71,7 @@ public class OrderServiceImpl implements OrderService {
                 .orderDate(LocalDateTime.now())
                 .totalAmount(orderDTO.getTotalAmount())
                 .mileageStatus(orderDTO.getMileageStatus())
-//                .mileageAmount(orderDTO.getMileageAmount())
+                .addMileageAmount(0)
                 .usingMileage(orderDTO.getUsingMileage())
                 .orderStatus(
                         (orderDTO.getPaymentMethod() == PaymentMethod.CARD) ? OrderStatus.PAID : OrderStatus.PENDING
@@ -112,11 +112,7 @@ public class OrderServiceImpl implements OrderService {
             totalDiscountAmount += ((int)((float)(cart.getItemOption().getOptionPrice() * cart.getQty()) * (1 - ((float)cart.getItem().getDiscountRate() / 100))));
         }
         order.changeTotalAmount(totalDiscountAmount);
-
         log.info("totalDiscountAmount: " + totalDiscountAmount);
-
-        // Order와 OrderItem을 함께 저장
-        Order saved1Order = orderRepository.save(savedOrder);
 
         int addMileageAmount;
         switch (member.getMemberShip()) {
@@ -138,9 +134,11 @@ public class OrderServiceImpl implements OrderService {
                 throw new RuntimeException("마일리지 보유량이 부족합니다.");
             }
         }
-//        saved1Order.changeMileageStatus(orderDTO.getMileageStatus());
-//        saved1Order.changeMileageAmount(addMileageAmount);
-//        saved1Order.changeUsingMileage(orderDTO.getUsingMileage());
+        savedOrder.changeAddMileageAmount(addMileageAmount);
+
+        // Order와 OrderItem을 함께 저장
+        Order saved1Order = orderRepository.save(savedOrder);
+
         return new OrderDTO(saved1Order, orderItemList);
     }
 

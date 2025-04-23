@@ -41,7 +41,7 @@ public class OrderDTO {
 
     private DeliveryStatus deliveryStatus;
     private MileageStatus mileageStatus;
-//    private int mileageAmount; // 마일리지 적립량
+    private int addMileageAmount; // 마일리지 적립량
     private int usingMileage;
 
     private List<OrderItemDTO> orderItemList = new ArrayList<>();
@@ -65,10 +65,9 @@ public class OrderDTO {
         this.recipient_detailed_address = order.getRecipient_detailed_address();
         this.deliveryStatus = order.getDelivery().getStatus();
         this.mileageStatus = order.getMileageStatus();
-//        this.mileageAmount = order.getMileageAmount();
+        this.addMileageAmount = order.getAddMileageAmount();
         this.usingMileage = order.getUsingMileage();
 
-        // List<OrderItem> to List<OrderItemDTO>
         this.orderItemList = (items != null ? items : new ArrayList<>()).stream()
                 .map(item -> new OrderItemDTO((OrderItem) item))  // 대신 람다식으로 명시적 호출
                 .collect(Collectors.toList());
@@ -93,7 +92,7 @@ public class OrderDTO {
         this.recipient_detailed_address = order.getRecipient_detailed_address();
         this.deliveryStatus = order.getDelivery().getStatus();
         this.mileageStatus = order.getMileageStatus();
-//        this.mileageAmount = order.getMileageAmount();
+        this.addMileageAmount = order.getAddMileageAmount();
         this.usingMileage = order.getUsingMileage();
     }
 
