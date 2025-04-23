@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
 
+
 const EditorComponent = ({ value, onChange }) => {
   const editorRef = useRef();
 
@@ -17,7 +18,7 @@ const EditorComponent = ({ value, onChange }) => {
   }, [value]);
 
   const handleChange = () => {
-    const content = editorRef.current.getInstance().getMarkdown();
+    const content = editorRef.current.getInstance().getHTML();
     onChange(content); // 상태 업데이트
   };
 
@@ -27,10 +28,11 @@ const EditorComponent = ({ value, onChange }) => {
         initialValue="" // 항상 비워둠
         previewStyle="vertical"
         height="400px"
-        initialEditType="markdown"
+        initialEditType="wysiwyg"
         useCommandShortcut={true}
         onChange={handleChange}
         ref={editorRef}
+        hideModeSwitch={true}
       />
     </div>
   );
