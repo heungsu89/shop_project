@@ -132,10 +132,8 @@ public class OrderServiceImpl implements OrderService {
         // 마일리지 상태가 REDEEM(사용)이라면
         if (orderDTO.getMileageStatus() == MileageStatus.REDEEM) {
             Member memberMileage = memberRepository.findById(orderDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
-            if (order.getUsingMileage() <= memberMileage.getStockMileage()) {
-                memberMileage.minusMileage(order.getUsingMileage());
+            if (orderDTO.getUsingMileage() <= memberMileage.getStockMileage()) {
                 createMileageByMemberShip(orderDTO.getUsingMileage(), member, order, MileageStatus.REDEEM);
-                memberRepository.save(memberMileage);
             } else {
                 throw new RuntimeException("마일리지 보유량이 부족합니다.");
             }
@@ -161,7 +159,13 @@ public class OrderServiceImpl implements OrderService {
         mileageService.createMileage(new MileageDTO(mileage));
 
         // 회원 마일리지량 증가
-        member.addMileage(amount);
+        if (mileageStatus == MileageStatus.REDEEM) {
+            member.minusMileage(amount);
+        } else if (mileageStatus == MileageStatus.NO_REDEEM) {
+            member.addMileage(amount);
+        } else {
+            throw new RuntimeException("올바른 마일리지 상태가 아닙니다.");
+        }
         memberRepository.save(member);
     }
 
