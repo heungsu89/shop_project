@@ -28,7 +28,7 @@ public class QnAList {
     private String title;
     private String writer;
     private LocalDateTime date;
-    private boolean answer;
+//    private boolean answer;
 
     @Lob
     private String content;
@@ -50,16 +50,31 @@ public class QnAList {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    @Enumerated(EnumType.STRING)
+    private QnAListStatus qnAListStatus;
+
     public void changeTitle(String title) {
         this.title = title;
+    }
+
+    public void changeWriter(String writer) {
+        this.writer = writer;
     }
 
     public void changeContent(String content) {
         this.content = content;
     }
 
-    public void changeAnswer(boolean answer) {
-        this.answer = answer;
+//    public void changeAnswer(boolean answer) {
+//        this.answer = answer;
+//    }
+
+    public void changeParent(QnAList parent) {
+        this.parent = parent;
+    }
+
+    public void changeQnAListStatus(QnAListStatus qnAListStatus) {
+        this.qnAListStatus = qnAListStatus;
     }
 
 }
