@@ -1,8 +1,6 @@
 package com.shop.shop.domain.order;
 
 import com.shop.shop.domain.delivery.Delivery;
-import com.shop.shop.domain.item.ItemImage;
-import com.shop.shop.domain.item.ItemOption;
 import com.shop.shop.domain.member.Member;
 import com.shop.shop.domain.member.MileageStatus;
 import jakarta.persistence.*;
@@ -12,8 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -38,7 +34,8 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private MileageStatus mileageStatus;
 
-    private int mileageAmount;
+//    private int mileageAmount;
+    private int usingMileage;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
@@ -72,11 +69,6 @@ public class Order {
     @Column(nullable = false)
     private String recipient_detailed_address;
 
-//    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-//    @JoinColumn(name = "order_item_id")
-//    @Builder.Default
-//    private List<OrderItem> orderItems = new ArrayList<>();
-
     public void changeRecipient_zip_code(String recipient_zip_code) {
         this.recipient_zip_code = recipient_zip_code;
     }
@@ -99,6 +91,18 @@ public class Order {
 
     public void changeDelFlag(boolean delFlag) {
         this.delFlag = delFlag;
+    }
+
+    public void changeMileageStatus(MileageStatus mileageStatus) {
+        this.mileageStatus = mileageStatus;
+    }
+
+//    public void changeMileageAmount(int mileageAmount) {
+//        this.mileageAmount = mileageAmount;
+//    }
+
+    public void changeUsingMileage(int usingMileage) {
+        this.usingMileage = usingMileage;
     }
 
 //    // 옵션 추가

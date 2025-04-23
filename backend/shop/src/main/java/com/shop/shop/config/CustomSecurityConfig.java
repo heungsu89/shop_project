@@ -52,6 +52,8 @@ public class CustomSecurityConfig {
                         .requestMatchers("/api/mileage/**").permitAll()
                         .requestMatchers("/api/eventList/**").permitAll()
                         .requestMatchers("/api/magazineList/**").permitAll()
+                        .requestMatchers("/api/reviewList/**").permitAll()
+                        .requestMatchers("/api/qnaList/**").permitAll()
                         .requestMatchers("/api/delivery/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/upload/**").permitAll() // ✅ 추가된 라인
