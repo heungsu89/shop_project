@@ -4,6 +4,7 @@ import memberRouter from "./memberRouter";
 import adminRouter from "./mypage/adminRouter";
 import userRouter from "./mypage/userRouter";
 import ProductRouter from "./product/ProductRouter";
+import cartRouter from "./cart/cartRouter";  
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../Pages/main/MainPage"));
@@ -43,7 +44,11 @@ const rootRouter = createBrowserRouter([
   {
     path: "user",
     children: userRouter()
-  }
+  },
+  {
+    path: "cart",  
+    children: cartRouter(),  
+  },
 ]);
 
 const Root = () => {

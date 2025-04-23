@@ -20,7 +20,7 @@ const MyPageSidebar = ({ userName, membership }) => {
   return (
     <aside className="sidebar">
       <h2>MYPAGE</h2>
-      <p>{membershipGrade[membership]}등급</p>
+      <p>{membershipGrade[membership]}</p>
       <p>{userName} 고객님 반갑습니다.</p>
       <nav className="siderbarMenu">
         <ul>

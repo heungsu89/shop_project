@@ -1,0 +1,99 @@
+.cartBox {
+    width: 100%;
+    padding: 20px;
+    margin: 20px auto;
+    border: 1px solid var(--charcoal-grey);
+    border-radius: 3px;
+  }
+  
+  .cartBox h1 {
+    margin-bottom: 20px;
+  }
+  
+  .membership {
+    margin-bottom: 20px;
+    .membershipLevel {
+        font-size: var(--h3);
+        color: var(--slate-blue);
+        font-weight: bold;
+    }
+    }
+  
+    .membership p{
+        font-size: var(--h5);
+    }
+  
+  .cartButtons {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 30px 0 10px 0;
+  }
+  
+  .cartButtons .leftButtons {
+    display: flex;
+    align-items: center;
+  }
+  
+  .cartButtons button.allSelectBtn {
+    padding: 7px 13px;
+    border: 1px solid var(--deep-onyx);
+    background-color: var(--deep-onyx);
+    color: var(--ash-white);
+    cursor: pointer;
+    font-size: var(--text-base);
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+  
+  .cartButtons button.allSelectBtn:hover {
+    background-color: #333;
+  }
+  
+  .cartButtons .leftButtons button:not(.allSelectBtn) {
+    padding: 7px 13px;
+    border: 1px solid var(--ash-white);
+    background-color: var(--ash-white);
+    color: var(--charcoal-grey);
+    cursor: pointer;
+    font-size: var(--text-base);
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+  
+  .cartButtons .leftButtons button:not(.allSelectBtn):hover {
+    background-color: #d4d4d4;
+  }
+  
+  .cartButtons .rightButtons {
+    margin-top: 20px;
+  }
+  
+  .cartButtons .rightButtons button:first-child {
+    padding: 11px 21px;
+    background-color: #FFFFFF;
+    color: var(--charcoal-grey);
+    border: 1px solid var(--charcoal-grey);
+    cursor: pointer;
+    font-size: 17px;
+    border-radius: 3px;
+    margin-right: 10px;
+  }
+  
+  .cartButtons .rightButtons button:first-child:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .cartButtons .rightButtons button:last-child {
+    padding: 11px 21px;
+    background-color: var(--charcoal-grey);
+    color: var(--ash-white);
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    border-radius: 3px;
+  }
+  
+  .cartButtons .rightButtons button:last-child:hover {
+    background-color: var(--deep-onyx);
+  }
