@@ -24,10 +24,18 @@
   .cartTable {
     width: 100%;
     display: grid;
-    gap: 0;
-    border-top: 1px solid var(--charcoal-grey);
-    border-bottom: 1px solid var(--charcoal-grey);
+    gap: 20px;
+    text-align: center;
 
+  }
+
+  .quantityControl button{
+    background-color: var(--deep-onyx);
+    color: var(--ash-white);
+    font-size: var(--text-base);
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
   }
   
   .cartButtons {

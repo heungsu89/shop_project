@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ImageUploadComponent from '../../../ImageUploadComponent';
 import EditorComponent from '../../../EditorComponent';
-import { getEvent, postMagazine, putMagazine, deleteMagazine } from '../../../../api/BoardApi';
+import { getMagazine, postMagazine, putMagazine, deleteMagazine } from '../../../../api/BoardApi';
 import '../../../../static/css/adminProduct.scss';
 
 const DEFAULT_FORM = {
@@ -23,7 +23,7 @@ const EventFormComponent = () => {
 
   useEffect(() => {
     if (isEdit) {
-      getEvent(id).then(data => {
+      getMagazine(id).then(data => {
         setForm({ ...DEFAULT_FORM, ...data });
         setContent(data.content || '');
 
@@ -53,8 +53,6 @@ const EventFormComponent = () => {
     if (!form.writer.trim()) return alert('작성자를 입력해주세요');
     if (!form.title.trim()) return alert('글제목을 입력해주세요');
 
-
-
     try {
       if (isEdit) {
         const formData = new FormData();
@@ -70,8 +68,6 @@ const EventFormComponent = () => {
           }
         });
 
-
-        formData.append("eventListId", form.eventListId);
         await putMagazine(formData);
         alert('글 수정이 완료되었습니다.');
       } else {
