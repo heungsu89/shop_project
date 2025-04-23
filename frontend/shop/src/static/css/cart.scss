@@ -1,9 +1,6 @@
 .cartBox {
     width: 100%;
-    padding: 20px;
-    margin: 20px auto;
-    border: 1px solid var(--charcoal-grey);
-    border-radius: 3px;
+    padding: 40px;
   }
   
   .cartBox h1 {
@@ -12,22 +9,53 @@
   
   .membership {
     margin-bottom: 20px;
-    .membershipLevel {
-        font-size: var(--h3);
-        color: var(--slate-blue);
-        font-weight: bold;
-    }
-    }
+  }
   
-    .membership p{
-        font-size: var(--h5);
-    }
+  .membership .membershipLevel {
+    font-size: var(--h3);
+    color: var(--slate-blue);
+    font-weight: bold;
+  }
+  
+  .membership p {
+    font-size: var(--h5);
+  }
+  
+  .cartTable {
+    width: 100%;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--charcoal-grey);
+  }
+  
+  .cartTable thead.menu {
+    display: grid;
+    background-color: #ffffff;
+  }
+  
+  .cartTable thead.menu th {
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    height: 42px;
+    border-bottom: 1px solid var(--charcoal-grey);
+  }
+  
+  .cartTable tr {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto auto auto auto;
+    align-items: center;
+    border-bottom: 1px solid color #ffffff;
+  }
+  
+
   
   .cartButtons {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 30px 0 10px 0;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    padding: 20px 0;
+    width: 100%;
   }
   
   .cartButtons .leftButtons {
@@ -47,7 +75,7 @@
   }
   
   .cartButtons button.allSelectBtn:hover {
-    background-color: #333;
+    background-color: var(--deep-onyx);
   }
   
   .cartButtons .leftButtons button:not(.allSelectBtn) {
@@ -61,12 +89,9 @@
     margin-right: 10px;
   }
   
-  .cartButtons .leftButtons button:not(.allSelectBtn):hover {
-    background-color: #d4d4d4;
-  }
-  
   .cartButtons .rightButtons {
-    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
   }
   
   .cartButtons .rightButtons button:first-child {
