@@ -13,6 +13,7 @@ import com.shop.shop.dto.MileageDTO;
 import com.shop.shop.dto.OrderDTO;
 import com.shop.shop.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -34,17 +36,17 @@ public class OrderServiceImpl implements OrderService {
     private final ItemOptionRepository itemOptionRepository;
     private final MileageService mileageService;
 
-    // 주문서 작성준비
-    @Override
-    public OrderDTO preparingOrder(OrderDTO orderDTO) {
+//    // 주문서 작성준비
+//    @Override
+//    public OrderDTO preparingOrder(OrderDTO orderDTO) {
 //        Member member = memberRepository.findById(orderDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
 //        List<Cart> cartList = cartRepository.findAllCartListByMemberId(orderDTO.getMemberId());
 //        if (cartList == null || cartList.isEmpty()) {
 //            throw new RuntimeException("장바구니에 상품이 없습니다.");
 //        }
 //        order
-        return null;
-    }
+//        return null;
+//    }
 
     // 주문서 작성(등록)
     @Override
@@ -68,6 +70,9 @@ public class OrderServiceImpl implements OrderService {
                 .member(member)
                 .orderDate(LocalDateTime.now())
                 .totalAmount(orderDTO.getTotalAmount())
+                .mileageStatus(orderDTO.getMileageStatus())
+//                .mileageAmount(orderDTO.getMileageAmount())
+                .usingMileage(orderDTO.getUsingMileage())
                 .orderStatus(
                         (orderDTO.getPaymentMethod() == PaymentMethod.CARD) ? OrderStatus.PAID : OrderStatus.PENDING
                 )
@@ -95,7 +100,7 @@ public class OrderServiceImpl implements OrderService {
             orderItem.changeOrderPrice(cart.getItemOption().getOptionPrice() * cart.getQty());
             orderItem.changeQty(cart.getQty());
             orderItem.changeDiscountRate(cart.getItem().getDiscountRate());
-            orderItem.changeDiscountPrice((int)((cart.getItemOption().getOptionPrice() * cart.getQty()) * (1 - (cart.getItem().getDiscountRate() / 100))));
+            orderItem.changeDiscountPrice((int)((float)(cart.getItemOption().getOptionPrice() * cart.getQty()) * (1 - ((float)cart.getItem().getDiscountRate() / 100))));
             orderItem.changeItem(cart.getItem());
             orderItem.changeItemOption(cart.getItemOption());
             orderItem.changeItemImage((cart.getItemImage() != null) ? cart.getItemImage() : null);
@@ -104,44 +109,50 @@ public class OrderServiceImpl implements OrderService {
             orderItem.getItemOption().removeStock(cart.getQty());
             orderItemList.add(savedOrderItem);
             totalAmount += cart.getItemOption().getOptionPrice() * cart.getQty();
-            totalDiscountAmount += (int)((cart.getItemOption().getOptionPrice() * cart.getQty()) * (1 - (cart.getItem().getDiscountRate() / 100)));
+            totalDiscountAmount += ((int)((float)(cart.getItemOption().getOptionPrice() * cart.getQty()) * (1 - ((float)cart.getItem().getDiscountRate() / 100))));
         }
-        order.changeTotalAmount(totalAmount);
+        order.changeTotalAmount(totalDiscountAmount);
+
+        log.info("totalDiscountAmount: " + totalDiscountAmount);
 
         // Order와 OrderItem을 함께 저장
         Order saved1Order = orderRepository.save(savedOrder);
 
         int addMileageAmount;
         switch (member.getMemberShip()) {
-            case BRONZE: addMileageAmount = (int) (totalDiscountAmount * 0.01); break;
-            case SILVER: addMileageAmount = (int) (totalDiscountAmount * 0.02); break;
-            case GOLD: addMileageAmount = (int) (totalDiscountAmount * 0.03); break;
-            case PLATINUM: addMileageAmount = (int) (totalDiscountAmount * 0.05); break;
+            case BRONZE: addMileageAmount = (int) ((float)totalDiscountAmount * 0.01); break;
+            case SILVER: addMileageAmount = (int) ((float)totalDiscountAmount * 0.02); break;
+            case GOLD: addMileageAmount = (int) ((float)totalDiscountAmount * 0.03); break;
+            case PLATINUM: addMileageAmount = (int) ((float)totalDiscountAmount * 0.05); break;
             default: addMileageAmount = 0; break;
         }
         // 마일리지 내역 생성
-        createMileageByMemberShip(addMileageAmount, member, order);
+        createMileageByMemberShip(addMileageAmount, member, order, MileageStatus.NO_REDEEM);
 
         // 마일리지 상태가 REDEEM(사용)이라면
         if (orderDTO.getMileageStatus() == MileageStatus.REDEEM) {
             Member memberMileage = memberRepository.findById(orderDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
-            if (order.getMileageAmount() <= memberMileage.getStockMileage()) {
-                memberMileage.minusMileage(order.getMileageAmount());
+            if (order.getUsingMileage() <= memberMileage.getStockMileage()) {
+                memberMileage.minusMileage(order.getUsingMileage());
+                createMileageByMemberShip(orderDTO.getUsingMileage(), member, order, MileageStatus.REDEEM);
+                memberRepository.save(memberMileage);
             } else {
                 throw new RuntimeException("마일리지 보유량이 부족합니다.");
             }
         }
-
+//        saved1Order.changeMileageStatus(orderDTO.getMileageStatus());
+//        saved1Order.changeMileageAmount(addMileageAmount);
+//        saved1Order.changeUsingMileage(orderDTO.getUsingMileage());
         return new OrderDTO(saved1Order, orderItemList);
     }
 
     // 회원 등급별 마일리지 생성
-    public void createMileageByMemberShip(int amount, Member member, Order order) {
+    public void createMileageByMemberShip(int amount, Member member, Order order, MileageStatus mileageStatus) {
 
         // 마일리지 수치 설정
         Mileage mileage = Mileage.builder()
                 .amount(amount)
-                .mileageStatus(MileageStatus.NO_REDEEM)
+                .mileageStatus(mileageStatus)
                 .mileageDate(LocalDateTime.now())
                 .member(member)
                 .order(order)

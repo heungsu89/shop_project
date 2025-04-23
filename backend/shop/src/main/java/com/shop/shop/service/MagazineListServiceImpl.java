@@ -23,7 +23,7 @@ public class MagazineListServiceImpl implements MagazineListService {
     private final MagazineImageRepository magazineImageRepository;
     private final CustomFileUtil fileUtil;
 
-    // 이벤트 리스트 등록
+    // 매거진 리스트 등록
     @Override
     public MagazineListDTO createMagazineList(MagazineListDTO magazineListDTO, List<MultipartFile> files) {
         MagazineList magazineList = MagazineList.builder()
@@ -55,43 +55,43 @@ public class MagazineListServiceImpl implements MagazineListService {
         return new MagazineListDTO(savedMagazineList);
     }
 
-    // 특정 이벤트 리스트 조회
+    // 특정 매거진 리스트 조회
     @Override
     public MagazineListDTO getMagazineListWithMagazineImages(Long magazineListId) {
         MagazineList magazineList = magazineListRepository.findByIdWithMagazineImages(magazineListId);
         if (magazineList == null) {
-            throw new RuntimeException("해당 이벤트 페이지를 찾을 수 없습니다.");
+            throw new RuntimeException("해당 매거진 페이지를 찾을 수 없습니다.");
         }
         List<MagazineImage> magazineImageList = magazineImageRepository.findAllByMagazineId(magazineListId);
         return new MagazineListDTO(magazineImageList, magazineList);
     }
 
-    // 이벤트 리스트 + 이미지 모두 조회(페이징) 삭제 포함
+    // 매거진 리스트 + 이미지 모두 조회(페이징) 삭제 포함
     @Override
     public Page<MagazineListDTO> getMagazineListPage(Pageable pageable) {
         Page<MagazineList> magazineListPage = magazineListRepository.findAllMagazineListPage(pageable);
         if (magazineListPage == null || magazineListPage.isEmpty()) {
-            throw new RuntimeException("조회된 이벤트 리스트가 없습니다.");
+            throw new RuntimeException("조회된 매거진 리스트가 없습니다.");
         }
         Page<MagazineListDTO> magazineListDTOPage = magazineListPage.map(MagazineListDTO::new);
         return magazineListDTOPage;
     }
 
-    // 이벤트 리스트 + 이미지 모두 조회(페이징) 삭제 미포함
+    // 매거진 리스트 + 이미지 모두 조회(페이징) 삭제 미포함
     @Override
     public Page<MagazineListDTO> getMagazineListPageWithDelFlag(Pageable pageable) {
         Page<MagazineList> magazineListPage = magazineListRepository.findAllMagazineListPageWithDelFlag(pageable);
         if (magazineListPage == null || magazineListPage.isEmpty()) {
-            throw new RuntimeException("조회된 이벤트 리스트가 없습니다.");
+            throw new RuntimeException("조회된 매거진 리스트가 없습니다.");
         }
         Page<MagazineListDTO> magazineListDTOPage = magazineListPage.map(MagazineListDTO::new);
         return magazineListDTOPage;
     }
 
-    // 이벤트 리스트 수정
+    // 매거진 리스트 수정
     @Override
     public MagazineListDTO editMagazineList(Long magazineListId, MagazineListDTO magazineListDTO, List<MultipartFile> files) {
-        MagazineList magazineList = magazineListRepository.findById(magazineListId).orElseThrow(() -> new RuntimeException("해당 이벤트 리스트를 찾을 수 없습니다."));
+        MagazineList magazineList = magazineListRepository.findById(magazineListId).orElseThrow(() -> new RuntimeException("해당 매거진 리스트를 찾을 수 없습니다."));
         magazineList.changeTitle(magazineListDTO.getTitle());
         magazineList.changeWriter(magazineListDTO.getWriter());
         magazineList.changeContent(magazineListDTO.getContent());
@@ -120,17 +120,17 @@ public class MagazineListServiceImpl implements MagazineListService {
         return new MagazineListDTO(editedMagazineList);
     }
 
-    // 특정 이벤트 리스트 삭제(논리적)
+    // 특정 매거진 리스트 삭제(논리적)
     @Override
     public void deleteMagazineList(Long magazineListId) {
-        MagazineList magazineList = magazineListRepository.findById(magazineListId).orElseThrow(() -> new RuntimeException("해당 이벤트 리스트를 찾을 수 없습니다."));
+        MagazineList magazineList = magazineListRepository.findById(magazineListId).orElseThrow(() -> new RuntimeException("해당 매거진 리스트를 찾을 수 없습니다."));
         magazineList.changeDelFlag(true);
         magazineListRepository.save(magazineList);
     }
 
     @Override
     public void incrementViewCount(Long magazineListId) {
-        MagazineList magazineList = magazineListRepository.findById(magazineListId).orElseThrow(() -> new RuntimeException("해당 이벤트 리스트를 찾을 수 없습니다."));
+        MagazineList magazineList = magazineListRepository.findById(magazineListId).orElseThrow(() -> new RuntimeException("해당 매거진 리스트를 찾을 수 없습니다."));
         magazineList.incrementViewCount();
         magazineListRepository.save(magazineList);
     }

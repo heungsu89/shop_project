@@ -41,7 +41,8 @@ public class OrderDTO {
 
     private DeliveryStatus deliveryStatus;
     private MileageStatus mileageStatus;
-    private int mileageAmount;
+//    private int mileageAmount; // 마일리지 적립량
+    private int usingMileage;
 
     private List<OrderItemDTO> orderItemList = new ArrayList<>();
 
@@ -64,7 +65,8 @@ public class OrderDTO {
         this.recipient_detailed_address = order.getRecipient_detailed_address();
         this.deliveryStatus = order.getDelivery().getStatus();
         this.mileageStatus = order.getMileageStatus();
-        this.mileageAmount = order.getMileageAmount();
+//        this.mileageAmount = order.getMileageAmount();
+        this.usingMileage = order.getUsingMileage();
 
         // List<OrderItem> to List<OrderItemDTO>
         this.orderItemList = (items != null ? items : new ArrayList<>()).stream()
@@ -91,7 +93,8 @@ public class OrderDTO {
         this.recipient_detailed_address = order.getRecipient_detailed_address();
         this.deliveryStatus = order.getDelivery().getStatus();
         this.mileageStatus = order.getMileageStatus();
-        this.mileageAmount = order.getMileageAmount();
+//        this.mileageAmount = order.getMileageAmount();
+        this.usingMileage = order.getUsingMileage();
     }
 
 }

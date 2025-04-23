@@ -20,8 +20,7 @@ import java.util.List;
 @Builder
 public class ReviewList {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_list_id")
     private Long id;
 
@@ -33,6 +32,7 @@ public class ReviewList {
 
     private int score;
     private LocalDateTime date;
+    private boolean delFlag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -72,12 +72,20 @@ public class ReviewList {
         this.title = title;
     }
 
+    public void changeWriter(String writer) {
+        this.writer = writer;
+    }
+
     public void changeContent(String content) {
         this.content = content;
     }
 
     public void changeScore(int score) {
         this.score = score;
+    }
+
+    public void changeDelFlag(boolean delFlag) {
+        this.delFlag = delFlag;
     }
 
 }
