@@ -79,14 +79,14 @@ export const deleteEvent = async (id) => {
 }
 
 /** 매거진 게시물 등록 */
-export const postMagazine = async (data) => {
+export const postMagazine = async (formData) => {
   try {
     const res = await axios.post(`${hostMagazine}/add`, formData, {
       headers: {'Content-Type': 'multipart/form-data'}
     });
     return res.data;
   } catch (error) {
-    console.error("이벤트 등록 실패:", error.response?.data || error.message);
+    console.error("매거진 등록 실패:", error.response?.data || error.message);
     throw error;
   }
 }
@@ -99,20 +99,20 @@ export const getMagazineList = async (page, size) => {
     const res = await axios.get(`${hostMagazine}/listPage?page=${p}&size=${s}`);
     return res.data;
   } catch (error) {
-    console.error("이벤트 조회 실패:", error.response?.data || error.message);
+    console.error("매거진 조회 실패:", error.response?.data || error.message);
     throw error;
   }
 }
 
 /** 매거진 리스트 조회 페이징 (삭제 포함)*/
-export const getMagazineListAll = async () => {
+export const getMagazineListAll = async (page,size) => {
   const p = page ? page : 0;
   const s = size ? size : 5;
   try {
     const res = await axios.get(`${hostMagazine}/listPageWithDelFlag?page=${p}&size=${s}`);
     return res.data;
   } catch (error) {
-    console.error("이벤트 조회 실패:", error.response?.data || error.message);
+    console.error("매거진 조회 실패:", error.response?.data || error.message);
     throw error;
   }
 }
@@ -123,20 +123,20 @@ export const getMagazine = async (id) => {
       const res = await axios.get(`${hostMagazine}/list/${id}`);
       return res.data;
     } catch (error) {
-      console.error("이벤트 조회 실패:", error.response?.data || error.message);
+      console.error("매거진 조회 실패:", error.response?.data || error.message);
       throw error;
     }
   }
 
 /** 매거진 게시물 수정 */
-export const putMagazine = async (data) => {
+export const putMagazine = async (formData) => {
   try {
     const res = await axios.put(`${hostMagazine}/edit`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
     return res.data;
   } catch (error) {
-    console.error("이벤트 수정 실패:", error.response?.data || error.message);
+    console.error("매거진 수정 실패:", error.response?.data || error.message);
     throw error;
   }
 }

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ImageUploadComponent from '../../../ImageUploadComponent';
 import EditorComponent from '../../../EditorComponent';
-import { getEvent, postEvent, putEvent, deleteMagazine } from '../../../../api/BoardApi';
+import { getEvent, postMagazine, putMagazine, deleteMagazine } from '../../../../api/BoardApi';
 import '../../../../static/css/adminProduct.scss';
 
 const DEFAULT_FORM = {
