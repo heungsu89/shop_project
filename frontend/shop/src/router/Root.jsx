@@ -4,14 +4,15 @@ import memberRouter from "./memberRouter";
 import adminRouter from "./mypage/adminRouter";
 import userRouter from "./mypage/userRouter";
 import ProductRouter from "./product/ProductRouter";
-import cartRouter from "./cart/cartRouter";  
+import cartRouter from "./cart/cartRouter";
+import magazineRouter from "./magazine/magazineRouter"; 
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../Pages/main/MainPage"));
 const Product = lazy(() => import("../Pages/product/ProductPage"));
 const Guide = lazy(() => import("../Pages/footer/GuidePage"));
 const Privacy = lazy(() => import("../Pages/footer/PrivacyPolicyPage"));
-const Terms =  lazy(() => import("../Pages/footer/TermsPage"));
+const Terms =  lazy(() => import("../Pages/footer/TermsPage"));
 const rootRouter = createBrowserRouter([
   {
     path: "/",
@@ -46,8 +47,12 @@ const rootRouter = createBrowserRouter([
     children: userRouter()
   },
   {
-    path: "cart",  
-    children: cartRouter(),  
+    path: "cart",
+    children: cartRouter(),
+  },
+  {
+    path: "magazine",
+    children: magazineRouter(), 
   },
 ]);
 

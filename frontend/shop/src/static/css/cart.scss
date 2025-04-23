@@ -26,29 +26,9 @@
     display: grid;
     gap: 0;
     border-top: 1px solid var(--charcoal-grey);
-  }
-  
-  .cartTable thead.menu {
-    display: grid;
-    background-color: #ffffff;
-  }
-  
-  .cartTable thead.menu th {
-    padding: 10px;
-    text-align: center;
-    font-weight: bold;
-    height: 42px;
     border-bottom: 1px solid var(--charcoal-grey);
-  }
-  
-  .cartTable tr {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto auto auto auto;
-    align-items: center;
-    border-bottom: 1px solid color #ffffff;
-  }
-  
 
+  }
   
   .cartButtons {
     display: grid;
@@ -95,7 +75,7 @@
   }
   
   .cartButtons .rightButtons button:first-child {
-    padding: 11px 21px;
+    padding: 10px 20px;
     background-color: #FFFFFF;
     color: var(--charcoal-grey);
     border: 1px solid var(--charcoal-grey);
@@ -110,7 +90,7 @@
   }
   
   .cartButtons .rightButtons button:last-child {
-    padding: 11px 21px;
+    padding: 10px 20px;
     background-color: var(--charcoal-grey);
     color: var(--ash-white);
     border: none;
