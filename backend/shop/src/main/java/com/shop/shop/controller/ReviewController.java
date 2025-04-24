@@ -39,9 +39,7 @@ public class ReviewController {
             @RequestParam("writer") String writer,
             @RequestParam("content") String content,
             @RequestParam("score") int score,
-            @RequestParam(value = "files", required = false) List<MultipartFile> files
-    ) {
-
+            @RequestParam(value = "files", required = false) List<MultipartFile> files) {
 
         ReviewListDTO reviewListDTO = new ReviewListDTO();
         reviewListDTO.setMemberId(memberId);
@@ -64,15 +62,11 @@ public class ReviewController {
 
     // 회원Id와 상품Id를 기준으로 구매여부(주문내역) 확인
     @GetMapping("/checkPurchaseStatus")
-    public ResponseEntity<?> checkPurchaseStatus(@RequestBody CheckDTO checkDTO) {
-        boolean checkResult = reviewListService.checkPurchaseStatus(checkDTO.getMemberId(), checkDTO.getItemId());
-        if (checkResult) {
-            Map<String, String> response = Map.of("result", "true");
-            return ResponseEntity.ok(response);
-        } else {
-            Map<String, String> response = Map.of("result", "false");
-            return ResponseEntity.ok(response);
-        }
+    public ResponseEntity<Boolean> checkPurchaseStatus(
+            @RequestParam("memberId") Long memberId,
+            @RequestParam("itemId") Long itemId) {
+        boolean checkResult = reviewListService.checkPurchaseStatus(memberId, itemId);
+        return ResponseEntity.ok(checkResult); // 👈 boolean 그대로 응답
     }
 
     // 특정 리뷰 리스트 조회
@@ -89,8 +83,7 @@ public class ReviewController {
     @GetMapping("/listPageWithDelFlag")
     public ResponseEntity<Page<ReviewListDTO>> getReviewListPage(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ReviewListDTO> reviewListDTOPage = reviewListService.getReviewListPage(pageable);
         if (reviewListDTOPage == null || reviewListDTOPage.isEmpty()) {
@@ -103,8 +96,7 @@ public class ReviewController {
     @GetMapping("/listPage")
     public ResponseEntity<Page<ReviewListDTO>> getReviewListPageWithDelFlag(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ReviewListDTO> reviewListDTOPage = reviewListService.getReviewListPageWithDelFlag(pageable);
         if (reviewListDTOPage == null || reviewListDTOPage.isEmpty()) {
@@ -118,8 +110,7 @@ public class ReviewController {
     public ResponseEntity<Page<ReviewListDTO>> getReviewListPageByItemId(
             @PathVariable("itemId") Long itemId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ReviewListDTO> reviewListDTOPage = reviewListService.getReviewListPageByItemId(itemId, pageable);
         if (reviewListDTOPage == null || reviewListDTOPage.isEmpty()) {
@@ -133,10 +124,10 @@ public class ReviewController {
     public ResponseEntity<Page<ReviewListDTO>> getReviewListPageByItemIdWithDelFlag(
             @PathVariable("itemId") Long itemId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ReviewListDTO> reviewListDTOPage = reviewListService.getReviewListPageByItemIdWithDelFlag(itemId, pageable);
+        Page<ReviewListDTO> reviewListDTOPage = reviewListService.getReviewListPageByItemIdWithDelFlag(itemId,
+                pageable);
         if (reviewListDTOPage == null || reviewListDTOPage.isEmpty()) {
             throw new RuntimeException("조회된 리뷰 페이지가 없습니다.");
         }
@@ -153,8 +144,7 @@ public class ReviewController {
             @RequestParam("content") String content,
             @RequestParam("score") int score,
             @RequestParam("delFlag") boolean delFlag,
-            @RequestParam(value = "files", required = false) List<MultipartFile> files
-    ) {
+            @RequestParam(value = "files", required = false) List<MultipartFile> files) {
         ReviewListDTO reviewListDTO = new ReviewListDTO();
         reviewListDTO.setMemberId(memberId);
         reviewListDTO.setReviewId(reviewListId);
