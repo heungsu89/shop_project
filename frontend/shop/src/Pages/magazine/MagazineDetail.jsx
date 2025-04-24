@@ -1,32 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getMagazine, getMagazineList } from "../../api/BoardApi";
 
 const MagazineDetail = () => {
   const [magazine, setMagazine] = useState(null);
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
   const [magazineList, setMagazineList] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(null);
+  const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const magazineListId = searchParams.get("id");
   const page = parseInt(searchParams.get("page")) || 0;
   const size = parseInt(searchParams.get("size")) || 10;
-  const magazineListId = parseInt(searchParams.get("id"));
-
-  console.log("렌더링");
 
   useEffect(() => {
-    if (magazineListId) {
-      console.log("로딩 시작");
-      fetchMagazineDetail(magazineListId);
-    }
-    console.log("로딩 시작");
     fetchMagazineListForNavigation();
+
+    if (magazineListId) {
+      fetchMagazineDetail(parseInt(magazineListId));
+    }
   }, [magazineListId, page, size]);
 
   const fetchMagazineDetail = async (id) => {
     try {
       const data = await getMagazine(id);
-      console.log("상세 정보 로딩 완료");
       setMagazine(data);
     } catch (error) {
       console.error("상세 정보 로딩 실패", error);
@@ -36,32 +33,39 @@ const MagazineDetail = () => {
   const fetchMagazineListForNavigation = async () => {
     try {
       const response = await getMagazineList(page, size);
-      setMagazineList(response?.content || []);
-      const index = response?.content?.findIndex(
-        (item) => item.magazineListId === magazineListId
+      const list = response?.content || [];
+      setMagazineList(list);
+
+      const index = list.findIndex(
+        (magazine) => magazine.magazineListId === parseInt(magazineListId)
       );
       setCurrentIndex(index);
-      console.log("로딩 완료");
+
+      // magazineListId가 없는 경우 첫 번째 아이템으로 리디렉션
+      if (!magazineListId && list.length > 0) {
+        navigate(
+          `/magazine/detail?id=${list[0].magazineListId}&page=${page}&size=${size}`
+        );
+      }
     } catch (error) {
-      console.error("로딩 실패:", error);
+      console.error("매거진 목록 로딩 실패:", error);
     }
   };
 
   const handlePrev = () => {
     if (currentIndex > 0) {
       const prevId = magazineList[currentIndex - 1]?.magazineListId;
-      if (prevId) {
-        navigate(`/magazine/detail?id=${prevId}&page=${page}&size=${size}`);
-      }
+      navigate(`/magazine/detail?id=${prevId}&page=${page}&size=${size}`);
     }
   };
 
   const handleNext = () => {
-    if (currentIndex !== null && currentIndex < magazineList.length - 1) {
+    if (
+      currentIndex !== null &&
+      currentIndex < magazineList.length - 1
+    ) {
       const nextId = magazineList[currentIndex + 1]?.magazineListId;
-      if (nextId) {
-        navigate(`/magazine/detail?id=${nextId}&page=${page}&size=${size}`);
-      }
+      navigate(`/magazine/detail?id=${nextId}&page=${page}&size=${size}`);
     }
   };
 
@@ -73,41 +77,41 @@ const MagazineDetail = () => {
     return <div>로딩 중...</div>;
   }
 
-  const displayIndex = magazineList.length - (page * size + (currentIndex !== null ? currentIndex : 0));
 
   return (
-    <>
-      {/* 왼쪽 */}
-      <main>
-        <section>
-          <div>
-            {magazine.uploadFileNames && magazine.uploadFileNames.length > 0 && (
+    <main>
+      <section>
+        <div>
+          {magazine.uploadFileNames &&
+            magazine.uploadFileNames.length > 0 && (
               <img
                 src={`http://localhost:8081/upload/${magazine.uploadFileNames[0]}`}
                 alt={magazine.title}
               />
             )}
-          </div>
+        </div>
 
-          <section>
-            <div>{magazine.content}</div>
-          </section>
-
-          {/* 오른쪽 */}
-          <div>
-            <div>. VOL. {displayIndex}</div>
-            <h2>{magazine.title}</h2>
-            <div>{new Date(magazine.date).toLocaleDateString()}</div>
-          </div>
+        <section>
+          <div
+            dangerouslySetInnerHTML={{ __html: magazine.content }}
+          />
         </section>
 
         <div>
-          <span onClick={handlePrev}>PREV</span> |
-          <span onClick={handleList}>LIST</span> |
-          <span onClick={handleNext}>NEXT</span>
+          <div>. VOL.</div>
+          <h2>{magazine.title}</h2>
+          <div>
+            {new Date(magazine.date).toLocaleDateString("ko-KR")}
+          </div>
         </div>
-      </main>
-    </>
+      </section>
+
+      <div>
+        <span onClick={handlePrev}>PREV</span> |{" "}
+        <span onClick={handleList}>LIST</span> |{" "}
+        <span onClick={handleNext}>NEXT</span>
+      </div>
+    </main>
   );
 };
 
