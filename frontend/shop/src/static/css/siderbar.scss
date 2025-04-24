@@ -1,6 +1,6 @@
   .itemSidebar {width: 520px; flex: 0 0 520px;padding: 40px;
       .innerSiedbarWrap{position: sticky;top:120px; right: 0;display: flex;flex-direction: column;align-items: end; height: calc(100vh - 160px);
-        .categoryTitle{font-size: var(--h1);}
+        .pageTitel{font-size: var(--h1);}
         .searchBox {display: flex;gap: 10px;margin: 20px 0 40px;
           input::placeholder {
               text-align: right;

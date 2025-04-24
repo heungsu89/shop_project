@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from "react";
 
 const Loading = () => <div>Loading....</div>;
-
 const MagazinePage = lazy(() => import("../../Pages/magazine/MagazinePage"));
 const MagazineDetail = lazy(() => import("../../Pages/magazine/MagazineDetail"));
 
@@ -12,13 +11,13 @@ const magazineRouter = () => [
       {
         index: true,
         element: (
-          <Suspense fallback={<Loading/>}><MagazinePage/> </Suspense>
+          <Suspense fallback={<Loading />}><MagazinePage /></Suspense>
         ),
       },
       {
-        path: "/magazine/detail", 
+        path: "detail",
         element: (
-          <Suspense fallback={<Loading/>}> <MagazineDetail/></Suspense>
+          <Suspense fallback={<Loading />}><MagazineDetail /></Suspense>
         ),
       },
     ],

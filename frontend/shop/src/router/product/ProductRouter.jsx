@@ -1,27 +1,35 @@
 import { Suspense, lazy } from "react";
-
-const Loading = () => <div>Loading....</div>;
-
-const ProductPage = lazy(() => import("../../Pages/product/ProductPage"));
+const ProductListPage = lazy(() => import("../../Pages/product/ProductListPage"));
 const ProductListComponent = lazy(() => import("../../Components/product/ProductListComponent"));
+const ProductDetailPage = lazy(() => import("../../Pages/product/ProductDetailPage"));
 const ProductDetailComponent = lazy(() => import("../../Components/product/ProductDetailComponent"));
+
+const Loading = () => <div>Loading....</div>
 
 const ProductRouter = () => {
   return [
     {
-      path: "",
+      path: "list/:categoryId", // ✅ 부모
       element: (
-        <Suspense fallback={<Loading />}><ProductPage /></Suspense>
+        <Suspense fallback={<Loading />}><ProductListPage /></Suspense>
       ),
       children: [
         {
-          path: "list/:categoryId",
+          index: true, // 기본 자식
           element: (
             <Suspense fallback={<Loading />}><ProductListComponent /></Suspense>
           )
-        },
+        }
+      ]
+    },
+    {
+      path: "detail/:productId",
+      element: (
+        <Suspense fallback={<Loading />}><ProductDetailPage /></Suspense>
+      ),
+      children: [
         {
-          path: "detail/:itemId",
+          index: true, // 기본 자식
           element: (
             <Suspense fallback={<Loading />}><ProductDetailComponent /></Suspense>
           )
@@ -30,5 +38,4 @@ const ProductRouter = () => {
     }
   ];
 };
-
 export default ProductRouter;

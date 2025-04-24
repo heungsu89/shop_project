@@ -6,11 +6,10 @@ import userRouter from "./mypage/userRouter";
 import ProductRouter from "./product/ProductRouter";
 import cartRouter from "./cart/cartRouter";
 import magazineRouter from "./magazine/magazineRouter"; 
-import eventRouter from "./event/eventRotuer";
+import eventRouter from "./event/eventRouter";
 
 const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../Pages/main/MainPage"));
-const Product = lazy(() => import("../Pages/product/ProductPage"));
 const Guide = lazy(() => import("../Pages/footer/GuidePage"));
 const Privacy = lazy(() => import("../Pages/footer/PrivacyPolicyPage"));
 const Terms =  lazy(() => import("../Pages/footer/TermsPage"));
