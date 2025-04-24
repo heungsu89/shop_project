@@ -85,7 +85,7 @@ public class ReviewListServiceImpl implements ReviewListService {
         boolean checkStatus = false;
         if (orderDTO == null || orderDTO.isEmpty()) {
 //            checkStatus = false;
-            throw new RuntimeException("해당 회원의 주문 내역이 조회되지 않습니다."); // 이 부분 회의 필요
+            throw new RuntimeException("해당 회원의 주문 내역이 존재하지 않습니다."); // 이 부분 회의 필요
         }
         int listIndex = 0;
         for (OrderDTO targetOrder : orderDTO) {
@@ -138,6 +138,7 @@ public class ReviewListServiceImpl implements ReviewListService {
         });
     }
 
+    // 상품Id를 기준으로 리뷰 리스트 + 이미지 모두 조회(페이징) 삭제 포함
     @Override
     public Page<ReviewListDTO> getReviewListPageByItemId(Long itemId, Pageable pageable) {
         Page<ReviewList> reviewListPage = reviewListRepository.findAllByItemIdWithReviewImages(itemId, pageable);
@@ -150,6 +151,7 @@ public class ReviewListServiceImpl implements ReviewListService {
         });
     }
 
+    // 상품Id를 기준으로 리뷰 리스트 + 이미지 모두 조회(페이징) 삭제 미포함
     @Override
     public Page<ReviewListDTO> getReviewListPageByItemIdWithDelFlag(Long itemId, Pageable pageable) {
         Page<ReviewList> reviewListPage = reviewListRepository.findAllByItemIdWithReviewImagesANDDelFlag(itemId, pageable);

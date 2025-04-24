@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface QnAListRepository extends JpaRepository<QnAList, Long> {
 
@@ -28,8 +30,20 @@ public interface QnAListRepository extends JpaRepository<QnAList, Long> {
     @Query("SELECT ql FROM QnAList ql WHERE ql.id = :qnaListId AND ql.delFlag = false")
     QnAList findByQnAListIdWithDelFlag(@Param("qnaListId") Long qnaListId);
     
-    // parentId를 기준으로 질의응답 조회
+    // parentId를 기준으로 하위 질의응답 조회
     @Query("SELECT ql FROM QnAList ql WHERE ql.parent.id = :parentId")
     QnAList findByParentId(@Param("parentId") Long parentId);
+
+    // parentId를 기준으로 하위 질의응답 모두 조회
+    @Query("SELECT ql FROM QnAList ql WHERE ql.parent.id = :parentId")
+    List<QnAList> findAllByParentId(@Param("parentId") Long parentId);
+
+    // itemId를 기준으로 질의응답 모두 조회
+    @Query("SELECT ql FROM QnAList ql WHERE ql.item.id = :itemId")
+    List<QnAList> findAllByItemId(@Param("itemId") Long itemId);
+
+    // memberId를 기준으로 질의응답 모두 조회
+    @Query("SELECT ql FROM QnAList ql WHERE ql.member.id = :memberId")
+    List<QnAList> findAllByMemberId(@Param("memberId") Long memberId);
 
 }

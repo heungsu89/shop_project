@@ -10,9 +10,12 @@ public interface
 QnAListService {
 
     public QnAListDTO createQnAList(QnAListDTO qnAListDTO);
-    public Page<QnAListDTO> getAllQnAList(Pageable pageable);
+    public Page<QnAListDTO> getAllQnAListPage(Pageable pageable);
+    public Page<QnAListDTO> getAllQnAListPageWithDelFlag(Pageable pageable);
     public QnAListDTO getQnAListByQnAListId(Long qnaListId);
+    public QnAListDTO getQnAListByQnAListIdWithDelFlag(Long qnaListId);
     public QnAListDTO editQnAList(QnAListDTO qnAListDTO);
     public void deleteQnAList(QnAListDTO qnaListDTO);
+    public boolean checkWritingStatus(Long memberId, Long qnaListId);
 
 }

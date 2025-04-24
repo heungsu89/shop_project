@@ -32,21 +32,35 @@ public class QnAListController {
         return ResponseEntity.ok(savedQnAListDTO);
     }
 
-    // 질의응답 리스트 모두 조회(페이징)
+    // 질의응답 리스트 모두 조회(페이징) 삭제 포함
     @GetMapping("/listPage")
     public ResponseEntity<Page<QnAListDTO>> getAllQnAListPage(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<QnAListDTO> qnAListDTOPage = qnAListService.getAllQnAList(pageable);
+        Page<QnAListDTO> qnAListDTOPage = qnAListService.getAllQnAListPage(pageable);
+        if (qnAListDTOPage == null) {
+            throw new RuntimeException("조회된 질의응답 페이지가 없습니다.");
+        }
+        return ResponseEntity.ok(qnAListDTOPage);
+    }
+
+    // 질의응답 리스트 모두 조회(페이징) 삭제 미포함
+    @GetMapping("/listPageWithDelFlag")
+    public ResponseEntity<Page<QnAListDTO>> getAllQnAListPageWithDelFlag(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<QnAListDTO> qnAListDTOPage = qnAListService.getAllQnAListPageWithDelFlag(pageable);
         if (qnAListDTOPage == null) {
             throw new RuntimeException("조회된 질의응답 페이지가 없습니다.");
         }
         return ResponseEntity.ok(qnAListDTOPage);
     }
     
-    // 질의응답Id를 기준으로 조회
+    // 질의응답Id를 기준으로 조회 삭제 포함
     @GetMapping("/list/{qnaListId}")
     public ResponseEntity<QnAListDTO> getQnAListByQnAListId(@PathVariable("qnaListId") Long qnaListId) {
         QnAListDTO qnAListDTO = qnAListService.getQnAListByQnAListId(qnaListId);
@@ -55,8 +69,18 @@ public class QnAListController {
         }
         return ResponseEntity.ok(qnAListDTO);
     }
+
+    // 질의응답Id를 기준으로 조회 삭제 미포함
+    @GetMapping("/listWithDelFlag/{qnaListId}")
+    public ResponseEntity<QnAListDTO> getQnAListByQnAListIdWithDelFlag(@PathVariable("qnaListId") Long qnaListId) {
+        QnAListDTO qnAListDTO = qnAListService.getQnAListByQnAListIdWithDelFlag(qnaListId);
+        if (qnAListDTO == null) {
+            throw new RuntimeException("조회된 질의응답 페이지가 없습니다.");
+        }
+        return ResponseEntity.ok(qnAListDTO);
+    }
     
-    // 질의응답 리스트 수정
+    // 특정 질의응답 리스트 수정
     @PutMapping("/edit")
     public ResponseEntity<QnAListDTO> editQnAListByQnAListId(@RequestBody QnAListDTO qnAListDTO) {
         QnAListDTO editedQnAList = qnAListService.editQnAList(qnAListDTO);
