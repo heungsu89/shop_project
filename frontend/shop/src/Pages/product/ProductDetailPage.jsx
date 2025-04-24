@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
-import { getCookie } from "../../util/cookieUtil";
+import { memberIdSearch } from '../../api/memberApi';
 import BasicLayout from "../../layout/BasicLayout";
 import "../../static/css/shop.scss";
 import "../../static/css/siderbar.scss";
@@ -11,19 +11,21 @@ const ProductPage = () => {
   const isLoggedIn = loginState && loginState.email !== '';
   const [memberInfo, setMemberInfo] = useState(null);
 
+
   useEffect(() => {
     if (isLoggedIn) {
-      const info = getCookie("member");
-      setMemberInfo(info);
+      memberIdSearch(loginState.memberId).then(res => {
+        setMemberInfo(res);
+      });
     } else {
       setMemberInfo(null);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, loginState.memberId]); // memberId도 의존성에 추가
 
   return (
     <BasicLayout>
       <div className="productWrap">
-          <Outlet context={{ memberInfo }} />
+          <Outlet context={ {memberInfo }  } />
       </div>
     </BasicLayout>
   );

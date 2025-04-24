@@ -10,3 +10,8 @@ export const getFormattedPrice = (price, discountRate) => {
       discounted: format(discountPrice),
     };
   };
+
+/** 천단위 콤마 */
+export const addComma = (number) => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};

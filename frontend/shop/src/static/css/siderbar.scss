@@ -1,68 +1,75 @@
-  .itemSidebar {width: 520px; flex: 0 0 520px;padding: 40px;
-      .innerSiedbarWrap{position: sticky;top:120px; right: 0;display: flex;flex-direction: column;align-items: end; height: calc(100vh - 160px);
-        .pageTitel{font-size: var(--h1);}
-        .searchBox {display: flex;gap: 10px;margin: 20px 0 40px;
-          input::placeholder {
-              text-align: right;
-          }
+.itemSidebar {width: 520px; flex: 0 0 520px;padding: 40px;
+    .innerSiedbarWrap{position: sticky;top:120px; right: 0;display: flex;flex-direction: column;align-items: end; height: calc(100vh - 160px);
+      .pageTitel{font-size: var(--h1);}
+      .searchBox {display: flex;gap: 10px;margin: 20px 0 40px;
+        input::placeholder {
+            text-align: right;
         }
-        .categoryList{
-          li {text-align: end;margin-bottom: 10px;font-size: var(--h3);
-            a.active {text-decoration: underline;}
-          }
-        }
-        .paginationSection{display: flex; flex-direction: column; align-items: end; margin-top: auto;
-          .totalCount{font-size:var(--h4);font-weight: bold;}
-          .sortButtons{display: flex; gap: 10px;margin: 12px 0 6px;}
-        }
-
-
       }
+      .categoryList{
+        li {text-align: end;margin-bottom: 10px;font-size: var(--h3);
+          a.active {text-decoration: underline;}
+        }
+      }
+      .paginationSection{display: flex; flex-direction: column; align-items: end; margin-top: auto;
+        .totalCount{font-size:var(--h4);font-weight: bold;}
+        .sortButtons{display: flex; gap: 10px;margin: 12px 0 6px;}
+      }
+
+
+    }
+  &.productDetail{
+    .sidebarInnerWrap{position: sticky;top:120px; right:0;}
+    .productMeta{display:flex;justify-content:space-between;align-items:center;
+      .productId{color: var(--placeholder);}
+      .actionButtons{display: flex; gap: 4px;}
+    }
+    
+    .productTitle{font-size: var(--h1);}
+
+    .priceSection{display: flex; gap: 8px;
+      span{font-size:var(--h4);
+        &.priceOriginal,
+        &.priceDiscount{color: var(--placeholder);}
+        &.priceOriginal{text-decoration: line-through;}
+      }
+    }
+    
+    .rating{color: var(--muted-sand);
+      &[data-rating="0"]::before {content: '☆☆☆☆☆';}
+      &[data-rating="1"]::before {content: '★☆☆☆☆';}
+      &[data-rating="2"]::before {content: '★★☆☆☆';}
+      &[data-rating="3"]::before {content: '★★★☆☆';}
+      &[data-rating="4"]::before {content: '★★★★☆';}
+      &[data-rating="5"]::before {content: '★★★★★';}
+    }
+
+    .optionGroup{display: flex; align-items: center;gap:8px;
+      .optionValues{display: flex; align-items: center;gap:8px;
+        button.btn{min-width: 48px;font-size:var(--text-small);padding:0.3em;
+          &.active{background-color: var(--slate-blue); border-color: var(--slate-blue);color: var(--ash-white);}
+        }
+      }
+    }
+
+    .selectedOptions{display: flex; flex-direction: column; gap: 10px;
+      .selectedItem{border: solid 1px var(--charcoal-grey);border-radius: 3px;padding: 10px;font-size: 16px;
+        .optionInfo{margin-bottom: 5px; display: flex; gap: 14px; justify-content: space-between;}
+
+        .quantityControl{display: flex;align-items: center; gap: 6px;
+          .qtyBtn{font-size: 12px;background: var(--charcoal-grey);color: var(--ash-white);border-radius: 3px;width: 1.6em;height: 1.6em;padding: 0;display: flex;justify-content: center;align-items: center;
+          }
+        }
+        
+      }
+    }
+
+    .totalSection{display: flex;justify-content: space-between; gap: 10px; align-items: center;
+      .totalPrice{font-size: var(--h2);font-weight: normal;letter-spacing: -.02em;}
+    }
+
+    .payBtn{
+      button.btn{width: 100%; font-size:var(--h4); font-weight: bold;}
+    }
   }
-
-
-    
-  // .paginationSection  {
-
-  //   .totalCount{
-  //     font-size: var(--h3);
-  //     font-weight: bold;
-  //     display: flex;
-  //     justify-content: flex-end;
-  //     margin-bottom: 20px;
-  //   }
-    
-  //   .sortButtons {
-  //     display: flex;
-  //     justify-content: flex-end; 
-  //     flex-direction: row; 
-  //     gap: 10px;
-  //     margin-bottom: 20px;
-  //     font-size: var(--h5); 
-  //   }
-  //   .sortButtons button {
-  //     padding: 5px 10px; 
-  //     background-color: white;
-  //     color: var(--deep-onyx); 
-  //     border: 1px solid var(--deep-onyx);
-  //     cursor: pointer;
-  //     height: 35px;
-  //     border-radius: 3px;
-  //   }
-    
-  //   .sortButtons button.active {
-  //     background-color: var(--deep-onyx);
-  //     color: white;
-  //     border: 1px solid var(--deep-onyx);
-  //   }
-  //     .pageLinks {
-  //     display: flex;
-  //     justify-content: flex-end; 
-  //     gap: 15px;
-  //     }
-
-  //     .pageLinks a.current {
-  //         font-weight: 400;
-  //         text-decoration: underline;
-  //       }
-  // }
+}

@@ -49,6 +49,18 @@ export const memberEmailSearch = async (email) => {
   }
 };
 
+
+/** 회원 아이디 검색 */
+export const memberIdSearch = async (id) => {
+  console.log('조회하려는 아이디:', id);
+  try {
+    const res = await axios.get(`${host}/id/${id}`);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 /** 회원 정보 수정 */
 export const modifyMember = async(member) => {
   try{

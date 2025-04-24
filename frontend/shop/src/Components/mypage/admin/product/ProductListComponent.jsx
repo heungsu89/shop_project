@@ -181,6 +181,15 @@ const ProductListComponent = () =>{
                 </div>
             </div>
         </div>
+
+
+        <SidebarComponent
+            items={items}
+            childCategorys={childCategories}
+            categoryName={categoryName}
+            page={page}
+            size={size}
+          />
         </>
     )
 }
