@@ -106,7 +106,7 @@ const CategoryList = ({
           </DroppableCategory>
         ))
       ) : (
-        <div>등록된 분류가 없습니다.</div>
+        <div className='noDataView'>등록된 분류가 없습니다.</div>
       )}
     </DroppableRoot>
   );

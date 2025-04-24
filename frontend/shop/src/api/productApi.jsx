@@ -2,7 +2,7 @@ import axios from 'axios';
 const API_SERVER_HOST = import.meta.env.VITE_API_SERVER_HOST;
 const host = `${API_SERVER_HOST}/api/items`;
 
-/** 상품 불러오기 */
+/** 상품 리스트 불러오기 */
 export const productList = async(page,size)=>{
     const p = page ? page : 0;
     const s = size ? size : 5;
@@ -21,29 +21,29 @@ export const getProductById = async (id) => {
     return res.data;
 };
 
-
 /** 상품 등록 요청 */
 export const registerProduct = async ({ itemDTO, categoryId, files }) => {
-  console.log("상품 등록 요청", itemDTO, categoryId, files);
   const formData = new FormData();
+
+  // ❗ 문자열로 넣는 것 유지
   formData.append("itemDTO", JSON.stringify(itemDTO));
   formData.append("categoryId", categoryId);
   files.forEach(file => {
-    formData.append("files", file);  // 같은 key로 여러 이미지 파일 추가
+    formData.append("files", file);
   });
-  try{
+
+  try {
     const res = await axios.post(`${host}/add`, formData, {
-      headers: {'Content-Type': 'multipart/form-data'}
+      headers: { 'Content-Type': 'multipart/form-data' }
     });
-    alert("상품등록완료")
+    alert("상품등록완료");
     return res.data;
-  }catch(error){
-    console.log(error);
+  } catch (error) {
+    console.error("상품 등록 실패:", error.response?.data || error.message);
     throw error;
   }
-  
 };
-  
+
   
 /** 상품 수정 */
 export const updateProduct = async ({ id, itemDTO, files = [] }) => {
@@ -72,4 +72,3 @@ export const deleteProduct = async (id) =>{
     throw error;
   }
 }
-  

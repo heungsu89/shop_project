@@ -12,7 +12,8 @@ const Loading = <div>Loading....</div>;
 const Main = lazy(() => import("../Pages/main/MainPage"));
 const Guide = lazy(() => import("../Pages/footer/GuidePage"));
 const Privacy = lazy(() => import("../Pages/footer/PrivacyPolicyPage"));
-const Terms =  lazy(() => import("../Pages/footer/TermsPage"));
+const Terms = lazy(() => import("../Pages/footer/TermsPage"));
+const Order = lazy(() => import("../Pages/order/OrderPage"));
 const rootRouter = createBrowserRouter([
   {
     path: "/",
@@ -58,6 +59,10 @@ const rootRouter = createBrowserRouter([
     path: "event",
     children: eventRouter(), 
   },
+  {
+    path:"order",
+    element : <Suspense fallback={Loading}><Order/></Suspense>
+  }
 ]);
 
 const Root = () => {

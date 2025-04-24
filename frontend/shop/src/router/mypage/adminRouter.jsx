@@ -3,15 +3,23 @@ import { Suspense, lazy } from "react";
 const Loading = () => <div>Loading....</div>;
 
 const AdminMainPage = lazy(() => import("../../Pages/myPage/admin/AdminMainPage"));
+
 const OrderComponent = lazy(() => import("../../Components/mypage/admin/order/OrderComponent"));
 const OrderListComponent = lazy(() => import("../../Components/mypage/admin/order/OrderListComponent"));
+
 const ProductComponent = lazy(() => import("../../Components/mypage/admin/product/ProductComponent"));
 const ProductListComponent = lazy(()=>import("../../Components/mypage/admin/product/ProductListComponent"));
 const ProductFormComponent = lazy(() => import("../../Components/mypage/admin/product/ProductFormComponent"));
+
+const ReviewComponent = lazy(()=>import("../../Components/mypage/admin/review/ReviewComponent"));
+const ReviewListComponent = lazy(()=>import("../../Components/mypage/admin/review/ReviewListComponent"));
+
 const MemberComponent = lazy(() => import("../../Components/mypage/admin/member/MemberComponent"));
 const MemberListCompenet = lazy(() => import("../../Components/mypage/admin/member/MemberListCompoenet"));
 const MemberModifyCompoenet = lazy(() => import("../../Components/mypage/admin/member/MemberModifyCompoenet"));
+
 const CategoryCompoenet = lazy(() => import("../../Components/mypage/admin/category/CategoryCompoenet"));
+
 const InquiryComponent = lazy(() => import("../../Components/mypage/admin/inquiry/InquiryCompoenet"));
 const InquiryListComponent = lazy(() => import("../../Components/mypage/admin/inquiry/InquiryListCompoenet"));
 
@@ -67,6 +75,18 @@ const adminRouter = () => {
                 <ProductFormComponent />
               )
             }
+          ]
+        },
+        {
+          path: "review",
+          element: (
+            <ReviewComponent />
+          ),
+          children:[
+            {
+              index: true,  // <- 기본 라우트
+              element: <ReviewListComponent />
+            },
           ]
         },
         {

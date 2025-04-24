@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createCategory, categoryList, categoryModify, categoryDelete } from '../../../../api/categoryApi';
 import { DndContext, closestCenter } from '@dnd-kit/core';
-import { useDroppable, useDraggable } from '@dnd-kit/core';
-
 import CategoryForm from './CategoryForm';
 import CategoryList from './CategoryList';
 
@@ -18,9 +16,7 @@ const CategoryComponent = () => {
   }, []);
 
   useEffect(() => {
-    if (editingId !== null && inputRef.current) {
-      inputRef.current.focus();
-    }
+    if (editingId !== null && inputRef.current) inputRef.current.focus();
   }, [editingId]);
 
   const fetchCategories = () => {
@@ -52,10 +48,12 @@ const CategoryComponent = () => {
   const handleEdit = (id, name) => {
     setEditingId(id);
     setEditingName(name);
+    window.dispatchEvent(new Event('categoryUpdated'));
   };
 
   const handleEditChange = (e) => {
     setEditingName(e.target.value);
+    window.dispatchEvent(new Event('categoryUpdated'));
   };
 
   const handleEditSave = (id) => {
@@ -113,6 +111,7 @@ const CategoryComponent = () => {
 
     categoryModify(payload).then(() => {
       fetchCategories();
+      window.dispatchEvent(new Event('categoryUpdated'));
     });
   };
 

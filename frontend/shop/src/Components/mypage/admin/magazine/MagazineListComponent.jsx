@@ -116,7 +116,7 @@ const MagazineListComponent = () => {
                         })
                         ) : (
                             <tr>
-                                <td colSpan={6}>등록한 게시물이 없습니다.</td>
+                                <td colSpan={6} className='noDataView'>등록한 게시물이 없습니다.</td>
                             </tr>
                         )}
                     </tbody>

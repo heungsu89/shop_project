@@ -5,16 +5,21 @@ import { getFormattedPrice } from "../../util/priecUtil";
 import { getProductById  } from "../../api/productApi";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper/modules';
+import ProductReviewList from "./ProductReviewListComponent";
+import ProductQnAList from "./ProductQnAListComponent"
 import SidebarDetailCoponent from "../../Components/product/SidebarDetailCoponent";
+
 import defaultImg from "../../static/images/default.png";
 import 'swiper/scss';
 // import 'swiper/scss/navigation';
 // import 'swiper/scss/pagination';
 import 'swiper/scss/scrollbar';
 import '../../static/css/productDetail.scss';
+
 const tabData = [
   'DETAILS','REVIEWS','Q&A','SHIPPING &  REFUNDS'
 ]
+
 
 const TabBar = ( { tabData, activeIndex })=>{
   return(
@@ -31,18 +36,16 @@ const TabBar = ( { tabData, activeIndex })=>{
 }
 
 const ProductDetailComponent = () => {
-  const { memberInfo } = useOutletContext();
+  const { memberInfo } = useOutletContext() || {};
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [imgSave , setImgSave] = useState([]);
 
-
   useEffect(() => {
     getProductById(productId).then((res) => {
       setProduct(res);
-    });
-  }, [productId]);
-
+    });  
+  }, [productId,memberInfo]);
 
   useEffect(() => {
     if (!product?.uploadFileNames) return;
@@ -56,11 +59,13 @@ const ProductDetailComponent = () => {
   
     setImgSave(originalImages);
   }, [product]);
-  
+
+  // console.log('product : '+product)
+  // console.log('memberInfo:'+memberInfo.id)
 
   return (
     <>
-    <div className="productContainer">
+    <div className="rightNavLayoutContainer">
       <div className="productDetailContainer">
         <div className="productImages">
           {product?.uploadFileNames.length > 0 ? (
@@ -92,7 +97,17 @@ const ProductDetailComponent = () => {
               dangerouslySetInnerHTML={{ __html: product?.description }}>
           </div>
           <TabBar tabData={tabData} activeIndex={1}/>
+          {productId && (
+            <ProductReviewList
+              memberId={memberInfo?.id}
+              productId={productId}
+            />
+          )}
           <TabBar tabData={tabData} activeIndex={2}/>
+            <ProductQnAList
+              memberId={memberInfo?.id}
+              productId={productId}
+            />
           <TabBar tabData={tabData} activeIndex={3}/>
           <div className="shippingRefunds">
             <div>

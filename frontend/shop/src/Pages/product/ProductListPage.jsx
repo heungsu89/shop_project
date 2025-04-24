@@ -23,7 +23,7 @@ const ProductListPage = () => {
 
   return (
     <BasicLayout>
-      <div className="productWrap">
+      <div className="rightNavLayoutWrap">
           <Outlet context={{ memberInfo }} />
       </div>
     </BasicLayout>

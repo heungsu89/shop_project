@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const API_SERVER_HOST = import.meta.env.VITE_API_SERVER_HOST;
 const CART_HOST = `${API_SERVER_HOST}/api/cart`;
 const WISHLIST_HOST = `${API_SERVER_HOST}/api/wish/add`;
@@ -14,9 +13,10 @@ export const fetchCartItems = async (memberId) => {
   }
 };
 
-export const addCartItem = async (memberId, itemId, optionId, qty) => {
+export const addCartItem = async (cartData) => {
   try {
-    const response = await axios.post(`${CART_HOST}/add/${memberId}`, { itemId, optionId, qty });
+    const response = await axios.post(`${CART_HOST}/add`, cartData);
+    console.log(response.data)
     return response.data;
   } catch (error) {
     console.error("장바구니 등록 실패:", error);

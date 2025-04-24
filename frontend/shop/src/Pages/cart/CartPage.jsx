@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import {fetchCartItems,removeCartItem,clearCartByMemberId,updateQuantity,deleteSelectedItems,addWishlistItem,addCartItem,} from "../../api/cartApi";
+import { getCookie } from "../../util/cookieUtil";
 import BasicLayout from "../../layout/BasicLayout";
-import {
-  fetchCartItems,
-  removeCartItem,
-  clearCartByMemberId,
-  updateQuantity,
-  deleteSelectedItems,
-  addWishlistItem,
-  addCartItem,
-} from "../../api/cartApi";
 import "../../static/css/cart.scss";
 
 const CartPage = () => {
-  const memberId = 1;
+  const loginState = useSelector((state) => state.loginSlice);
+  const isLoggedIn = loginState && loginState.email !== '';
+  const [memberInfo, setMemberInfo] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
   const [isAllChecked, setIsAllChecked] = useState(false);
@@ -20,7 +16,7 @@ const CartPage = () => {
 
   const loadCartItems = async () => {
     try {
-      const data = await fetchCartItems(memberId);
+      const data = await fetchCartItems(loginState.memberId);
       const initialSizes = {};
       data.forEach(item => {
         initialSizes[item.cartId] = item.selectedOptionId || (item.options && item.options[0]?.optionId);
@@ -34,9 +30,20 @@ const CartPage = () => {
     }
   };
 
+
   useEffect(() => {
-    loadCartItems();
-  }, []);
+    if (isLoggedIn) {
+      const info = getCookie("member");
+      setMemberInfo(info);
+      loadCartItems();
+    } else {
+      setMemberInfo(null);
+    }
+  }, [isLoggedIn, loginState.memberId]);
+
+
+  console.log(cartItems)
+
 
   const handleAllCheck = () => {
     setIsAllChecked(!isAllChecked);
@@ -167,63 +174,61 @@ const CartPage = () => {
         <div className="tablePage">
         <div className="itemTableWrap">
           <table className="itemTable">
-           <thead className="itemThead">
-            <tr className="itemTr">
-              <th className="ckBox">
-                <input type="checkbox" checked={isAllChecked} onChange={handleAllCheck} />
-              </th>
-              <th className="item">상품</th>
-              <th className="price">단품가격</th>
-              <th className="orderPrice">주문금액</th>
-              <th className="mileage">적립금</th>
-              <th className="etc">기타</th>
-            </tr>
-          </thead>
-          <tbody className="itemTbody">
-            {cartItems.map((item) => (
-              <tr className="itemTr" key={item.cartId}>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={checkedItems.includes(item.cartId)}
-                    onChange={() => handleSingleCheck(item.cartId)}
-                  />
-                </td>
-                <td>
-                  <div className="cartItem">
-                    {item.imageFile && (
-                      <img src={item.imageFile} alt={item.itemName} className="itemImage" />
-                    )}
-                    <span className="itemName">{item.itemName}</span>
-                    {item.options && item.options.length > 0 ? (
-                      <select
-                        value={selectedSizes[item.cartId] || item.options[0]?.optionId}
-                        onChange={(event) => handleSizeChange(item.cartId, event)}
-                        id={`size-${item.cartId}`}
-                      >
-                        {item.options.map((option) => (
-                          <option key={option.optionId} value={option.optionId}>{option.size}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <span>옵션 없음</span>
-                    )}
-                    <div className="quantityControl">
-                      <button type="button" onClick={() => decreaseQuantity(item)}>-</button>
-                      <span>{item.qty}</span>
-                      <button type="button" onClick={() => increaseQuantity(item)}>+</button>
-                    </div>
-                  </div>
-                </td>
-                <td>{item.price.toLocaleString()}원</td>
-                <td>{(item.price * item.qty).toLocaleString()}원</td>
-                <td>{((item.price * item.qty) * membershipRate).toLocaleString()}원</td>
-                <td>
-                  <button onClick={() => handleAddToWishlist(item.itemId)}>관심상품 등록</button>
-                  <button onClick={() => handleRemoveItem(item.cartId)}>카트에서 삭제</button>
-                </td>
+            <thead className="itemThead">
+              <tr className="itemTr">
+                <th className="itemNumber"><input type="checkbox" checked={isAllChecked} onChange={handleAllCheck} /></th>
+                <th className="itemInfo">상품</th>
+                <th className="itemPriceInfo">단품가격</th>
+                <th className="itemPriceInfo">주문금액</th>
+                <th className="itemPriceInfo">적립금</th>
+                <th className="itemWriter">기타</th>
               </tr>
-            ))}
+            </thead>
+          <tbody className="itemTbody">
+          {cartItems.map((item) => (
+            <tr className="itemTr" key={item.cartId}>
+              <td className="itemNumber">
+                <input type="checkbox" checked={checkedItems.includes(item.cartId)} onChange={() => handleSingleCheck(item.cartId)}/>
+              </td>
+              <td className="itemInfo">
+                {item.imageName && (
+                <div className="itemImg">
+                  <img src={`http://localhost:8081/upload/${item.imageName}`} alt={item.itemName} className="itemImage" />
+                </div>
+                )}
+              <div className="itemDetailInfo">
+                <span className="itemName">{item.itemName}</span>
+                <span>{item.optionName} : {item.optionValue} </span>
+                <div className="quantityControl">
+                  <button type="button" onClick={() => decreaseQuantity(item)}>-</button>
+                  <span>{item.qty}</span>
+                  <button type="button" onClick={() => increaseQuantity(item)}>+</button>
+                </div>
+              </div>
+
+              {/* {item.options && item.options.length > 0 ? (
+              <select
+              value={selectedSizes[item.cartId] || item.options[0]?.optionId}
+              onChange={(event) => handleSizeChange(item.cartId, event)}
+              id={`size-${item.cartId}`}
+              >
+              {item.options.map((option) => (
+              <option key={option.optionId} value={option.optionId}>{option.size}</option>
+              ))}
+              </select>
+              ) : (
+              <span>옵션 없음</span>
+              )} */}
+              </td>
+              <td className="itemPriceInfo">{item.itemPrice.toLocaleString()}원</td>
+              <td className="itemPriceInfo">{(item.itemPrice * item.qty).toLocaleString()}원</td>
+              <td className="itemPriceInfo">{((item.itemPrice * item.qty) * membershipRate).toLocaleString()}원</td>
+              <td className="itemWriter">
+                <button onClick={() => handleAddToWishlist(item.itemId)}>관심상품 등록</button>
+                <button onClick={() => handleRemoveItem(item.cartId)}>카트에서 삭제</button>
+              </td>
+            </tr>
+          ))}
           </tbody>
           </table>
         </div>

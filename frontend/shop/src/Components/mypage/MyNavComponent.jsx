@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { getMemberById, modifyMember} from '../../api/memberApi';
 
 const MyNav = ({ memberInfo }) => {
-  const pageParam = `/?page=0&size=10`;
+  const pageParam = `?page=0&size=10`;
   const [ userInfo, setUserInfo ] = useState(null);
   const [ isUser, setIsUSer ] = useState({});
   const isAdmin = Array.isArray(memberInfo?.roleNames) && memberInfo.roleNames.includes("ADMIN");
@@ -48,13 +48,14 @@ const MyNav = ({ memberInfo }) => {
         </div>
           <nav className="userNav">
             <ul>
-              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="order">주문</NavLink></li>
-              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="inquiry">문의</NavLink></li>
-              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`product/${pageParam}`}>상품</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`order${pageParam}`}>주문</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`inquiry${pageParam}`}>문의</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`review${pageParam}`}>리뷰</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`product${pageParam}`}>상품</NavLink></li>
               <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="category">분류</NavLink></li>
-              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="member">회원</NavLink></li>
-              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="event?page=0&size=10">이벤트</NavLink></li>
-              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="magazine?page=0&size=10">메거진</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`member${pageParam}`}>회원</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`event${pageParam}`}>이벤트</NavLink></li>
+              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`magazine${pageParam}`}>메거진</NavLink></li>
               <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="adminInfo">관리자정보</NavLink></li>
             </ul>
           </nav>

@@ -24,8 +24,8 @@ const ProductPage = () => {
 
   return (
     <BasicLayout>
-      <div className="productWrap">
-          <Outlet context={ {memberInfo }  } />
+      <div className="rightNavLayoutWrap">
+          <Outlet context={ { memberInfo }  } />
       </div>
     </BasicLayout>
   );

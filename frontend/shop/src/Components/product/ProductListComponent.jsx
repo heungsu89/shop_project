@@ -73,7 +73,7 @@ const ProductListComponent = () => {
 
   return (
     <>
-    <div className="productContainer">
+    <div className="rightNavLayoutContainer">
         <div className="itemListSection">
           {items?.content?.length > 0 ? (
             <ul>
@@ -108,7 +108,7 @@ const ProductListComponent = () => {
               })}
             </ul>
           ) : (
-            <div className='innerWrap'>등록된 상품이 없습니다.</div>
+            <div className='innerWrap noDataView'>등록된 상품이 없습니다.</div>
           )}
         </div>
       </div>

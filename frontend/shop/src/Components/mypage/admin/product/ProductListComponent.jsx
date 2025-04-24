@@ -169,7 +169,7 @@ const ProductListComponent = () =>{
                             })
                             ) : (
                                 <tr>
-                                    <td colSpan={9}>등록된 상품이 없습니다.</td>
+                                    <td colSpan={9} className="noDataView">등록된 상품이 없습니다.</td>
                                 </tr>
                             )}
                         </tbody>
@@ -181,15 +181,6 @@ const ProductListComponent = () =>{
                 </div>
             </div>
         </div>
-
-
-        <SidebarComponent
-            items={items}
-            childCategorys={childCategories}
-            categoryName={categoryName}
-            page={page}
-            size={size}
-          />
         </>
     )
 }
