@@ -206,9 +206,16 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(id).orElseThrow();
 
         // 기본 필드 수정
-        if (itemDTO.getName() != null) item.changeName(itemDTO.getName());
-        if (itemDTO.getDescription() != null) item.changeDescription(itemDTO.getDescription());
-        if (itemDTO.getCategoryId() != null) item.changeCategoryId(itemDTO.getCategoryId());
+        if (itemDTO.getName() != null) {
+            item.changeName(itemDTO.getName());
+        }
+        if (itemDTO.getDescription() != null) {
+            item.changeDescription(itemDTO.getDescription());
+        }
+        if (itemDTO.getCategoryId() != null) {
+            item.changeCategoryId(itemDTO.getCategoryId());
+        }
+        item.changeDiscountRate(itemDTO.getDiscountRate());
         item.changeDelFlag(itemDTO.isDelFlag());
 
         // 인포 수정

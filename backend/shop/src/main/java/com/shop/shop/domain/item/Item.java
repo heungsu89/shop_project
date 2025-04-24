@@ -114,4 +114,8 @@ public class Item {
     public void changeCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
+
+    public void changeDiscountRate(int discountRate) {
+        this.discountRate = discountRate;
+    }
 }

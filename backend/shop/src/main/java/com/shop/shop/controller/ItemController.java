@@ -128,7 +128,7 @@ public class ItemController {
     // 아이템 수정
     @PutMapping(value = "/modify/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ItemDTO> updateItem(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @RequestPart("itemDTO") ItemDTO itemDTO,
             @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
