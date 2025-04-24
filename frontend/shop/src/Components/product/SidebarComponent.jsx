@@ -1,12 +1,12 @@
 import { NavLink } from "react-router-dom";
 import Pagination from "../../Components/Pagination";
 
-const Sidebar = ({items,childCategorys,categoryName,page,size}) => {
+const SidebarComponent = ({items,childCategorys,categoryName,page,size}) => {
     return(
         <aside className="itemSidebar">
             <div className="innerSiedbarWrap">
 
-            <h2 className="categoryTitle">{categoryName}</h2>
+            <h2 className="pageTitle">{categoryName}</h2>
 
             <div className="searchBox">
                 <input type="text" placeholder="SEARCH TEXT" />
@@ -42,4 +42,4 @@ const Sidebar = ({items,childCategorys,categoryName,page,size}) => {
         </aside>
     )
 }
-export default Sidebar;
+export default SidebarComponent;

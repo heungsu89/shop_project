@@ -126,7 +126,7 @@ const ProductFormComponent = () => {
           .map(img => img.url.split('/').pop()); // 파일명 추출
       
         dto.uploadFileNames = existingImageNames; // 서버에 남길 이미지명만 담기
-      
+        console.log("상품 수정 요청", dto);
         await updateProduct({ id, itemDTO: dto, files: filesToUpload });
         alert('상품 수정이 완료되었습니다.');
         navigate(-1);

@@ -23,7 +23,6 @@ export const getProductById = async (id) => {
 
 
 /** 상품 등록 요청 */
-
 export const registerProduct = async ({ itemDTO, categoryId, files }) => {
   console.log("상품 등록 요청", itemDTO, categoryId, files);
   const formData = new FormData();
@@ -53,10 +52,6 @@ export const updateProduct = async ({ id, itemDTO, files = [] }) => {
   files.forEach(file => {
     formData.append('files', file); // ✅ 여러 파일 처리
   });
-  for (let pair of formData.entries()) {
-    console.log('FormData key:', pair[0], 'value:', pair[1]);
-  }
-  console.log("상품 수정 요청", id, itemDTO, files);
   try{
     const response = await axios.put(`${host}/modify/${id}`, formData);
     return response.data;
