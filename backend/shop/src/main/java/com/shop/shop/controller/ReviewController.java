@@ -113,6 +113,36 @@ public class ReviewController {
         return ResponseEntity.ok(reviewListDTOPage);
     }
 
+    // 특정 상품Id를 기준으로 리뷰 리스트 조회(페이징) 삭제 포함
+    @GetMapping("/listPageByItemId/{itemId}")
+    public ResponseEntity<Page<ReviewListDTO>> getReviewListPageByItemId(
+            @PathVariable("itemId") Long itemId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ReviewListDTO> reviewListDTOPage = reviewListService.getReviewListPageByItemId(itemId, pageable);
+        if (reviewListDTOPage == null || reviewListDTOPage.isEmpty()) {
+            throw new RuntimeException("조회된 리뷰 페이지가 없습니다.");
+        }
+        return ResponseEntity.ok(reviewListDTOPage);
+    }
+
+    // 특정 상품Id를 기준으로 리뷰 리스트 조회(페이징) 삭제 미포함
+    @GetMapping("/listPageByItemIdWithDelFlag/{itemId}")
+    public ResponseEntity<Page<ReviewListDTO>> getReviewListPageByItemIdWithDelFlag(
+            @PathVariable("itemId") Long itemId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ReviewListDTO> reviewListDTOPage = reviewListService.getReviewListPageByItemIdWithDelFlag(itemId, pageable);
+        if (reviewListDTOPage == null || reviewListDTOPage.isEmpty()) {
+            throw new RuntimeException("조회된 리뷰 페이지가 없습니다.");
+        }
+        return ResponseEntity.ok(reviewListDTOPage);
+    }
+
     // 특정 리뷰 리스트 수정
     @PutMapping("/edit")
     public ResponseEntity<ReviewListDTO> createReviewList(

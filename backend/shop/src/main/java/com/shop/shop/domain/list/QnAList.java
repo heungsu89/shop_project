@@ -20,8 +20,7 @@ import java.util.List;
 @Builder
 public class QnAList {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "qna_list_id")
     private Long id;
 
@@ -53,6 +52,8 @@ public class QnAList {
     @Enumerated(EnumType.STRING)
     private QnAListStatus qnAListStatus;
 
+    private boolean delFlag;
+
     public void changeTitle(String title) {
         this.title = title;
     }
@@ -75,6 +76,10 @@ public class QnAList {
 
     public void changeQnAListStatus(QnAListStatus qnAListStatus) {
         this.qnAListStatus = qnAListStatus;
+    }
+
+    public void changeDelFlag(boolean delFlag) {
+        this.delFlag = delFlag;
     }
 
 }

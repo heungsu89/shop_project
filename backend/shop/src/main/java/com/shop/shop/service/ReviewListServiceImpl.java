@@ -138,6 +138,30 @@ public class ReviewListServiceImpl implements ReviewListService {
         });
     }
 
+    @Override
+    public Page<ReviewListDTO> getReviewListPageByItemId(Long itemId, Pageable pageable) {
+        Page<ReviewList> reviewListPage = reviewListRepository.findAllByItemIdWithReviewImages(itemId, pageable);
+        if (reviewListPage == null || reviewListPage.isEmpty()) {
+            throw new RuntimeException("조회된 리뷰 리스트가 없습니다.");
+        }
+        return reviewListPage.map(review -> {
+            List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReviewId(review.getId());
+            return new ReviewListDTO(reviewImageList, review);
+        });
+    }
+
+    @Override
+    public Page<ReviewListDTO> getReviewListPageByItemIdWithDelFlag(Long itemId, Pageable pageable) {
+        Page<ReviewList> reviewListPage = reviewListRepository.findAllByItemIdWithReviewImagesANDDelFlag(itemId, pageable);
+        if (reviewListPage == null || reviewListPage.isEmpty()) {
+            throw new RuntimeException("조회된 리뷰 리스트가 없습니다.");
+        }
+        return reviewListPage.map(review -> {
+            List<ReviewImage> reviewImageList = reviewImageRepository.findAllByReviewId(review.getId());
+            return new ReviewListDTO(reviewImageList, review);
+        });
+    }
+
     // 리뷰 리스트 수정
     @Override
     public ReviewListDTO editReviewList(ReviewListDTO reviewListDTO, List<MultipartFile> files) {
