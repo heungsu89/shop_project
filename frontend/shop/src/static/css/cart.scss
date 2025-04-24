@@ -1,112 +1,46 @@
 .cartBox {
-    width: 100%;
-    padding: 40px;
-  }
-  
-  .cartBox h1 {
-    margin-bottom: 20px;
-  }
-  
-  .membership {
-    margin-bottom: 20px;
-  }
-  
-  .membership .membershipLevel {
-    font-size: var(--h3);
-    color: var(--slate-blue);
-    font-weight: bold;
-  }
-  
-  .membership p {
-    font-size: var(--h5);
-  }
-  
-  .cartTable {
-    width: 100%;
-    display: grid;
-    gap: 20px;
-    text-align: center;
+  width: 100%;
+  padding: 40px;
+}
 
-  }
+.cartBox h1 {
+  margin-bottom: 20px;
+}
 
-  .quantityControl button{
-    background-color: var(--deep-onyx);
-    color: var(--ash-white);
-    font-size: var(--text-base);
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .cartButtons {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    padding: 20px 0;
-    width: 100%;
-  }
-  
-  .cartButtons .leftButtons {
+.membership {
+  margin-bottom: 20px;
+}
+
+.membership .membershipLevel {
+  font-size: var(--h3);
+  color: var(--slate-blue);
+  font-weight: bold;
+}
+
+.membership p {
+  font-size: var(--h5);
+}
+
+.itemThead .itemTr .ckBox{
+  flex: 0 0 100px;
+}
+
+  .cartButtons{
     display: flex;
+    justify-content: space-between;
     align-items: center;
   }
-  
-  .cartButtons button.allSelectBtn {
-    padding: 7px 13px;
-    border: 1px solid var(--deep-onyx);
-    background-color: var(--deep-onyx);
-    color: var(--ash-white);
-    cursor: pointer;
-    font-size: var(--text-base);
-    border-radius: 3px;
-    margin-right: 10px;
-  }
-  
-  .cartButtons button.allSelectBtn:hover {
-    background-color: var(--deep-onyx);
-  }
-  
-  .cartButtons .leftButtons button:not(.allSelectBtn) {
-    padding: 7px 13px;
-    border: 1px solid var(--ash-white);
-    background-color: var(--ash-white);
-    color: var(--charcoal-grey);
-    cursor: pointer;
-    font-size: var(--text-base);
-    border-radius: 3px;
-    margin-right: 10px;
-  }
-  
-  .cartButtons .rightButtons {
+
+  .cartButtons .leftButtons{
     display: flex;
-    justify-content: flex-end;
+    gap: 10px;
   }
-  
-  .cartButtons .rightButtons button:first-child {
-    padding: 10px 20px;
-    background-color: #FFFFFF;
-    color: var(--charcoal-grey);
-    border: 1px solid var(--charcoal-grey);
-    cursor: pointer;
-    font-size: 17px;
-    border-radius: 3px;
-    margin-right: 10px;
+
+  .cartButtons .rightButtons{
+    display: flex;
+    gap: 10px;
+    margin-top: 80px;
   }
-  
-  .cartButtons .rightButtons button:first-child:hover {
-    background-color: #f0f0f0;
-  }
-  
-  .cartButtons .rightButtons button:last-child {
-    padding: 10px 20px;
-    background-color: var(--charcoal-grey);
-    color: var(--ash-white);
-    border: none;
-    cursor: pointer;
-    font-size: 17px;
-    border-radius: 3px;
-  }
-  
-  .cartButtons .rightButtons button:last-child:hover {
-    background-color: var(--deep-onyx);
-  }
+
+
+

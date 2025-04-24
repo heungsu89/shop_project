@@ -18,34 +18,19 @@ const CartPage = () => {
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState({});
 
-  const dummyCartItem = {
-    cartId: 999,
-    itemId: 999,
-    itemName: "임시 상품",
-    price: 10000,
-    qty: 2,
-    imageFile: "/static/images/dummy_product.jpg",
-    options: [
-      { optionId: 1, size: "S" },
-      { optionId: 2, size: "M" },
-      { optionId: 3, size: "L" },
-    ],
-    selectedOptionId: 2,
-  };
-
   const loadCartItems = async () => {
     try {
       const data = await fetchCartItems(memberId);
       const initialSizes = {};
-      [dummyCartItem, ...data].forEach(item => {
+      data.forEach(item => {
         initialSizes[item.cartId] = item.selectedOptionId || (item.options && item.options[0]?.optionId);
       });
       setSelectedSizes(initialSizes);
-      setCartItems([dummyCartItem, ...data]);
+      setCartItems(data);
     } catch (error) {
       console.error("장바구니 불러오기 실패:", error);
-      setCartItems([dummyCartItem]);
-      setSelectedSizes({ [dummyCartItem.cartId]: dummyCartItem.selectedOptionId || (dummyCartItem.options && dummyCartItem.options[0]?.optionId) });
+      setCartItems([]);
+      setSelectedSizes({});
     }
   };
 
@@ -172,31 +157,31 @@ const CartPage = () => {
   return (
     <BasicLayout>
       <div className="cartBox">
-        <h1>CART</h1>
+        <h2>CART</h2>
         <div className="membership">
           <div className="membershipLevel">{membershipLevel}</div>
           <p>
             {memberName}은 구매금액의 {membershipRate * 100}% 마일리지로 적립됩니다.
           </p>
         </div>
-        <table className="cartTable">
-          <thead className="menu">
-            <tr>
-              <th>
+        <div className="tablePage">
+        <div className="itemTableWrap">
+          <table className="itemTable">
+           <thead className="itemThead">
+            <tr className="itemTr">
+              <th className="ckBox">
                 <input type="checkbox" checked={isAllChecked} onChange={handleAllCheck} />
               </th>
-              <th>상품</th>
-              <th>단가</th>
-              <th>수량</th>
-              <th>사이즈</th>
-              <th>주문금액</th>
-              <th>적립금</th>
-              <th>기타</th>
+              <th className="item">상품</th>
+              <th className="price">단품가격</th>
+              <th className="orderPrice">주문금액</th>
+              <th className="mileage">적립금</th>
+              <th className="etc">기타</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="itemTbody">
             {cartItems.map((item) => (
-              <tr key={item.cartId}>
+              <tr className="itemTr" key={item.cartId}>
                 <td>
                   <input
                     type="checkbox"
@@ -210,31 +195,27 @@ const CartPage = () => {
                       <img src={item.imageFile} alt={item.itemName} className="itemImage" />
                     )}
                     <span className="itemName">{item.itemName}</span>
+                    {item.options && item.options.length > 0 ? (
+                      <select
+                        value={selectedSizes[item.cartId] || item.options[0]?.optionId}
+                        onChange={(event) => handleSizeChange(item.cartId, event)}
+                        id={`size-${item.cartId}`}
+                      >
+                        {item.options.map((option) => (
+                          <option key={option.optionId} value={option.optionId}>{option.size}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span>옵션 없음</span>
+                    )}
+                    <div className="quantityControl">
+                      <button type="button" onClick={() => decreaseQuantity(item)}>-</button>
+                      <span>{item.qty}</span>
+                      <button type="button" onClick={() => increaseQuantity(item)}>+</button>
+                    </div>
                   </div>
                 </td>
                 <td>{item.price.toLocaleString()}원</td>
-                <td>
-                  <div className="quantityControl">
-                    <button type="button" onClick={() => decreaseQuantity(item)}>-</button>
-                    <span>{item.qty}</span>
-                    <button type="button" onClick={() => increaseQuantity(item)}>+</button>
-                  </div>
-                </td>
-                <td>
-                  {item.options && item.options.length > 0 ? (
-                    <select
-                      value={selectedSizes[item.cartId] || item.options[0]?.optionId}
-                      onChange={(event) => handleSizeChange(item.cartId, event)}
-                      id={`size-${item.cartId}`}
-                    >
-                      {item.options.map((option) => (
-                        <option key={option.optionId} value={option.optionId}>{option.size}</option>
-                      ))}
-                    </select>
-                  ) : (
-                    <span>옵션 없음</span>
-                  )}
-                </td>
                 <td>{(item.price * item.qty).toLocaleString()}원</td>
                 <td>{((item.price * item.qty) * membershipRate).toLocaleString()}원</td>
                 <td>
@@ -244,18 +225,20 @@ const CartPage = () => {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
+        </div>
         <div className="cartButtons">
           <div className="leftButtons">
-            <button onClick={handleAllCheck} className="allSelectBtn">
+            <button onClick={handleAllCheck} className="btn black">
               전체선택
             </button>
-            <button onClick={handleSelectDelete}>선택삭제</button>
-            <button onClick={handleClearCart}>장바구니 비우기</button>
+            <button onClick={handleSelectDelete} className="btn gray">선택삭제</button>
+            <button onClick={handleClearCart} className="btn gray">장바구니 비우기</button>
           </div>
           <div className="rightButtons">
-            <button onClick={handleSelectedOrder}>선택주문</button>
-            <button onClick={handleAllOrder}>
+            <button onClick={handleSelectedOrder} className="btn line bigBtn">선택주문</button>
+            <button onClick={handleAllOrder} className="btn black bigBtn">
               전체주문 ({totalPrice.toLocaleString()}원)
             </button>
           </div>
