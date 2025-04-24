@@ -9,15 +9,15 @@ import { getProductById, deleteProduct, updateProduct, registerProduct } from '.
 import '../../../../static/css/adminProduct.scss';
 
 const DEFAULT_FORM = {
-  name: '',
-  description: '',
+  name: '베이직 마이',
+  description: '상품 테스트',
   totalScore: '',
-  price: '',
-  discountRate: '',
+  price: 58000,
+  discountRate: 10,
   delFlag: false,
   info: {
-    브랜드: '',
-    원산지: ''
+    브랜드: '노드',
+    원산지: '한국'
   }
 };
 
@@ -29,7 +29,7 @@ const ProductFormComponent = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [images, setImages] = useState([null, null, null, null]);
   const [optionName, setOptionName] = useState('');
-  const [options, setOptions] = useState([{ optionValue: '', optionPrice: 0, stockQty: 0 }]);
+  const [options, setOptions] = useState([{ optionValue: '', optionPrice: '', stockQty: '' }]);
   const [content, setContent] = useState('');
   const { moveToPath } = useCustomLogin();
 
@@ -102,6 +102,7 @@ const ProductFormComponent = () => {
       ...form,
       description: content,
       categoryId: selectedCategoryId,
+      discountRate: Number(form.discountRate),
       options: options.map(opt => ({
         optionName,
         optionValue: opt.optionValue,
@@ -112,10 +113,11 @@ const ProductFormComponent = () => {
 
     const filesToUpload = images.filter(Boolean).map(img => img.file);
 
-
-    console.log(dto.categoryId)
-    console.log(filesToUpload)
-    console.log(selectedCategoryId)
+    
+    // console.log(dto.categoryId)
+    // console.log(filesToUpload)
+    // console.log(selectedCategoryId)
+    console.log(dto)
 
     try {
       if (isEdit) {
@@ -126,11 +128,12 @@ const ProductFormComponent = () => {
         dto.uploadFileNames = existingImageNames; // 서버에 남길 이미지명만 담기
       
         await updateProduct({ id, itemDTO: dto, files: filesToUpload });
-        navigate(-1);
         alert('상품 수정이 완료되었습니다.');
+        navigate(-1);
         
       }else{
-        registerProduct({itemDTO: dto, categoryId :selectedCategoryId,files: filesToUpload })
+        registerProduct({itemDTO: dto, categoryId :selectedCategoryId,files: filesToUpload });
+        alert('상품 등록이 완료되었습니다.');
         navigate(-1);
       }
       
@@ -187,9 +190,18 @@ const ProductFormComponent = () => {
             <div className='optionItemsWrap'>
               {options.map((opt, idx) => (
                 <div key={idx} className="optionItem">
-                  <input type="text" placeholder="옵션" value={opt.optionValue} onChange={(e) => handleOptionChange(idx, 'optionValue', e.target.value)} />
-                  <input type="number" placeholder="가격(원)" value={opt.optionPrice} onChange={(e) => handleOptionChange(idx, 'optionPrice', e.target.value)} />
-                  <input type="number" placeholder="재고" value={opt.stockQty} onChange={(e) => handleOptionChange(idx, 'stockQty', e.target.value)} />
+                  <div>
+                    <span>해당 옵션명</span>
+                    <input type="text" placeholder="옵션" value={opt.optionValue} onChange={(e) => handleOptionChange(idx, 'optionValue', e.target.value)} />
+                  </div>
+                  <div>
+                    <span>가격(원)</span>
+                    <input type="number" placeholder="가격(원)" value={opt.optionPrice} onChange={(e) => handleOptionChange(idx, 'optionPrice', e.target.value)} />
+                  </div>
+                  <div>
+                    <span>재고수량</span>
+                    <input type="number" placeholder="재고수량" value={opt.stockQty} onChange={(e) => handleOptionChange(idx, 'stockQty', e.target.value)} />
+                  </div>
                   <button className='btn black' type="button" onClick={() => handleRemoveOption(idx)}>삭제</button>
                 </div>
               ))}

@@ -126,7 +126,7 @@ public class ItemController {
     }
 
     // 아이템 수정
-    @PostMapping(value = "/modify/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/modify/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ItemDTO> updateItem(
             @PathVariable Long id,
             @RequestPart("itemDTO") ItemDTO itemDTO,

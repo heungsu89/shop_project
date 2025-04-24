@@ -40,6 +40,7 @@
         .optionItemsWrap{display: flex;flex-direction: column;gap: 10px;margin-top:8px;
             .optionItem{display: flex; align-items: center; gap: 10px;max-width: 800px;
                 &::before{display: block;content: '↳';font-size: var(--h5);}
+                span{display: block; font-size:var(--small-text); color: var(--placeholder);margin-bottom:0.2em;}
             }
         }
     }
