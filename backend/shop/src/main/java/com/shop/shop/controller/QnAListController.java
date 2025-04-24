@@ -1,6 +1,5 @@
 package com.shop.shop.controller;
 
-import com.shop.shop.domain.list.QnAList;
 import com.shop.shop.dto.QnAListDTO;
 import com.shop.shop.service.QnAListService;
 import lombok.RequiredArgsConstructor;
