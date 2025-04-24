@@ -45,7 +45,7 @@ const MagazinePage = () => {
             return(
               <li key={magazine.magazineListId} className="magazineItem">
                 <div className="imageContainer">
-                  <img src={`http://localhost:8081/upload/${magazine.uploadFileNames[0]}`} alt={`vol.${magazine.title}`} />
+                  <img src={`http://localhost:8081/upload/${magazine.uploadFileNames[0]}`} alt={`•vol.${magazine.title}`} />
                 </div>
                 <div className="textContainer">
                   <div className="textWrapper"> 
@@ -61,7 +61,7 @@ const MagazinePage = () => {
         </section>
 
         <aside className="magazineAside">
-          <h1>MAGAZINE</h1>
+          <h2>MAGAZINE</h2>
           <p>NØRD documents inspiration<br /> drawn from everyday life and beyond fashion<br />
             Through interviews, essays, and visuals,<br />we explore brand philosophies and aesthetics.</p>
           <div className="searchBox">

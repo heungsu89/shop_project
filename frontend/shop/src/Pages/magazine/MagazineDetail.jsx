@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getMagazine, getMagazineList } from "../../api/BoardApi";
+import "../../static/css/magazine.scss";
 
 const MagazineDetail = () => {
   const [magazine, setMagazine] = useState(null);
@@ -41,7 +42,6 @@ const MagazineDetail = () => {
       );
       setCurrentIndex(index);
 
-      // magazineListId가 없는 경우 첫 번째 아이템으로 리디렉션
       if (!magazineListId && list.length > 0) {
         navigate(
           `/magazine/detail?id=${list[0].magazineListId}&page=${page}&size=${size}`
@@ -79,8 +79,8 @@ const MagazineDetail = () => {
 
 
   return (
-    <main>
-      <section>
+    <main className="detailMain">
+      <section className="detailLeft">
         <div>
           {magazine.uploadFileNames &&
             magazine.uploadFileNames.length > 0 && (
@@ -90,27 +90,29 @@ const MagazineDetail = () => {
               />
             )}
         </div>
-
-        <section>
-          <div
+        <div
             dangerouslySetInnerHTML={{ __html: magazine.content }}
           />
         </section>
 
+      <section className="detailRight">
         <div>
-          <div>. VOL.</div>
-          <h2>{magazine.title}</h2>
-          <div>
+          <h2>MAGAZINE</h2>
+          <div className="rightText">
+          <div className="vol">•VOL.</div>
+          <h3 className="magT">{magazine.title}</h3>
+          <div className="date">
             {new Date(magazine.date).toLocaleDateString("ko-KR")}
           </div>
+          </div>
         </div>
-      </section>
 
-      <div>
-        <span onClick={handlePrev}>PREV</span> |{" "}
-        <span onClick={handleList}>LIST</span> |{" "}
-        <span onClick={handleNext}>NEXT</span>
-      </div>
+       <div className="page">
+        <span onClick={handlePrev} className="PREV">PREV</span> 
+        <span onClick={handleList}className="LIST">LIST</span> 
+        <span onClick={handleNext}className="NEXT">NEXT</span>
+       </div>
+     </section>
     </main>
   );
 };
