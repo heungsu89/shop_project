@@ -126,8 +126,7 @@ public class ReviewController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<ReviewListDTO> reviewListDTOPage = reviewListService.getReviewListPageByItemIdWithDelFlag(itemId,
-                pageable);
+        Page<ReviewListDTO> reviewListDTOPage = reviewListService.getReviewListPageByItemIdWithDelFlag(itemId, pageable);
         if (reviewListDTOPage == null || reviewListDTOPage.isEmpty()) {
             throw new RuntimeException("조회된 리뷰 페이지가 없습니다.");
         }
