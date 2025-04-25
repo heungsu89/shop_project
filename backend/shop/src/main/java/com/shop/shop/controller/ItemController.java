@@ -97,7 +97,7 @@ public class ItemController {
     public ResponseEntity<ItemDTO> registerItem(
             @RequestPart("itemDTO") ItemDTO itemDTO,
             @RequestPart(value = "files", required = false) List<MultipartFile> files,
-            @RequestParam("categoryId") Long categoryId //
+            @RequestParam("categoryId") Long categoryId
     ) {
         try {
             if (categoryId == null) {
