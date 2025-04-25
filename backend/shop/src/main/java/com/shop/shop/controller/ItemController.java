@@ -93,37 +93,38 @@ public class ItemController {
     }
 
     // 아이템 등록
-    @PostMapping("/add")
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ItemDTO> registerItem(
-            @RequestParam("itemDTO") String itemJson,  // JSON 데이터를 문자열로 받음
-            @RequestParam(value = "files", required = false) List<MultipartFile> files,
-            @RequestParam("categoryId") Long categoryId
+            @RequestPart("itemDTO") ItemDTO itemDTO,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+            @RequestParam("categoryId") Long categoryId //
     ) {
         try {
-            // JSON 을 ItemDTO 로 변환
-            ObjectMapper objectMapper = new ObjectMapper();
-            ItemDTO itemDTO = objectMapper.readValue(itemJson, ItemDTO.class);
             if (categoryId == null) {
                 throw new RuntimeException("등록하려는 카테고리Id를 입력해주세요.");
             }
-            Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("해당 카테고리를 찾을 수 없습니다."));
-
-            // 파일 처리
+    
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new RuntimeException("해당 카테고리를 찾을 수 없습니다."));
+    
+            // 파일 저장 처리
             if (files != null && !files.isEmpty()) {
                 List<String> uploadFileNames = fileUtil.saveFiles(files);
                 itemDTO.setUploadFileNames(uploadFileNames);
             }
-
+    
             // 서비스 호출
-            ItemDTO createdItem = itemService.createItem(itemDTO, files, categoryId); // 아이템 등록
+            ItemDTO createdItem = itemService.createItem(itemDTO, files, categoryId);
             Item item = itemServiceImpl.getSavedItem();
-            CategoryItemDTO categoryItemDTO = categoryItemService.registerCategoryItem(item, categoryId); // 카테고리에 해당 아이템 등록
-
+            CategoryItemDTO categoryItemDTO = categoryItemService.registerCategoryItem(item, categoryId);
+    
             return ResponseEntity.status(HttpStatus.CREATED).body(createdItem);
         } catch (Exception e) {
+            e.printStackTrace(); // 에러 추적 로그
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+    
 
     // 아이템 수정
     @PutMapping(value = "/modify/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

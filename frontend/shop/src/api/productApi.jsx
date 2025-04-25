@@ -26,8 +26,8 @@ export const registerProduct = async ({ itemDTO, categoryId, files }) => {
   const formData = new FormData();
 
   // ❗ 문자열로 넣는 것 유지
-  formData.append("itemDTO", JSON.stringify(itemDTO));
-  formData.append("categoryId", categoryId);
+  formData.append("itemDTO", new Blob([JSON.stringify(itemDTO)], { type: "application/json" }));
+  formData.append("categoryId", String(categoryId));
   files.forEach(file => {
     formData.append("files", file);
   });
