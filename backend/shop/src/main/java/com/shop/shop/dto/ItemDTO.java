@@ -5,6 +5,7 @@ import com.shop.shop.domain.item.Item;
 import com.shop.shop.domain.item.ItemImage;
 import com.shop.shop.domain.item.ItemInfo;
 import com.shop.shop.domain.item.ItemOption;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +27,10 @@ public class ItemDTO {
 
     private Long id;
     private String name;
+
+    @Lob
     private String description;
+
     private int price;
     private float totalScore;
     private int discountRate;

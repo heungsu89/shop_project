@@ -1,6 +1,7 @@
 package com.shop.shop.service;
 
 import com.shop.shop.dto.CartDTO;
+import com.shop.shop.dto.CheckDTO;
 
 import java.util.List;
 
@@ -17,5 +18,8 @@ public interface CartService {
 
     // 장바구니 목록 다중 삭제
     public void multipleDeleteItemFromWishList(CartDTO cartDTO);
+
+    // 재고량 체크
+    public CheckDTO checkOptionQty(Long optionId, int qty);
 
 }

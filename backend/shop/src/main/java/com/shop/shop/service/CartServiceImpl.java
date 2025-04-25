@@ -7,6 +7,7 @@ import com.shop.shop.domain.item.ItemImage;
 import com.shop.shop.domain.item.ItemOption;
 import com.shop.shop.domain.member.Member;
 import com.shop.shop.dto.CartDTO;
+import com.shop.shop.dto.CheckDTO;
 import com.shop.shop.dto.ItemDTO;
 import com.shop.shop.dto.WishListDTO;
 import com.shop.shop.repository.*;
@@ -42,7 +43,7 @@ public class CartServiceImpl implements CartService {
             itemImage = images.get(0);
         }
 
-        Cart duplicatePrevention = cartRepository.findByMemberIdAndItemId(member.getId(), item.getId());
+        Cart duplicatePrevention = cartRepository.findByMemberIdAndOptionId(member.getId(), item.getId());
 
         // 존재한다면 삭제 후 null값 반환
         if (duplicatePrevention != null) {
@@ -64,9 +65,9 @@ public class CartServiceImpl implements CartService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        List<CartDTO> cartList = cartRepository.findAllByMemberId(member.getId());
+        List<Cart> cartList = cartRepository.findAllByMemberId(member.getId());
 
-        return cartList;
+        return cartList.stream().map(CartDTO::new).toList();
     }
 
     // 회원Id와 상품Id를 기준으로 장바구니 데이터 삭제
@@ -89,5 +90,19 @@ public class CartServiceImpl implements CartService {
             Cart deleteWishListItem = cartRepository.findById(deleteId).orElseThrow(() -> new RuntimeException("삭제하려는 상품을 찾을 수 없습니다."));
             cartRepository.deleteById(deleteWishListItem.getId());
         }
+    }
+
+    // 상품 옵션 재고량 체크
+    @Override
+    public CheckDTO checkOptionQty(Long optionId, int qty) {
+        ItemOption itemOption = itemOptionRepository.findById(optionId).orElseThrow();
+        boolean check = false;
+        if (itemOption.getStockQty() < qty) {
+            check = false;
+//            throw new RuntimeException("재고량이 부족합니다. 현재 재고량: " + itemOption.getStockQty());
+        } else {
+            check = true;
+        }
+        return new CheckDTO(check);
     }
 }

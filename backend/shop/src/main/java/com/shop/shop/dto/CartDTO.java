@@ -38,6 +38,8 @@ public class CartDTO {
     private Long imageId;
     private String imageName;
 
+    private boolean checkQty;
+
     public CartDTO(Cart cart) {
         this.cartId = cart.getId();
         this.memberId = cart.getMember().getId();

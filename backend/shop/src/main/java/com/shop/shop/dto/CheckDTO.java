@@ -8,14 +8,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
+//@NoArgsConstructor
+//@AllArgsConstructor
 public class CheckDTO {
 
-    private Long ReviewId;
-    private Long CartId;
-    private Long WishId;
-    private Long itemId;
-    private Long memberId;
+    private boolean checkResult;
+
+    public CheckDTO(boolean checkResult) {
+        this.checkResult = checkResult;
+    }
 
 }

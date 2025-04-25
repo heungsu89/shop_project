@@ -38,6 +38,8 @@ public class Cart {
     @JoinColumn(name = "item_image_id")
     private ItemImage itemImage; // 선택한 이미지를 저장
 
+    private boolean incrementQty;
+
     private int qty;
 
     public void registerCart(Member member, Item item, ItemOption itemOption, ItemImage itemImage) {

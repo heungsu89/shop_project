@@ -179,14 +179,6 @@ public class ItemServiceImpl implements ItemService {
                 .toList();
 
         return new PageImpl<>(itemDTOs, pageable, itemPage.getTotalElements());
-
-//        return itemPage.map(item -> {
-//            List<ItemImage> images = item.getImages();
-//            ItemImage representativeImage = (images != null && !images.isEmpty())
-//                    ? images.get(0)
-//                    : ItemImage.builder().fileName("default.png").build();
-//            return new ItemDTO(item, List.of(representativeImage));
-//        });r
     }
 
     // 특정 아이템 옵션 조회

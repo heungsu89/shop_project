@@ -2,6 +2,7 @@ package com.shop.shop.controller;
 
 import com.shop.shop.dto.CartDTO;
 import com.shop.shop.dto.CategoryDTO;
+import com.shop.shop.dto.CheckDTO;
 import com.shop.shop.dto.WishListDTO;
 import com.shop.shop.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,16 @@ public class CartController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("result", "fail", "error", e.getMessage()));
         }
+    }
+
+    // 재고량 체크 true(가능) / false(불가) 반환
+    @GetMapping("/checkQty")
+    public ResponseEntity<CheckDTO> checkQty(
+                @RequestParam Long optionId,
+                @RequestParam int qty
+            ) {
+        CheckDTO checkResult = cartService.checkOptionQty(optionId, qty);
+        return ResponseEntity.ok(checkResult);
     }
 
 }
