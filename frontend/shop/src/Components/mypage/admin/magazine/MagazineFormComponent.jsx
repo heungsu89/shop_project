@@ -93,7 +93,7 @@ const EventFormComponent = () => {
 
   return (
     <>
-      <h2 className="pageTitle">이벤트 - {isEdit ? '글 수정' : '글 등록'}</h2>
+      <h2 className="pageTitle">매거진 - {isEdit ? '글 수정' : '글 등록'}</h2>
       <div className="pageContainer product">
         <ImageUploadComponent images={images} setImages={setImages} />
 

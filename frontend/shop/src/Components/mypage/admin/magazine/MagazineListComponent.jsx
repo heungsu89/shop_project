@@ -29,7 +29,7 @@ const MagazineListComponent = () => {
 
   return(
     <>
-    <h2 className="pageTitle">이벤트</h2>
+    <h2 className="pageTitle">매거진</h2>
     <div className="pageContainer">
     <div className="borderSection filter">
                 <strong>등록된 작성글 : {boardData?.totalElements || 0}개</strong>
