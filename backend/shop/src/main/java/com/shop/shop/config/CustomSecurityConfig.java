@@ -56,7 +56,7 @@ public class CustomSecurityConfig {
                         .requestMatchers("/api/qnaList/**").permitAll()
                         .requestMatchers("/api/delivery/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/upload/**").permitAll() // ✅ 추가된 라인
+                        .requestMatchers("/upload/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole("MANAGER", "ADMIN")
                         .anyRequest().authenticated()
                 )
