@@ -142,4 +142,15 @@ public class CategoryController {
         return ResponseEntity.ok(categoryItemDTOPage);
     }
 
+    // 특정 카테고리 상품 조회(페이징) 필터 기능 추가
+    @GetMapping("/categoryItemPageWithStatus")
+    public ResponseEntity<Page<CategoryItemDTO>> getALLCategoryItemByIdAndStatus(
+            @RequestBody CategoryItemDTO categoryItemDTO,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CategoryItemDTO> categoryItemDTOPage = categoryItemService.getAllItemsFromCategoryItemWithStatus(pageable, categoryItemDTO);
+        return ResponseEntity.ok(categoryItemDTOPage);
+    }
+
 }

@@ -179,6 +179,9 @@ public class ItemController {
 
             // 서비스 호출
             ItemDTO createdItem = itemService.createItem(itemDTO, files, categoryId);  // 상품 생성
+            Item item = itemServiceImpl.getSavedItem();
+            CategoryItemDTO categoryItemDTO = categoryItemService.registerCategoryItem(item, categoryId);
+
             return ResponseEntity.status(HttpStatus.CREATED).body(createdItem);
         } catch (Exception e) {
             e.printStackTrace(); // 에러 추적 로그

@@ -28,12 +28,27 @@ public interface CategoryItemRepository extends JpaRepository<CategoryItem, Long
     @Query("SELECT ci FROM CategoryItem ci ORDER BY ci.id DESC")
     Page<CategoryItem> findAllWithItem(Pageable pageable);
 
-    // categoryId 에 속한 상위/하위의 모든 데이터 가져오기
+    // categoryId 에 속한 상위/하위의 모든 데이터 가져오기 최신순
     @EntityGraph(attributePaths = { "item" })
     @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId OR ci.category.parent.id = :categoryId ORDER BY ci.id DESC")
-    Page<CategoryItem> findAllPageByCategoryId(Pageable pageable, @Param("categoryId") Long categoryId);
+    Page<CategoryItem> findAllPageByCategoryIdDESC(Pageable pageable, @Param("categoryId") Long categoryId);
 
-    // categoryId를 기준으로 모두 조회
+    // categoryId 에 속한 상위/하위의 모든 데이터 가져오기 오랜된 순
+    @EntityGraph(attributePaths = { "item" })
+    @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId OR ci.category.parent.id = :categoryId ORDER BY ci.id ASC")
+    Page<CategoryItem> findAllPageByCategoryIdASC(Pageable pageable, @Param("categoryId") Long categoryId);
+
+    // categoryId 에 속한 상위/하위의 모든 데이터 가져오기
+    @EntityGraph(attributePaths = { "item" })
+    @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId OR ci.category.parent.id = :categoryId ORDER BY ci.item.price DESC")
+    Page<CategoryItem> findAllPageByItemPriceDESC(Pageable pageable, @Param("categoryId") Long categoryId);
+
+    // categoryId 에 속한 상위/하위의 모든 데이터 가져오기
+    @EntityGraph(attributePaths = { "item" })
+    @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId OR ci.category.parent.id = :categoryId ORDER BY ci.item.price ASC")
+    Page<CategoryItem> findAllPageByItemPriceASC(Pageable pageable, @Param("categoryId") Long categoryId);
+
+    // categoryId를 기준으로 모두 조회(최신순)
     @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId ORDER BY ci.id DESC")
     List<CategoryItem> findAllByCategoryId(@Param("categoryId") Long categoryId);
 
