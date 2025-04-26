@@ -40,9 +40,21 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO createOrder(OrderDTO orderDTO) {
         Member member = memberRepository.findById(orderDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
-        List<Cart> cartList = cartRepository.findAllCartListByMemberId(orderDTO.getMemberId());
-        if (cartList == null || cartList.isEmpty()) {
-            throw new RuntimeException("장바구니에 상품이 없습니다.");
+        List<Cart> cartList;
+        if (orderDTO.getSelectId() == null || orderDTO.getSelectId().length == 0) {
+            cartList = cartRepository.findAllCartListByMemberId(orderDTO.getMemberId());
+            if (cartList == null || cartList.isEmpty()) {
+                throw new RuntimeException("장바구니에 상품이 없습니다.");
+            }
+        } else {
+            cartList = new ArrayList<>();
+            for (Long cartItemId : orderDTO.getSelectId()) {
+                Cart cart = cartRepository.findCartItemByMemberIdANDItemId(member.getId(), cartItemId);
+                if (cart == null) {
+                    throw new RuntimeException("해당 상품을 찾을 수 없습니다. 요청된 상품Id: " + cart);
+                }
+                cartList.add(cart);
+            }
         }
 
         Delivery delivery = new Delivery();
@@ -113,6 +125,8 @@ public class OrderServiceImpl implements OrderService {
             default: addMileageAmount = 0; break;
         }
 
+
+
         // 마일리지 내역 생성
         createMileageByMemberShip(addMileageAmount, member, order, MileageStatus.NO_REDEEM);
 
@@ -129,6 +143,11 @@ public class OrderServiceImpl implements OrderService {
 
         // Order와 OrderItem을 함께 저장
         Order saved1Order = orderRepository.save(savedOrder);
+
+        // 주문에 등록된 상품(들)을 장바구니 목록에서 삭제
+        for (Cart cart : cartList) {
+            cartRepository.deleteById(cart.getId());
+        }
 
         return new OrderDTO(saved1Order, orderItemList);
     }
