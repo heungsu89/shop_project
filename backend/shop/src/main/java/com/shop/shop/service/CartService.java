@@ -22,4 +22,9 @@ public interface CartService {
     // 재고량 체크
     public CheckDTO checkOptionQty(Long optionId, int qty);
 
+    // 재고량 수정
+    public CheckDTO updateOptionQty(Long optionId, int qty);
+
+    public void updateCartQty(Long cartId, int newQty);
+
 }

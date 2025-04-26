@@ -26,6 +26,7 @@ public class CartDTO {
     private Long itemId;
     private String itemName;
     private int itemPrice;
+    private int discountRate;
 
     private Long optionId;
     private String optionName;
@@ -48,6 +49,7 @@ public class CartDTO {
         this.itemId = cart.getItem().getId();
         this.itemName = cart.getItem().getName();
         this.itemPrice = cart.getItem().getPrice();
+        this.discountRate = cart.getItem().getDiscountRate();
 
         if (cart.getItemImage() != null) {
             this.imageId = cart.getItemImage().getId();

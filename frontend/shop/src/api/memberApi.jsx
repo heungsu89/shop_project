@@ -84,11 +84,10 @@ export const memberList = async(page,size) =>{
   }
 }
 
-/** 모든 회원 리스트 불러오기 */
+/** 회원 정보 불러오기 */
 export const getMemberById = async(id) =>{
   try{
     const res = await axios.get(`${host}/id/${id}`);
-    console.log(res.data)
     return res.data;
   }catch(error){
     throw error;

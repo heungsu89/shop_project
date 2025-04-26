@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {fetchCartItems,removeCartItem,clearCartByMemberId,updateQuantity,deleteSelectedItems,addWishlistItem,addCartItem,} from "../../api/cartApi";
+import {fetchCartItems,removeCartItem,clearCartByMemberId,updateQuantity,deleteSelectedItems,addWishlistItem, updateCartQty} from "../../api/cartApi";
+import { addComma } from '../../util/priecUtil';
+import { getMemberById } from '../../api/memberApi';
 import { getCookie } from "../../util/cookieUtil";
 import BasicLayout from "../../layout/BasicLayout";
 import "../../static/css/cart.scss";
@@ -13,6 +15,24 @@ const CartPage = () => {
   const [checkedItems, setCheckedItems] = useState([]);
   const [isAllChecked, setIsAllChecked] = useState(false);
   const [selectedSizes, setSelectedSizes] = useState({});
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setMemberInfo(null);
+      return;
+    }
+    const init = async () => {
+      try {
+        const info = getCookie("member");
+        await getMemberById(info.memberId).then(setMemberInfo);
+        await loadCartItems();
+      } catch (e) {
+        setMemberInfo(null);
+      }
+    };
+    init();
+  }, [isLoggedIn]);
+  
 
   const loadCartItems = async () => {
     try {
@@ -29,21 +49,6 @@ const CartPage = () => {
       setSelectedSizes({});
     }
   };
-
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      const info = getCookie("member");
-      setMemberInfo(info);
-      loadCartItems();
-    } else {
-      setMemberInfo(null);
-    }
-  }, [isLoggedIn, loginState.memberId]);
-
-
-  console.log(cartItems)
-
 
   const handleAllCheck = () => {
     setIsAllChecked(!isAllChecked);
@@ -92,31 +97,70 @@ const CartPage = () => {
 
   const handleQuantityChange = async (cartId, newQty) => {
     try {
-      await updateQuantity(cartId, newQty);
-      loadCartItems();
+      const response = await updateQuantity(cartId, newQty);
+
+      // 서버 응답을 확인
+      if (response.checkResult) {
+        // 성공하면 장바구니 다시 불러오기
+        await loadCartItems();
+      } else {
+        // 실패하면 사용자에게 알림
+        alert("수량 변경 실패: 서버에서 거절되었습니다.");
+      }
     } catch (error) {
-      console.error("수량 변경 실패:", error);
+      console.error("수량 변경 중 오류:", error);
+      alert("수량 변경 중 오류가 발생했습니다.");
     }
   };
 
-  const increaseQuantity = (item) => {
-    handleQuantityChange(item.cartId, item.qty + 1);
-  };
 
-  const decreaseQuantity = (item) => {
-    if (item.qty > 1) {
-      handleQuantityChange(item.cartId, item.qty - 1);
-    }
-  };
+// 수량 증가
+const increaseQuantity = async (item) => {
+  const newQty = item.qty + 1;
 
-  const handleRemoveItem = async (cartId) => {
+  // 프론트에서도 재고 초과 막기
+  if (newQty > item.stockQty) {
+    alert(`재고 초과! 현재 남은 수량은 ${item.stockQty}개입니다.`);
+    return;
+  }
+
+  try {
+    await updateCartQty(item.cartId, newQty);
+    setCartItems(prevItems =>
+      prevItems.map(prevItem =>
+        prevItem.cartId === item.cartId
+          ? { ...prevItem, qty: newQty }
+          : prevItem
+      )
+    );
+  } catch (error) {
+    console.error("수량 증가 오류:", error);
+    alert(error.response?.data?.message || "수량 증가 중 오류가 발생했습니다.");
+  }
+};
+  
+
+// 수량 감소
+const decreaseQuantity = async (item) => {
+  if (item.qty > 1) {
+    const newQty = item.qty - 1;
     try {
-      await removeCartItem(cartId);
-      loadCartItems();
+      await updateCartQty(item.cartId, newQty); // 장바구니 수량만 수정
+      setCartItems(prevItems =>
+        prevItems.map(prevItem =>
+          prevItem.cartId === item.cartId
+            ? { ...prevItem, qty: newQty }
+            : prevItem
+        )
+      );
     } catch (error) {
-      console.error("상품 삭제 실패:", error);
+      console.error("수량 감소 오류:", error);
+      alert("수량 감소 중 오류가 발생했습니다.");
     }
-  };
+  } else {
+    alert("수량은 1개보다 작을 수 없습니다.");
+  }
+};
 
   const handleAddToWishlist = async (itemId) => {
     try {
@@ -155,20 +199,30 @@ const CartPage = () => {
     }
   };
 
-  const membershipRate = 0.03;
-  const memberName = "홍길동";
-  const membershipLevel = "GOLD";
 
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.qty * item.price, 0);
+  if (memberInfo === null)  return;
 
+  console.log(cartItems)
+  console.log(memberInfo.memberShip)
+
+
+  const rateMap = { BRONZE: 0.01, SILVER: 0.02, GOLD: 0.03, PLATINUM: 0.05 };
+  const rate = rateMap[memberInfo.memberShip] || 0;
+
+  const totalPrice = cartItems.reduce((sum, item) => {
+    const itemTotalPrice = (item.itemPrice + item.optionPrice) * item.qty;
+    return sum + itemTotalPrice;
+  }, 0);
+
+  
   return (
     <BasicLayout>
       <div className="cartBox">
         <h2>CART</h2>
         <div className="membership">
-          <div className="membershipLevel">{membershipLevel}</div>
+          <div className="membershipLevel">{memberInfo.memberShip}</div>
           <p>
-            {memberName}은 구매금액의 {membershipRate * 100}% 마일리지로 적립됩니다.
+            {memberInfo.memberName}은 구매금액의 {rate}% 마일리지로 적립됩니다.
           </p>
         </div>
         <div className="tablePage">
@@ -185,7 +239,9 @@ const CartPage = () => {
               </tr>
             </thead>
           <tbody className="itemTbody">
-          {cartItems.map((item) => (
+          {cartItems.map((item) => {
+          const dcPrice = Math.floor(item.itemPrice * (1 - item.discountRate / 100));
+          return(
             <tr className="itemTr" key={item.cartId}>
               <td className="itemNumber">
                 <input type="checkbox" checked={checkedItems.includes(item.cartId)} onChange={() => handleSingleCheck(item.cartId)}/>
@@ -196,39 +252,25 @@ const CartPage = () => {
                   <img src={`http://localhost:8081/upload/${item.imageName}`} alt={item.itemName} className="itemImage" />
                 </div>
                 )}
-              <div className="itemDetailInfo">
-                <span className="itemName">{item.itemName}</span>
-                <span>{item.optionName} : {item.optionValue} </span>
-                <div className="quantityControl">
-                  <button type="button" onClick={() => decreaseQuantity(item)}>-</button>
-                  <span>{item.qty}</span>
-                  <button type="button" onClick={() => increaseQuantity(item)}>+</button>
+                <div className="itemDetailInfo">
+                  <span className="itemName">{item.itemName}</span>
+                  <span>{item.optionName} : {item.optionValue} {item.optionPrice > 0 && `(${item.optionPrice})`} </span>
+                  <div className="quantityControl">
+                    <button type="button" onClick={() => decreaseQuantity(item)}>-</button>
+                    <span>{item.qty}</span>
+                    <button type="button" onClick={() => increaseQuantity(item)}>+</button>
+                  </div>
                 </div>
-              </div>
-
-              {/* {item.options && item.options.length > 0 ? (
-              <select
-              value={selectedSizes[item.cartId] || item.options[0]?.optionId}
-              onChange={(event) => handleSizeChange(item.cartId, event)}
-              id={`size-${item.cartId}`}
-              >
-              {item.options.map((option) => (
-              <option key={option.optionId} value={option.optionId}>{option.size}</option>
-              ))}
-              </select>
-              ) : (
-              <span>옵션 없음</span>
-              )} */}
               </td>
-              <td className="itemPriceInfo">{item.itemPrice.toLocaleString()}원</td>
-              <td className="itemPriceInfo">{(item.itemPrice * item.qty).toLocaleString()}원</td>
-              <td className="itemPriceInfo">{((item.itemPrice * item.qty) * membershipRate).toLocaleString()}원</td>
+              <td className="itemPriceInfo">{addComma((dcPrice + item.optionPrice))}원</td>
+              <td className="itemPriceInfo">{addComma(((dcPrice + item.optionPrice) * item.qty))}원</td>
+              <td className="itemPriceInfo">{(((dcPrice + item.optionPrice) * item.qty) * rate).toLocaleString()}원</td>
               <td className="itemWriter">
                 <button onClick={() => handleAddToWishlist(item.itemId)}>관심상품 등록</button>
                 <button onClick={() => handleRemoveItem(item.cartId)}>카트에서 삭제</button>
               </td>
             </tr>
-          ))}
+          )})}
           </tbody>
           </table>
         </div>

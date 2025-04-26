@@ -10,10 +10,11 @@ import com.shop.shop.dto.CartDTO;
 import com.shop.shop.dto.CheckDTO;
 import com.shop.shop.dto.ItemDTO;
 import com.shop.shop.dto.WishListDTO;
+import com.shop.shop.exception.NotEnoughStockException;
 import com.shop.shop.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -29,9 +30,12 @@ public class CartServiceImpl implements CartService {
     // 장바구니 등록하기
     @Override
     public CartDTO registerCart(CartDTO cartDTO) {
-        Member member = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
-        Item item = itemRepository.findById(cartDTO.getItemId()).orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
-        ItemOption option = itemOptionRepository.findById(cartDTO.getOptionId()).orElseThrow(() -> new IllegalArgumentException("해당 옵션이 존재하지 않습니다."));
+        Member member = memberRepository.findById(cartDTO.getMemberId())
+                .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+        Item item = itemRepository.findById(cartDTO.getItemId())
+                .orElseThrow(() -> new RuntimeException("해당 상품을 찾을 수 없습니다."));
+        ItemOption option = itemOptionRepository.findById(cartDTO.getOptionId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 옵션이 존재하지 않습니다."));
         List<ItemImage> images = itemImageRepository.findByItemId(cartDTO.getItemId());
 
         if (cartDTO.getQty() > option.getStockQty()) {
@@ -73,7 +77,8 @@ public class CartServiceImpl implements CartService {
     // 회원Id와 상품Id를 기준으로 장바구니 데이터 삭제
     @Override
     public void deleteCartItem(CartDTO cartDTO) {
-        Member member = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+        Member member = memberRepository.findById(cartDTO.getMemberId())
+                .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
         Cart cartItem = cartRepository.findByMemberIdAndItemId(member.getId(), cartDTO.getItemId());
 
         if (cartItem == null) {
@@ -87,7 +92,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public void multipleDeleteItemFromWishList(CartDTO cartDTO) {
         for (Long deleteId : cartDTO.getDeleteId()) {
-            Cart deleteWishListItem = cartRepository.findById(deleteId).orElseThrow(() -> new RuntimeException("삭제하려는 상품을 찾을 수 없습니다."));
+            Cart deleteWishListItem = cartRepository.findById(deleteId)
+                    .orElseThrow(() -> new RuntimeException("삭제하려는 상품을 찾을 수 없습니다."));
             cartRepository.deleteById(deleteWishListItem.getId());
         }
     }
@@ -99,10 +105,50 @@ public class CartServiceImpl implements CartService {
         boolean check = false;
         if (itemOption.getStockQty() < qty) {
             check = false;
-//            throw new RuntimeException("재고량이 부족합니다. 현재 재고량: " + itemOption.getStockQty());
+            // throw new RuntimeException("재고량이 부족합니다. 현재 재고량: " +
+            // itemOption.getStockQty());
         } else {
             check = true;
         }
         return new CheckDTO(check);
     }
+
+    @Override
+    @Transactional
+    public void updateCartQty(Long cartId, int newQty) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("해당 장바구니 상품을 찾을 수 없습니다."));
+
+        ItemOption itemOption = itemOptionRepository.findById(cart.getItemOption().getId())
+                .orElseThrow(() -> new RuntimeException("해당 옵션이 존재하지 않습니다."));
+
+        if (newQty > itemOption.getStockQty()) {
+            throw new RuntimeException("재고 수량 초과: 현재 재고는 " + itemOption.getStockQty() + "개입니다.");
+        }
+
+        cart.changeQty(newQty);
+        cartRepository.save(cart);
+    }
+
+    @Override
+    @Transactional
+    public CheckDTO updateOptionQty(Long optionId, int changeQty) {
+        ItemOption itemOption = itemOptionRepository.findById(optionId)
+                .orElseThrow(() -> new RuntimeException("해당 옵션이 존재하지 않습니다: optionId=" + optionId));
+
+        int currentStock = itemOption.getStockQty(); // 현재 재고량
+        int expectedStock = currentStock + changeQty; // 변경 후 예상 재고량
+
+        // 재고량이 0 미만이면 실패
+        if (expectedStock < 0) {
+            return new CheckDTO(false);
+        }
+
+        // 재고량 업데이트
+        itemOption.changeStockQty(expectedStock);
+        itemOptionRepository.save(itemOption);
+
+        return new CheckDTO(true);
+    }
+
 }

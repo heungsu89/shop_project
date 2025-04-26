@@ -68,3 +68,37 @@ export const addWishlistItem = async (memberId, itemId) => {
     throw error;
   }
 };
+
+export const itemQty = async (optionId,qty) =>{
+  try{
+    const res = await axios.get(`${CART_HOST}/checkQty?optionId=${optionId}&qty=${qty}`);
+    return res.data;
+  }catch(error){
+    console.error("수량 조정실패:", error);
+    throw error;
+  }
+}
+
+
+// 장바구니 카트
+export const updateQty = async (optionId, changeQty) => {
+  console.log(optionId,changeQty)
+  const response = await axios.post(`${CART_HOST}/updateQty`, null, {
+    params: {
+      optionId: optionId,
+      changeQty: changeQty
+    }
+  });
+  return response.data;
+};
+
+// 장바구니 수량 수정
+export const updateCartQty = async (cartId, newQty) => {
+  const response = await axios.post(`${CART_HOST}/updateCartQty`, null, {
+    params: {
+      cartId: cartId,
+      newQty: newQty
+    }
+  });
+  return response.data;
+};

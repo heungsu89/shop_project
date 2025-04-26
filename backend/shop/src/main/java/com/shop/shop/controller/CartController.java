@@ -59,18 +59,37 @@ public class CartController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("result", "fail", "error", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("result", "fail", "error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("result", "fail", "error", e.getMessage()));
         }
     }
 
     // 재고량 체크 true(가능) / false(불가) 반환
     @GetMapping("/checkQty")
     public ResponseEntity<CheckDTO> checkQty(
-                @RequestParam Long optionId,
-                @RequestParam int qty
-            ) {
+            @RequestParam Long optionId,
+            @RequestParam int qty) {
         CheckDTO checkResult = cartService.checkOptionQty(optionId, qty);
         return ResponseEntity.ok(checkResult);
+    }
+
+    // 옵션 재고량 수정
+    @PostMapping("/updateQty")
+    public ResponseEntity<CheckDTO> updateQty(
+            @RequestParam Long optionId,
+            @RequestParam int changeQty // 예) +1 이면 증가, -1 이면 감소
+    ) {
+        CheckDTO result = cartService.updateOptionQty(optionId, changeQty);
+        return ResponseEntity.ok(result);
+    }
+
+    // 옵션 장바구니 재고량 수정
+    @PostMapping("/updateCartQty")
+    public ResponseEntity<Void> updateCartQty(
+            @RequestParam Long cartId,
+            @RequestParam int newQty) {
+        cartService.updateCartQty(cartId, newQty);
+        return ResponseEntity.ok().build();
     }
 
 }

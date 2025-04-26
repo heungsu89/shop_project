@@ -1,46 +1,28 @@
-.cartBox {
-  width: 100%;
-  padding: 40px;
+.cartBox {padding: 40px;
+  h1 {margin-bottom: 20px;}
 }
 
-.cartBox h1 {
-  margin-bottom: 20px;
+.membership {margin-bottom: 20px;
+  .membershipLevel {font-size: var(--h3);color: var(--slate-blue);font-weight: bold;}
+  p {font-size: var(--h5);}
 }
 
-.membership {
-  margin-bottom: 20px;
+.cartButtons{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.membership .membershipLevel {
-  font-size: var(--h3);
-  color: var(--slate-blue);
-  font-weight: bold;
+.cartButtons .leftButtons{
+  display: flex;
+  gap: 10px;
 }
 
-.membership p {
-  font-size: var(--h5);
+.cartButtons .rightButtons{
+  display: flex;
+  gap: 10px;
+  margin-top: 80px;
 }
-
-.itemThead .itemTr .ckBox{
-  flex: 0 0 100px;
-}
-
-  .cartButtons{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .cartButtons .leftButtons{
-    display: flex;
-    gap: 10px;
-  }
-
-  .cartButtons .rightButtons{
-    display: flex;
-    gap: 10px;
-    margin-top: 80px;
-  }
 
 
 

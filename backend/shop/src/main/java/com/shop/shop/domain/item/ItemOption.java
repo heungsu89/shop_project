@@ -56,8 +56,8 @@ public class ItemOption {
         this.stockQty = remainingStock;
     }
 
-    public void changeStockQty(int stockQty) {
-        this.stockQty = stockQty;
+    public void changeStockQty(int newQty) {
+        this.stockQty = newQty;
     }
 
     public void changeOptionPrice(int optionPrice) {
