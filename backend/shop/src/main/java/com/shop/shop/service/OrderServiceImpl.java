@@ -80,6 +80,7 @@ public class OrderServiceImpl implements OrderService {
         // 먼저 order를 저장한 후, order의 id를 참조하는 orderItem 저장
         Order savedOrder = orderRepository.save(order); // order의 id가 생성된 후에 orderItem 저장 가능
 
+        // 카트의 상품을 주문 상품 리스트에 추가
         int totalAmount = 0;
         int totalDiscountAmount = 0;
         List<OrderItem> orderItemList = new ArrayList<>();
@@ -102,6 +103,7 @@ public class OrderServiceImpl implements OrderService {
         order.changeTotalAmount(totalDiscountAmount);
         log.info("totalDiscountAmount: " + totalDiscountAmount);
 
+        // 회원 등급별 마일리지 적립 수치 설정
         int addMileageAmount;
         switch (member.getMemberShip()) {
             case BRONZE: addMileageAmount = (int) ((float)totalDiscountAmount * 0.01); break;
@@ -110,6 +112,7 @@ public class OrderServiceImpl implements OrderService {
             case PLATINUM: addMileageAmount = (int) ((float)totalDiscountAmount * 0.05); break;
             default: addMileageAmount = 0; break;
         }
+
         // 마일리지 내역 생성
         createMileageByMemberShip(addMileageAmount, member, order, MileageStatus.NO_REDEEM);
 

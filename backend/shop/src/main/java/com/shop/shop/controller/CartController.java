@@ -83,7 +83,7 @@ public class CartController {
         return ResponseEntity.ok(result);
     }
 
-    // 옵션 장바구니 재고량 수정
+    // 장바구니 옵션 재고량 수정
     @PostMapping("/updateCartQty")
     public ResponseEntity<Void> updateCartQty(
             @RequestParam Long cartId,
