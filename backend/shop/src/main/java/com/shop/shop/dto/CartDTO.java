@@ -36,6 +36,9 @@ public class CartDTO {
     // 다중 삭제에 필요한 ItemId를 담아두는 변수
     private Long[] deleteId;
 
+    // 다중 선택에 필요한 ItemId를 담아두는 변수
+    private Long[] selectId;
+    
     private Long imageId;
     private String imageName;
 

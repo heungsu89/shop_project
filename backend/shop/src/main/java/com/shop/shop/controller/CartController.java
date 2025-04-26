@@ -36,6 +36,13 @@ public class CartController {
         return ResponseEntity.ok(getCartByMemberId);
     }
 
+    // 회원Id를 기준으로 장바구니 조회
+    @GetMapping("/getSelectList")
+    public ResponseEntity<List<CartDTO>> getCartByMemberIdAndItemId(@RequestBody CartDTO cartDTO) {
+        List<CartDTO> getCartByMemberIdAndItemId = cartService.getCartListByMemberIdANDItemId(cartDTO);
+        return ResponseEntity.ok(getCartByMemberIdAndItemId);
+    }
+
     // 회원Id를 기준으로 장바구니 상품 삭제
     @DeleteMapping("/deleteItem")
     public ResponseEntity<Map<String, String>> deleteCartItem(@RequestBody CartDTO cartDTO) {
