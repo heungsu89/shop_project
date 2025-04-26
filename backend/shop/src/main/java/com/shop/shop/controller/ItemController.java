@@ -151,4 +151,39 @@ public class ItemController {
         }
     }
 
+    // 아이템 등록 PostMan
+    @PostMapping(value = "/addPost")
+    public ResponseEntity<ItemDTO> registerItem(
+            @RequestPart(value = "itemDTO") String itemDTOJson, // String으로 받아서 JSON 파싱
+            @RequestParam(value = "categoryId") Long categoryId, // categoryId
+            @RequestPart(value = "files", required = false) List<MultipartFile> files // 파일들
+    ) {
+        try {
+            // JSON을 ItemDTO 객체로 변환
+            ObjectMapper objectMapper = new ObjectMapper();
+            ItemDTO itemDTO = objectMapper.readValue(itemDTOJson, ItemDTO.class);
+
+            // 카테고리 검증
+            if (categoryId == null) {
+                throw new RuntimeException("카테고리 ID를 입력해주세요.");
+            }
+
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new RuntimeException("해당 카테고리를 찾을 수 없습니다."));
+
+            // 파일 저장 처리
+            if (files != null && !files.isEmpty()) {
+                List<String> uploadFileNames = fileUtil.saveFiles(files);
+                itemDTO.setUploadFileNames(uploadFileNames);  // 파일 이름 저장
+            }
+
+            // 서비스 호출
+            ItemDTO createdItem = itemService.createItem(itemDTO, files, categoryId);  // 상품 생성
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdItem);
+        } catch (Exception e) {
+            e.printStackTrace(); // 에러 추적 로그
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
 }
