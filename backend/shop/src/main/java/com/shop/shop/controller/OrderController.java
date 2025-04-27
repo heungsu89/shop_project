@@ -26,7 +26,7 @@ public class OrderController {
     private final OrderRepository orderRepository;
     private final OrderService orderService;
     private final OrderItemRepository orderItemRepository;
-//    private final OrderItemService orderItemService;
+    // private final OrderItemService orderItemService;
 
     // 주문 생성
     @PostMapping("/add")
@@ -64,8 +64,7 @@ public class OrderController {
     public ResponseEntity<Page<OrderDTO>> getOrderListByMemberId(
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<OrderDTO> getOrderList = orderService.findAllByMemberId(pageable, memberId);
         if (getOrderList == null || getOrderList.isEmpty()) {
@@ -99,10 +98,10 @@ public class OrderController {
     public ResponseEntity<Page<OrderDTO>> getOrderListByDuringDate(
             @RequestBody OrderDTO orderDTO,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<OrderDTO> getOrderList = orderService.findByDuringPeriod(pageable, orderDTO.getStartDate(), orderDTO.getEndDate());
+        Page<OrderDTO> getOrderList = orderService.findByDuringPeriod(pageable, orderDTO.getStartDate(),
+                orderDTO.getEndDate());
         if (getOrderList == null || getOrderList.isEmpty()) {
             throw new RuntimeException("해당 기간동안 조회된 주문 내역이 존재하지 않습니다.");
         }
@@ -112,7 +111,8 @@ public class OrderController {
     // 특정 회원의 특정 기간동안의 주문 내역 모두 조회
     @PostMapping("/duringDateMember")
     public ResponseEntity<List<OrderDTO>> getOrderListByDuringMember(@RequestBody OrderDTO orderDTO) {
-        List<OrderDTO> getOrderList = orderService.findByDuringPeriodFromMemberId(orderDTO.getMemberId(), orderDTO.getStartDate(), orderDTO.getEndDate());
+        List<OrderDTO> getOrderList = orderService.findByDuringPeriodFromMemberId(orderDTO.getMemberId(),
+                orderDTO.getStartDate(), orderDTO.getEndDate());
         if (getOrderList == null || getOrderList.isEmpty()) {
             throw new RuntimeException("해당 회원 또는 해당 기간동안 조회된 주문 내역이 존재하지 않습니다.");
         }
@@ -124,10 +124,10 @@ public class OrderController {
     public ResponseEntity<Page<OrderDTO>> getOrderListByDuringMember(
             @RequestBody OrderDTO orderDTO,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<OrderDTO> getOrderList = orderService.findByDuringPeriodFromMemberId(pageable, orderDTO.getMemberId(), orderDTO.getStartDate(), orderDTO.getEndDate());
+        Page<OrderDTO> getOrderList = orderService.findByDuringPeriodFromMemberId(pageable, orderDTO.getMemberId(),
+                orderDTO.getStartDate(), orderDTO.getEndDate());
         if (getOrderList == null || getOrderList.isEmpty()) {
             throw new RuntimeException("해당 회원 또는 해당 기간동안 조회된 주문 내역이 존재하지 않습니다.");
         }
@@ -164,7 +164,8 @@ public class OrderController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("result", "fail", "error", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("result", "fail", "error", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("result", "fail", "error", e.getMessage()));
         }
     }
 
