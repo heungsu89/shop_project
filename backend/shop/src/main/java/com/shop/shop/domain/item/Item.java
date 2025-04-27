@@ -118,4 +118,8 @@ public class Item {
     public void changeDiscountRate(int discountRate) {
         this.discountRate = discountRate;
     }
+
+    public void changeTotalScore(float totalScore) {
+        this.totalScore = totalScore;
+    }
 }

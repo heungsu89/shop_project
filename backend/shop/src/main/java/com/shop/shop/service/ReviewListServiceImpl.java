@@ -3,14 +3,13 @@ package com.shop.shop.service;
 import com.shop.shop.domain.item.Item;
 import com.shop.shop.domain.list.ReviewImage;
 import com.shop.shop.domain.list.ReviewList;
+import com.shop.shop.domain.list.ScoreList;
 import com.shop.shop.domain.member.Member;
 import com.shop.shop.domain.member.MemberRole;
 import com.shop.shop.dto.OrderDTO;
 import com.shop.shop.dto.ReviewListDTO;
-import com.shop.shop.repository.ItemRepository;
-import com.shop.shop.repository.MemberRepository;
-import com.shop.shop.repository.ReviewImageRepository;
-import com.shop.shop.repository.ReviewListRepository;
+import com.shop.shop.dto.ScoreListDTO;
+import com.shop.shop.repository.*;
 import com.shop.shop.util.CustomFileUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -33,6 +34,7 @@ public class ReviewListServiceImpl implements ReviewListService {
     private final ReviewImageRepository reviewImageRepository;
     private final CustomFileUtil fileUtil;
     private final OrderService orderService;
+    private final ScoreListRepository scoreListRepository;
 
     // 리뷰 리스트 등록
     @Override
@@ -56,6 +58,37 @@ public class ReviewListServiceImpl implements ReviewListService {
                 .score(reviewListDTO.getScore())
                 .delFlag(false)
                 .build();
+
+        // 점수 내역 생성
+        ScoreList scoreList = ScoreList.builder()
+                .score(reviewListDTO.getScore())
+                .item(item)
+                .member(member)
+                .build();
+        ScoreList savedScore = scoreListRepository.save(scoreList);
+
+        // 점수를 계산하기 위한 조회
+        List<ScoreList> getScoreList = scoreListRepository.findAllScoreListByItemId(item.getId());
+        if (getScoreList == null || getScoreList.isEmpty()) {
+            throw new RuntimeException("해당 상품의 점수를 조회할 수 없습니다.");
+        }
+
+        // 조회된 점수를 모두 더함
+        int totalScore = 0;
+        for (ScoreList getScore : getScoreList) {
+            totalScore += getScore.getScore();
+        }
+        // 모두 더해진 점수를 조회된 갯수만큼 나눔 = 평균 점수
+        float resultScore = (float) totalScore / (float) getScoreList.size();
+
+        // 해당 상품의 점수를 수정
+        BigDecimal bd = new BigDecimal(resultScore); // 정밀하게 계산하기 위해 BigDecimal 사용
+        bd = bd.setScale(2, RoundingMode.CEILING); // 소수점 2자리에서 올림처리
+        float finalResult = bd.setScale(1, RoundingMode.DOWN).floatValue(); // 소수점 1자리까지만 표현 - 점수는 소수점 1자리까지만 표현하는게 정책
+
+        // 해당 상품의 점수를 설정
+        item.changeTotalScore(finalResult);
+        itemRepository.save(item);
 
         ReviewList savedReviewList = reviewListRepository.save(reviewList);
 
