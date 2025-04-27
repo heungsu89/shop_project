@@ -1,5 +1,6 @@
 package com.shop.shop.dto;
 
+import com.shop.shop.domain.list.ScoreList;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,12 @@ public class ScoreListDTO {
     private int score;
     private Long memberId;
     private Long itemId;
+
+    public ScoreListDTO(ScoreList scoreList) {
+        this.scoreId = scoreList.getId();
+        this.score = scoreList.getScore();
+        this.memberId = scoreList.getMember().getId();
+        this.itemId = scoreList.getItem().getId();
+    }
 
 }

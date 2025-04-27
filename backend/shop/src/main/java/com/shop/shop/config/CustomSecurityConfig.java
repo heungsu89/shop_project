@@ -54,6 +54,7 @@ public class CustomSecurityConfig {
                         .requestMatchers("/api/reviewList/**").permitAll()
                         .requestMatchers("/api/qnaList/**").permitAll()
                         .requestMatchers("/api/delivery/**").permitAll()
+                        .requestMatchers("/api/scoreList/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/upload/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole("MANAGER", "ADMIN")
