@@ -50,11 +50,11 @@ public class AuthController {
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(email, password);
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
-            log.info("--- [AuthController] --- 인증성공 : " + email);
+            log.info("AuthController: 인증성공 : " + email);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // 📌 `MemberDetails`에서 `MemberDTO` 변환
+            // `MemberDetails`에서 `MemberDTO` 변환
             MemberDTO memberClaims = memberDetails.toMemberDTO();
 
             Map<String, Object> claims = new HashMap<>();
@@ -73,10 +73,10 @@ public class AuthController {
             response.getWriter().write(jsonStr);
 
         } catch (BadCredentialsException e) {
-            log.error("❌ --- [AuthController] --- 이메일 또는 비밀번호 오류 : " + email, e);
+            log.error("AuthController: 이메일 또는 비밀번호 오류 : " + email, e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         } catch (Exception e) {
-            log.error("❌ --- [AuthController] --- 로그인 과정 중 예기치 못한 오류 ", e);
+            log.error("AuthController: 로그인 과정 중 예기치 못한 오류 ", e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
