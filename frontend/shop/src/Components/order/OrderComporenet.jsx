@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { orderAdd } from "../../api/order";
+import { orderAdd } from "../../api/orderApi";
 import { getSelectList } from "../../api/cartApi";
 import { addComma } from "../../util/priecUtil";
 import { useNavigate } from "react-router-dom";

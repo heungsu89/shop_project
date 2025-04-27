@@ -8,11 +8,9 @@ import '../static/css/basic.scss'
 const Statement =({memberInfo, order})=>{
     if(!order || !memberInfo) return;
 
+
     const deliveryCharge = 3000;
-
-
     console.log(order)
-    
     
     return(
         <div className="statementWrap innerWrap">
@@ -86,7 +84,7 @@ const Statement =({memberInfo, order})=>{
                         <ul>
                             <li>
                                 <strong>주문금액</strong>
-                                <span>{addComma(order.totalAmount)}원</span>
+                                <span>{addComma(order.totalAmount-deliveryCharge)}원</span>
                             </li>
                             <li>
                                 <strong>배송비</strong>
@@ -118,11 +116,7 @@ const Statement =({memberInfo, order})=>{
                     </section>
                     <div className="totalPrice">
                         <strong>총 주문금액</strong>
-                        {order.totalAmount >= 100000 ? (
-                            <h3>{addComma(order.totalAmount)}원</h3>
-                        ) : (
-                            <h3>{addComma(order.totalAmount+deliveryCharge)}원</h3>
-                        )} 
+                        <h3>{addComma(order.totalAmount)}원</h3>
                     </div>
                 </div>
                 <div className="statementBox">
@@ -146,8 +140,8 @@ const Statement =({memberInfo, order})=>{
                                                 <div className="itemImg">
                                                     <img
                                                         src={
-                                                            item.uploadFileNames?.length > 0
-                                                            ? `http://localhost:8081/upload/${item.uploadFileNames[0]}`
+                                                            item.imageName
+                                                            ? `http://localhost:8081/upload/${item.imageName}`
                                                             : defaultImg
                                                     }
                                                     alt={item.name}
