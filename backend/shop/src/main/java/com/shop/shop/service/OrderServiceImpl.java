@@ -113,10 +113,11 @@ public class OrderServiceImpl implements OrderService {
             totalAmount += cart.getItemOption().getOptionPrice() * cart.getQty();
             totalDiscountAmount += ((int)((float)((cart.getItem().getPrice() + cart.getItemOption().getOptionPrice()) * cart.getQty()) * (1 - ((float)cart.getItem().getDiscountRate() / 100))));
         }
-        order.changeTotalAmount(totalDiscountAmount);
         if (totalDiscountAmount < 100000) { // 최종 결제 금액이 100,000원보다 적을 경우
-            totalDiscountAmount+=3000; // 배송비 + 3000원
-        } 
+            totalDiscountAmount += 3000; // 배송비 + 3000원
+        }
+        order.changeTotalAmount(totalDiscountAmount);
+
         log.info("totalDiscountAmount: " + totalDiscountAmount);
 
         // 회원 등급별 마일리지 적립 수치 설정
@@ -128,6 +129,8 @@ public class OrderServiceImpl implements OrderService {
             case PLATINUM: addMileageAmount = (int) ((float)totalDiscountAmount * 0.05); break;
             default: addMileageAmount = 0; break;
         }
+
+
 
         // 마일리지 내역 생성
         createMileageByMemberShip(addMileageAmount, member, order, MileageStatus.NO_REDEEM);
