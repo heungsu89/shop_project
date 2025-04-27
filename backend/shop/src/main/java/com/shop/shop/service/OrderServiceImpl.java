@@ -99,10 +99,10 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItemList = new ArrayList<>();
         for (Cart cart : cartList) {
             OrderItem orderItem = new OrderItem();
-            orderItem.changeOrderPrice(cart.getItemOption().getOptionPrice() * cart.getQty());
+            orderItem.changeOrderPrice((cart.getItem().getPrice() + cart.getItemOption().getOptionPrice()) * cart.getQty());
             orderItem.changeQty(cart.getQty());
             orderItem.changeDiscountRate(cart.getItem().getDiscountRate());
-            orderItem.changeDiscountPrice((int)((float)(cart.getItemOption().getOptionPrice() * cart.getQty()) * (1 - ((float)cart.getItem().getDiscountRate() / 100))));
+            orderItem.changeDiscountPrice((int)((float)((cart.getItem().getPrice() + cart.getItemOption().getOptionPrice())) * (1 - ((float)cart.getItem().getDiscountRate() / 100))));
             orderItem.changeItem(cart.getItem());
             orderItem.changeItemOption(cart.getItemOption());
             orderItem.changeItemImage((cart.getItemImage() != null) ? cart.getItemImage() : null);
