@@ -44,6 +44,9 @@ public class OrderDTO {
     private int addMileageAmount; // 마일리지 적립량
     private int usingMileage;
 
+    // 다중 선택에 필요한 ItemId를 담아두는 변수
+    private Long[] selectId;
+
     private List<OrderItemDTO> orderItemList = new ArrayList<>();
 
     // Order를 OrderDTO로 변환

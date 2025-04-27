@@ -72,7 +72,7 @@ public class ItemServiceImpl implements ItemService {
                             .optionValue(optionDTO.getOptionValue())
                             .optionPrice(optionDTO.getOptionPrice())
                             .stockQty(optionDTO.getStockQty())
-                            .itemId(item.getId()) // 연관된 Item ID 설정
+                            .itemId(item.getId()) // 연관된 itemId 설정
                             .build())
                     .toList();
             itemOptionRepository.saveAll(options);

@@ -1,6 +1,7 @@
 package com.shop.shop.dto;
 
 import com.shop.shop.domain.category.CategoryItem;
+import com.shop.shop.domain.category.CategoryItemStatus;
 import jakarta.persistence.Column;
 import lombok.*;
 
@@ -33,6 +34,8 @@ public class CategoryItemDTO {
     private boolean delFlag;
     private LocalDateTime dueDate;
     private int salesVolume;
+
+    private CategoryItemStatus categoryItemStatus;
 
 //    private List<ItemOptionDTO> options = new ArrayList<>();
 //    private Map<String, String> info = new HashMap<>();

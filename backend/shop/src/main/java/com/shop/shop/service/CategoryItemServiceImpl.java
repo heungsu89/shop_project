@@ -8,12 +8,14 @@ import com.shop.shop.repository.CategoryItemRepository;
 import com.shop.shop.repository.CategoryRepository;
 import com.shop.shop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class CategoryItemServiceImpl implements CategoryItemService {
 
     private final CategoryRepository categoryRepository;
@@ -44,7 +46,26 @@ public class CategoryItemServiceImpl implements CategoryItemService {
     // 특정 카테고리 상품 페이징 조회 - 목록+이미지
     @Override
     public Page<CategoryItemDTO> getAllItemsFromCategoryItem(Pageable pageable, Long categoryId) {
-        Page<CategoryItem> categoryPage = categoryItemRepository.findAllPageByCategoryId(pageable, categoryId);
+        Page<CategoryItem> categoryPage = categoryItemRepository.findAllPageByCategoryIdDESC(pageable, categoryId);
+        if (categoryPage == null) {
+            throw new RuntimeException("해당 카테고리 상품들을 조회할 수 없습니다.");
+        }
+        return categoryPage.map(CategoryItemDTO::new);
+    }
+
+    // 특정 카테고리 상품 페이징 조회 - 목록+이미지
+    @Override
+    public Page<CategoryItemDTO> getAllItemsFromCategoryItemWithStatus(Pageable pageable, CategoryItemDTO categoryItemDTO) {
+        Page<CategoryItem> categoryPage;
+        log.info("정렬 상태: " + categoryItemDTO.getCategoryItemStatus());
+        switch (categoryItemDTO.getCategoryItemStatus()) {
+            case NEWEST : categoryPage = categoryItemRepository.findAllPageByCategoryIdDESC(pageable, categoryItemDTO.getCategoryId()); break;
+            case LATER : categoryPage = categoryItemRepository.findAllPageByCategoryIdASC(pageable, categoryItemDTO.getCategoryId()); break;
+            case HIGH_PRICE : categoryPage = categoryItemRepository.findAllPageByItemPriceDESC(pageable, categoryItemDTO.getCategoryId()); break;
+            case LOW_PRICE : categoryPage = categoryItemRepository.findAllPageByItemPriceASC(pageable, categoryItemDTO.getCategoryId()); break;
+            default : categoryPage = categoryItemRepository.findAllPageByCategoryIdDESC(pageable, categoryItemDTO.getCategoryId()); break;
+        }
+
         if (categoryPage == null) {
             throw new RuntimeException("해당 카테고리 상품들을 조회할 수 없습니다.");
         }

@@ -15,6 +15,8 @@ import com.shop.shop.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,6 +76,21 @@ public class CartServiceImpl implements CartService {
         return cartList.stream().map(CartDTO::new).toList();
     }
 
+    // 특정 회원Id와 선택된 상품Id 들을 기준으로 조회 장바구니 조회
+    @Override
+    public List<CartDTO> getCartListByMemberIdANDItemId(CartDTO cartDTO) {
+        Member member = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+        List<Cart> cartList = new ArrayList<>();
+        for (Long cartItemId : cartDTO.getSelectId()) {
+            Cart cart = cartRepository.findCartItemByMemberIdANDItemId(member.getId(), cartItemId);
+            if (cart == null) {
+                throw new RuntimeException("해당 상품을 찾을 수 없습니다. 요청된 상품Id: " + cart);
+            }
+            cartList.add(cart);
+        }
+        return cartList.stream().map(CartDTO::new).toList();
+    }
+
     // 회원Id와 상품Id를 기준으로 장바구니 데이터 삭제
     @Override
     public void deleteCartItem(CartDTO cartDTO) {
@@ -113,23 +130,7 @@ public class CartServiceImpl implements CartService {
         return new CheckDTO(check);
     }
 
-    @Override
-    @Transactional
-    public void updateCartQty(Long cartId, int newQty) {
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("해당 장바구니 상품을 찾을 수 없습니다."));
-
-        ItemOption itemOption = itemOptionRepository.findById(cart.getItemOption().getId())
-                .orElseThrow(() -> new RuntimeException("해당 옵션이 존재하지 않습니다."));
-
-        if (newQty > itemOption.getStockQty()) {
-            throw new RuntimeException("재고 수량 초과: 현재 재고는 " + itemOption.getStockQty() + "개입니다.");
-        }
-
-        cart.changeQty(newQty);
-        cartRepository.save(cart);
-    }
-
+    // 특정 옵션 재고량 수정
     @Override
     @Transactional
     public CheckDTO updateOptionQty(Long optionId, int changeQty) {
@@ -149,6 +150,24 @@ public class CartServiceImpl implements CartService {
         itemOptionRepository.save(itemOption);
 
         return new CheckDTO(true);
+    }
+
+    // 장바구니 옵션 재고량 수정
+    @Override
+    @Transactional
+    public void updateCartQty(Long cartId, int newQty) {
+        Cart cart = cartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("해당 장바구니 상품을 찾을 수 없습니다."));
+
+        ItemOption itemOption = itemOptionRepository.findById(cart.getItemOption().getId())
+                .orElseThrow(() -> new RuntimeException("해당 옵션이 존재하지 않습니다."));
+
+        if (newQty > itemOption.getStockQty()) {
+            throw new RuntimeException("재고 수량 초과: 현재 재고는 " + itemOption.getStockQty() + "개입니다.");
+        }
+
+        cart.changeQty(newQty);
+        cartRepository.save(cart);
     }
 
 }
