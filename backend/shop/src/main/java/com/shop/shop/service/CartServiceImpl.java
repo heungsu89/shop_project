@@ -44,6 +44,7 @@ public class CartServiceImpl implements CartService {
             throw new RuntimeException("재고량이 부족합니다!");
         }
 
+        // 등록된 상품의 이미지 중 가장 첫번째 이미지를 불러옴 = 썹네일 이미지
         ItemImage itemImage = null;
         if (images != null && !images.isEmpty()) {
             itemImage = images.get(0);
