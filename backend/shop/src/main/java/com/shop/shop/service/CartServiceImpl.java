@@ -141,12 +141,12 @@ public class CartServiceImpl implements CartService {
         return cartList.stream().map(CartDTO::new).toList();
     }
 
-    // 회원Id와 상품Id를 기준으로 장바구니 데이터 삭제
+    // 회원Id와 옵션Id를 기준으로 장바구니 데이터 삭제
     @Override
     public void deleteCartItem(CartDTO cartDTO) {
         Member member = memberRepository.findById(cartDTO.getMemberId())
                 .orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
-        Cart cartItem = cartRepository.findByMemberIdAndItemId(member.getId(), cartDTO.getItemId());
+        Cart cartItem = cartRepository.findByMemberIdAndOptionId(member.getId(), cartDTO.getOptionId());
 
         if (cartItem == null) {
             throw new RuntimeException("삭제하려는 상품이 장바구니에 존재하지 않습니다.");
@@ -155,13 +155,15 @@ public class CartServiceImpl implements CartService {
         cartRepository.deleteById(cartItem.getId());
     }
 
-    // 장바구니 목록 상품 다중 삭제(선택한 상품 삭제)
+    // 옵션Id를 기주능로 장바구니 목록 상품 다중 삭제(선택한 상품 삭제)
     @Override
     public void multipleDeleteItemFromWishList(CartDTO cartDTO) {
         for (Long deleteId : cartDTO.getDeleteId()) {
-            Cart deleteWishListItem = cartRepository.findById(deleteId)
-                    .orElseThrow(() -> new RuntimeException("삭제하려는 상품을 찾을 수 없습니다."));
-            cartRepository.deleteById(deleteWishListItem.getId());
+            Cart deleteCartItem = cartRepository.findByMemberIdAndOptionId(cartDTO.getMemberId(), deleteId);
+            if (deleteCartItem == null) {
+                throw new RuntimeException("해당 옵션을 가진 상품을 찾을 수 없습니다. 요청된 옵션Id: " + deleteCartItem);
+            }
+            cartRepository.deleteById(deleteCartItem.getId());
         }
     }
 

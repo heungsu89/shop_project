@@ -5,6 +5,7 @@ import com.shop.shop.repository.MagazineListRepository;
 import com.shop.shop.service.MagazineListService;
 import com.shop.shop.util.CustomFileUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +29,7 @@ public class MagazineListController {
     private final CustomFileUtil fileUtil;
 
     // 매거진 리스트 등록
-    @PostMapping("/add")
+    @PostMapping(value = "/add", consumes = "multipart/form-data")
     public ResponseEntity<MagazineListDTO> createMagazineList(
             @RequestParam("title") String title,
             @RequestParam("writer") String writer,
