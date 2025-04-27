@@ -20,10 +20,23 @@
   --text-small : 13px;
 }
 
+html,body{font-family: var(--font-main);color: var(--charcoal-grey);background-color: white;font-size: var(--text-base);height:100%;
+  h1{font-size: var(--h1);}
+  h2{font-size: var(--h2);letter-spacing:-0.02em;}
+  h3{font-size: var(--h3);}
+  h4{font-size: var(--h4);}
+  h5{font-size: var(--h5);}
+}
+
+#root{display:flex; flex-direction: column; min-height: 100vh; }
+.blind{display:none;}
+.innerWrap{padding: 0 $innerPadding;}
+.container{padding-top: $headerHeight;min-height: 0; display: flex; flex: 1; flex-direction: column;}
+.main{display: flex;;min-height: 0; display: flex; flex: 1; flex-direction: column;}
+.point{color: var(--Pointer);}
+
 a{color: inherit;
-  &:focus-visible {
-    outline: 1px solid var(--charcoal-grey); // 키보드 탭으로 접근 시만 outline
-  }
+  &:focus-visible {outline: 1px solid var(--charcoal-grey);}
   &:active{outline: none;}
 }
 button{font-family:inherit;background: none;border:none;
@@ -32,13 +45,6 @@ button{font-family:inherit;background: none;border:none;
 }
 textarea{width: 100%; }
 label{display: flex;align-items: center;gap: 0 4px;cursor: pointer;}
-html,body{font-family: var(--font-main);color: var(--charcoal-grey);background-color: white;font-size: var(--text-base);min-height:100%;
-  h1{font-size: var(--h1);}
-  h2{font-size: var(--h2);letter-spacing:-0.02em;}
-  h3{font-size: var(--h3);}
-  h4{font-size: var(--h4);}
-  h5{font-size: var(--h5);}
-}
 
 /** 인풋 기본 디자인 */
 input:read-only{background-color: var(--ash-white);}
@@ -49,6 +55,8 @@ input[type=number]{width: 100%;font-family: inherit;font-size: var(--text-base);
   &::placeholder{color: var(--placeholder);font-weight: 300;}
   &:focus{outline-color: var(--slate-blue);box-shadow: 0 0 3px var(--slate-blue);}
 }
+input[type=radio],
+input[type=checkbox]{position: absolute !important;width: 1px !important;height: 1px !important;padding: 0 !important;margin: -1px !important;overflow: hidden !important;clip: rect(0, 0, 0, 0) !important;white-space: nowrap !important;border: 0 !important;}
 
 /** 테이블 너비 */
 $tbw50 : 50px;
@@ -116,6 +124,32 @@ $tbw140 : 140px;
 /** 데이터 없을 때 */
 .noDataView{height: 300px;display: flex;justify-content: center;align-items: center; font-size: var(--h5);}
 
+
+/** 라디오 및 체크박스 디자인 */
+.selectInputWrap{position: relative;
+  input:focus-visible ~ label{outline: 1px solid var(--charcoal-grey);}
+  label{position: relative; display: inline-flex;}
+  &.checkbox{
+    label{
+      &::before{display:block;width:1em;height:1em; content:'';border:solid 1px var(--charcoal-grey); border-radius: 3px;}
+      &::after{display:none;position: absolute;top: .15em; left: .4em; width: .3em;height: .6em; content: ''; border-bottom: 1px solid var(--charcoal-grey); border-right: 1px solid var(--charcoal-grey);transform: rotate(45deg); }
+    }
+    input:checked ~ label{
+      &::before{background-color: var(--charcoal-grey);}
+      &::after{display:block;border-color:var(--ash-white);}
+    }
+  }
+  &.radio{
+    label{
+      &::before{display:block;width:1em;height:1em; content:'';border:solid 1px var(--charcoal-grey); border-radius: 50%;}
+      &::after{display:none;position: absolute; top: 4px; left: 4px;  width: calc(1em - 6px);;height:calc(1em - 6px);;content: '';border-radius: 50%;background: var(--charcoal-grey);}
+    }
+    input:checked ~ label{
+      &::after{display:block;}
+    }
+  }
+}
+
 /** 버튼 디자인 모음 */
 button.btn,
 a.btn{display: flex;justify-content: center;align-items: center;font-size: var(--text-base);border: none;border-radius: 3px;min-width: 74px;border:1px solid transparent;padding: 6px 12px;
@@ -134,7 +168,7 @@ a.btn{display: flex;justify-content: center;align-items: center;font-size: var(-
 
 /** 입력필드 기본 디자인 */
 .inputWrap{
-  .inputTitle{display: flex;gap: 0 4px;margin-bottom: 2px;}
+  .inputTitle{display: flex;gap: 0 4px;margin-bottom: 4px;}
   .inputBox{display:flex;gap: 0 10px;
     button{white-space: nowrap;}
   }
@@ -144,7 +178,7 @@ a.btn{display: flex;justify-content: center;align-items: center;font-size: var(-
   &.filter{display:flex;gap:20px 0;
     >strong{display: block;font-size: var(--h3);}
   }
-  .inputTitle{font-size: var(--h5);}
+  .inputTitle{font-size: var(--h5); margin-bottom: 4px;}
 }
 
 
@@ -156,12 +190,6 @@ a.btn{display: flex;justify-content: center;align-items: center;font-size: var(-
   }
 
 }
-
-#root{display:flex;flex-direction:column;min-height:100%;}
-.blind{display:none;}
-.innerWrap{padding: 0 $innerPadding;}
-.container{padding-top: $headerHeight;min-height: 100%;}
-.point{color: var(--Pointer);}
 
 /** 헤더 */
 .header{
@@ -177,7 +205,7 @@ a.btn{display: flex;justify-content: center;align-items: center;font-size: var(-
 }
 
 /** 푸터 */
-.footer{margin-top: auto;
+.footer{//margin-top: auto;
   .innerWrap{padding-top:40px;padding-bottom:40px;border-top:solid 1px transparent;}
   .f_content_top{display: flex;align-items: flex-start;justify-content: space-between;
     .logo svg{width:366px;}

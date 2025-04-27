@@ -4,9 +4,9 @@ import defaultImg from "../static/images/default.png"
 const ImageUploadComponent = ({ images, setImages }) => {
   const fileInputRefs = useRef([]);
 
-  useEffect(() => {
-    fileInputRefs.current = new Array(4).fill(null);
-  }, []);
+  // useEffect(() => {
+  //   fileInputRefs.current = new Array(4).fill(null);
+  // }, []);
 
   const handleFileChange = (e, index) => {
     const file = e.target.files[0];

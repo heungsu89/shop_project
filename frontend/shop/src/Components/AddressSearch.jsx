@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 const AddressSearch = ({ onComplete, setingAddress }) => {
 
@@ -8,14 +8,18 @@ const AddressSearch = ({ onComplete, setingAddress }) => {
     detailed_address: ''
   });
 
+  const prevSettingAddress = useRef(null);
+
   useEffect(() => {
-    if (setingAddress) {
+    if (
+      setingAddress &&
+      JSON.stringify(setingAddress) !== JSON.stringify(prevSettingAddress.current)
+    ) {
       setLocalAddress(setingAddress);
+      prevSettingAddress.current = setingAddress;
     }
   }, [setingAddress]);
 
-
-  console.log(localAddress)
   const handleSearch = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {

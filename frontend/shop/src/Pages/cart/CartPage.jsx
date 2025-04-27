@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import {fetchCartItems,removeCartItem,clearCartByMemberId,updateQuantity,deleteSelectedItems,addWishlistItem, updateCartQty} from "../../api/cartApi";
+import { useNavigate } from 'react-router-dom';
+import {fetchCartItems,clearCartByMemberId,deleteSelectedItems,addWishlistItem, updateCartQty} from "../../api/cartApi";
 import { addComma } from '../../util/priecUtil';
 import { getMemberById } from '../../api/memberApi';
 import { getCookie } from "../../util/cookieUtil";
 import BasicLayout from "../../layout/BasicLayout";
 import "../../static/css/cart.scss";
 
+
 const CartPage = () => {
   const loginState = useSelector((state) => state.loginSlice);
   const isLoggedIn = loginState && loginState.email !== '';
+  const navigate = useNavigate();
   const [memberInfo, setMemberInfo] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -95,24 +98,6 @@ const CartPage = () => {
     setSelectedSizes({ ...selectedSizes, [cartId]: parseInt(event.target.value) });
   };
 
-  const handleQuantityChange = async (cartId, newQty) => {
-    try {
-      const response = await updateQuantity(cartId, newQty);
-
-      // 서버 응답을 확인
-      if (response.checkResult) {
-        // 성공하면 장바구니 다시 불러오기
-        await loadCartItems();
-      } else {
-        // 실패하면 사용자에게 알림
-        alert("수량 변경 실패: 서버에서 거절되었습니다.");
-      }
-    } catch (error) {
-      console.error("수량 변경 중 오류:", error);
-      alert("수량 변경 중 오류가 발생했습니다.");
-    }
-  };
-
 
 // 수량 증가
 const increaseQuantity = async (item) => {
@@ -193,6 +178,7 @@ const decreaseQuantity = async (item) => {
         selectedOptionId: selectedSizes[item.cartId]
       }));
       console.log("전체 주문 상품:", orderDetails);
+      navigate('/order')
       alert("전체 주문 완료 (콘솔 로그 확인)");
     } else {
       alert("장바구니에 상품이 없습니다.");
@@ -203,7 +189,7 @@ const decreaseQuantity = async (item) => {
   if (memberInfo === null)  return;
 
   console.log(cartItems)
-  console.log(memberInfo.memberShip)
+  console.log(memberInfo)
 
 
   const rateMap = { BRONZE: 0.01, SILVER: 0.02, GOLD: 0.03, PLATINUM: 0.05 };
@@ -230,7 +216,12 @@ const decreaseQuantity = async (item) => {
           <table className="itemTable">
             <thead className="itemThead">
               <tr className="itemTr">
-                <th className="itemNumber"><input type="checkbox" checked={isAllChecked} onChange={handleAllCheck} /></th>
+                <th className="itemNumber">
+                  <div className="selectInputWrap checkbox">
+                    <input id="all" type="checkbox" checked={isAllChecked} onChange={handleAllCheck} />
+                    <label for="all"><span className="blind">전체선택</span></label>
+                  </div>
+                </th>
                 <th className="itemInfo">상품</th>
                 <th className="itemPriceInfo">단품가격</th>
                 <th className="itemPriceInfo">주문금액</th>
@@ -244,7 +235,10 @@ const decreaseQuantity = async (item) => {
           return(
             <tr className="itemTr" key={item.cartId}>
               <td className="itemNumber">
-                <input type="checkbox" checked={checkedItems.includes(item.cartId)} onChange={() => handleSingleCheck(item.cartId)}/>
+                  <div className="selectInputWrap checkbox">
+                    <input id={`item_${item.cartId}`} type="checkbox" checked={checkedItems.includes(item.cartId)} onChange={()=>{handleSingleCheck(item.cartId)}} />
+                    <label for={`item_${item.cartId}`}><span className="blind">전체선택</span></label>
+                  </div>
               </td>
               <td className="itemInfo">
                 {item.imageName && (
@@ -277,9 +271,7 @@ const decreaseQuantity = async (item) => {
         </div>
         <div className="cartButtons">
           <div className="leftButtons">
-            <button onClick={handleAllCheck} className="btn black">
-              전체선택
-            </button>
+            <button onClick={handleAllCheck} className="btn black">전체선택</button>
             <button onClick={handleSelectDelete} className="btn gray">선택삭제</button>
             <button onClick={handleClearCart} className="btn gray">장바구니 비우기</button>
           </div>

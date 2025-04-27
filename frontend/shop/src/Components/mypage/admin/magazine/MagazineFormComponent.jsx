@@ -6,7 +6,7 @@ import { getMagazine, postMagazine, putMagazine, deleteMagazine } from '../../..
 import '../../../../static/css/adminProduct.scss';
 
 const DEFAULT_FORM = {
-  eventListId: "",
+  magazineListId: "",
   title: "",
   writer: "관리자",
   content: "",
@@ -56,7 +56,9 @@ const EventFormComponent = () => {
     try {
       if (isEdit) {
         const formData = new FormData();
-        formData.append("eventListId", form.eventListId);
+        console.log(form.magazineListId)
+
+        formData.append("magazineListId", form.magazineListId);
         formData.append("title", form.title);
         formData.append("writer", form.writer);
         formData.append("content", content);

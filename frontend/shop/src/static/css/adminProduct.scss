@@ -1,8 +1,6 @@
 @use "@/static/css/_variables.scss" as *;
 
 .product{
-    .inputTitle{}
-
     /** 분류 추가 */
     .categorySelectWrap{display: flex; 
         .categorySelect {display: flex; gap: 10px; border-radius: 3px; align-items: flex-start;
@@ -15,8 +13,6 @@
         }
         .selectedPath{margin-top: 10px; border: $boredrStyle;padding: 6px 10px; border-radius: 3px;}
     }
-
-
 
     /** 이미지 추가 */
     .imageswrap{
@@ -31,7 +27,6 @@
             }
         }
     }
-
     /** 옵션 */
     .optionWrap{
         .inputBox{
@@ -41,10 +36,10 @@
             .optionItem{display: flex; align-items: center; gap: 10px;max-width: 800px;
                 &::before{display: block;content: '↳';font-size: var(--h5);}
                 span{display: block; font-size:var(--small-text); color: var(--placeholder);margin-bottom:0.2em;}
+                button{align-self: flex-end;}
             }
         }
     }
-
     /** 제조정보 */
     .innerInput{
         .inputWrap{margin-top: 10px;
@@ -52,6 +47,4 @@
         }
         
     }
-
-    
 }

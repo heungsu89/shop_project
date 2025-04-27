@@ -130,6 +130,7 @@ export const getMagazine = async (id) => {
 
 /** 매거진 게시물 수정 */
 export const putMagazine = async (formData) => {
+  console.log(formData)
   try {
     const res = await axios.put(`${hostMagazine}/edit`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }

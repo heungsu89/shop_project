@@ -8,11 +8,14 @@
   .signupSection{
     display: flex;flex-direction: column;gap: 20px 0; width: 100%;max-width: 420px;
     &.formSection{gap: 40px 0;}
-    label{margin-bottom: 4px;}
+    .discriptionWrap .selectInputWrap{margin-bottom: 4px;}
     .discription{
       display: flex;flex-direction: column;gap: .8em 0;border: solid 1px var(--charcoal-grey);padding: 16px 19px;border-radius: 3px;height: 200px;overflow-y: auto;
       strong{display: block;}
       ul{display: flex;flex-direction: column;gap: .8em 0;}
+    }
+    >button{
+      margin-top: 40px;
     }
   }
 }

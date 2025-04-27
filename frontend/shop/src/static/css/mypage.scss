@@ -1,6 +1,6 @@
 .innerWrap.mypage {border-color: var(--charcoal-grey);}
 
-.mypageWrap{display: flex;
+.mypageWrap{display: flex; flex: 1;
     .myContainer{flex: 1;min-height: 800px;overflow: hidden;max-width: 1200px; margin: 0 auto;}
     .myPageComponent{
         display: flex;flex-direction: column;padding: 40px 0 100px;gap: 40px 0;

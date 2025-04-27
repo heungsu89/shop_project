@@ -6,10 +6,7 @@ const host = `${API_SERVER_HOST}/api/order`;
 export const orderAdd = async ( data ) =>{
     try{
         const res = await axios.post(`${host}/add`,data,{
-            headers: {
-                "Content-Type": "application/json"
-              }
-            })
+            headers: {"Content-Type": "application/json"}})
         console.log(res.data)
         return res.data;
     }catch(error){

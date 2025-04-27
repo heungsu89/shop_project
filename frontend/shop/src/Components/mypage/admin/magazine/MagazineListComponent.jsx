@@ -88,7 +88,7 @@ const MagazineListComponent = () => {
                         boardData.content.map((item, index) => {
                             const displayIndex = boardData.totalElements - (page * size + index);
                             return (
-                                <tr className="itemTr" key={item.eventListId}>
+                                <tr className="itemTr" key={item.magazineListId}>
                                   <td className="itemNumber">{displayIndex}</td>
                                   <td className="itemInfo">
                                     <div className="itemImg">
@@ -102,7 +102,7 @@ const MagazineListComponent = () => {
                                         />
                                     </div>
                                     <div className="itemDetailInfo">
-                                        <NavLink to={`modify/${item.eventListId}`} className="itemName">{item.title}</NavLink>
+                                        <NavLink to={`modify/${item.magazineListId}`} className="itemName">{item.title}</NavLink>
                                     </div>
                                   </td>
                                   <td className="itemWriter">{item.writer}</td>

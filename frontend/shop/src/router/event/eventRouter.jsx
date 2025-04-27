@@ -3,10 +3,11 @@ import React, { Suspense, lazy } from "react";
 const Loading = () => <div>Loading....</div>;
 
 const EventPage = lazy(() => import("../../Pages/event/EventPage"));
+const EventDetail = lazy(() => import("../../Pages/magazine/MagazineDetail"));
 
 const eventRouter = () => [
   {
-    path: "/event",
+    path: "event",
     children: [
       {
         index: true,
@@ -19,3 +20,4 @@ const eventRouter = () => [
 ];
 
 export default eventRouter;
+

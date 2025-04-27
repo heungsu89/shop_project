@@ -51,14 +51,6 @@ export const removeCartItem = async (cartId) => {
   }
 };
 
-export const updateQuantity = async (cartItemId, qty) => {
-  try {
-    await axios.put(`${CART_HOST}/update/${cartItemId}`, { qty });
-  } catch (error) {
-    console.error("수량 변경 실패:", error);
-    throw error;
-  }
-};
 
 export const addWishlistItem = async (memberId, itemId) => {
   try {
@@ -68,17 +60,6 @@ export const addWishlistItem = async (memberId, itemId) => {
     throw error;
   }
 };
-
-export const itemQty = async (optionId,qty) =>{
-  try{
-    const res = await axios.get(`${CART_HOST}/checkQty?optionId=${optionId}&qty=${qty}`);
-    return res.data;
-  }catch(error){
-    console.error("수량 조정실패:", error);
-    throw error;
-  }
-}
-
 
 // 장바구니 카트
 export const updateQty = async (optionId, changeQty) => {

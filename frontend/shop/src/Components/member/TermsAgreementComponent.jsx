@@ -48,45 +48,46 @@ const TermsAgreement = ({ onNext }) => {
     <div className="termsSection signupSection">
       <h2>회원가입 <span>(1/2)</span></h2>
 
-      <label>
-        <input type="checkbox" checked={checked.all} onChange={handleAllChange} />이용약관 전체동의
-      </label>
+      <div className='selectInputWrap checkbox'>
+        <input id='all' type="checkbox" checked={checked.all} onChange={handleAllChange} />
+        <label for="all">이용약관 전체동의</label>
+      </div>
 
-      <div>
-        <label>
-          <input type="checkbox" checked={checked.terms} onChange={() => handleCheckChange('terms')} />
-          <span className="point">[필수]</span> 쇼핑몰 이용약관
-        </label>
+      <div className='discriptionWrap'>
+        <div className='selectInputWrap checkbox'>
+          <input id='terms' type="checkbox" checked={checked.terms} onChange={()=>handleCheckChange('terms')} />
+          <label for="terms"><span className="point">[필수]</span> 쇼핑몰 이용약관</label>
+        </div>
         <div className="discription">
           <Terms />
         </div>
       </div>
 
-      <div>
-        <label>
-          <input type="checkbox" checked={checked.privacy} onChange={() => handleCheckChange('privacy')} />
-          <span className="point">[필수]</span> 개인정보 수집 및 이용
-        </label>
+      <div className='discriptionWrap'>
+        <div className='selectInputWrap checkbox '>
+          <input id='privacy' type="checkbox" checked={checked.privacy} onChange={() => handleCheckChange('privacy')} />
+          <label for="privacy"><span className="point">[필수]</span> 개인정보 수집 및 이용</label>
+        </div>
         <div className="discription">
           <PrivacyPolicy />
         </div>
       </div>
 
-      <div>
-        <label>
-          <input type="checkbox" checked={checked.age} onChange={() => handleCheckChange('age')} />
-          <span className="point">[필수]</span> 만 14세 이상
-        </label>
+      <div className='discriptionWrap'>
+        <div className='selectInputWrap checkbox'>
+          <input id='age' type="checkbox" checked={checked.age} onChange={() => handleCheckChange('age')} />
+          <label for="age"><span className="point">[필수]</span> 만 14세 이상</label>
+        </div>
       </div>
 
       <div>
-        <label>
-          <input type="checkbox" checked={checked.sns} onChange={() => handleCheckChange('sns')} />
-          <span>[선택]</span> SNS 수신동의
-        </label>
+        <div className='selectInputWrap checkbox'>
+          <input id='sns' type="checkbox" checked={checked.age} onChange={() => handleCheckChange('sns')} />
+          <label for="sns"><span>[선택]</span> SNS 수신동의</label>
+        </div>
       </div>
 
-      <button className='btn bigBtn bold' onClick={handleNext}>다음</button>
+      <button className='btn bigBtn bold black' onClick={handleNext}>다음</button>
     </div>
   );
 };
