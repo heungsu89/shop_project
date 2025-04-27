@@ -87,7 +87,7 @@ public class OrderServiceImpl implements OrderService {
                 .recipient_zip_code(orderDTO.getRecipient_zip_code())
                 .recipient_default_address(orderDTO.getRecipient_default_address())
                 .recipient_detailed_address(orderDTO.getRecipient_detailed_address())
-                .delivery(delivery)
+                .delivery(null)
                 .build();
 
         // 먼저 order를 저장한 후, order의 id를 참조하는 orderItem 저장
@@ -126,8 +126,6 @@ public class OrderServiceImpl implements OrderService {
             default: addMileageAmount = 0; break;
         }
 
-
-
         // 마일리지 내역 생성
         createMileageByMemberShip(addMileageAmount, member, order, MileageStatus.NO_REDEEM);
 
@@ -141,6 +139,8 @@ public class OrderServiceImpl implements OrderService {
             }
         }
         savedOrder.changeAddMileageAmount(addMileageAmount);
+
+        savedOrder.changeDelivery(delivery);
 
         // Order와 OrderItem을 함께 저장
         Order saved1Order = orderRepository.save(savedOrder);

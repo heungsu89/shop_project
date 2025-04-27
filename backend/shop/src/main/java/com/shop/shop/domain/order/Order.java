@@ -106,4 +106,8 @@ public class Order {
         this.usingMileage = usingMileage;
     }
 
+    public void changeDelivery(Delivery delivery) {
+        this.delivery =delivery;
+    }
+
 }
