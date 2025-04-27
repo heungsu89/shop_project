@@ -155,7 +155,7 @@ public class CartServiceImpl implements CartService {
         cartRepository.deleteById(cartItem.getId());
     }
 
-    // 옵션Id를 기주능로 장바구니 목록 상품 다중 삭제(선택한 상품 삭제)
+    // 옵션Id를 기준으로 장바구니 목록 상품 다중 삭제(선택한 상품 삭제)
     @Override
     public void multipleDeleteItemFromWishList(CartDTO cartDTO) {
         for (Long deleteId : cartDTO.getDeleteId()) {

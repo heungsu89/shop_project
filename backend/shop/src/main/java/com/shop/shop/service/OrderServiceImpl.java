@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO createOrder(OrderDTO orderDTO) {
         Member member = memberRepository.findById(orderDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
         List<Cart> cartList;
-        // 장바구니에서 전체 주문 선택이 해당 회원의 모든 장바구니 상품들을 불러와서 주문 진행
+        // 장바구니에서 전체 주문 선택시 해당 회원의 모든 장바구니 상품들을 불러와서 주문 진행
         if (orderDTO.getSelectId() == null || orderDTO.getSelectId().length == 0) {
             cartList = cartRepository.findAllCartListByMemberId(orderDTO.getMemberId());
             if (cartList == null || cartList.isEmpty()) {
@@ -50,9 +50,9 @@ public class OrderServiceImpl implements OrderService {
         } else { // 선택 상품 주문을 선택시 선택된 옵션Id를 기준으로 주문에 불러와서 주문 진행
             cartList = new ArrayList<>();
             for (Long cartItemId : orderDTO.getSelectId()) {
-                Cart cart = cartRepository.findCartItemByMemberIdANDItemId(member.getId(), cartItemId);
+                Cart cart = cartRepository.findByMemberIdAndOptionIdAndCheckItem(member.getId(), cartItemId);
                 if (cart == null) {
-                    throw new RuntimeException("해당 상품을 찾을 수 없습니다. 요청된 상품Id: " + cart);
+                    throw new RuntimeException("해당 상품을 찾을 수 없습니다. 요청된 옵션Id: " + cart);
                 }
                 cartList.add(cart);
             }

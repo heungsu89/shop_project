@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
@@ -33,13 +35,16 @@ public class MagazineListController {
     public ResponseEntity<MagazineListDTO> createMagazineList(
             @RequestParam("title") String title,
             @RequestParam("writer") String writer,
-            @RequestParam("content") String content,
+//            @RequestParam("content") String content,
+            @RequestParam("content") MultipartFile content,
             @RequestParam(value = "files", required = false) List<MultipartFile> files
-    ) {
+    ) throws IOException {
+        String contentFile = new String(content.getBytes(), StandardCharsets.UTF_8);
+
         MagazineListDTO magazineListDTO = new MagazineListDTO();
         magazineListDTO.setTitle(title);
         magazineListDTO.setWriter(writer);
-        magazineListDTO.setContent(content);
+        magazineListDTO.setContent(contentFile);
 
         // 파일 처리
         if (files != null && !files.isEmpty()) {

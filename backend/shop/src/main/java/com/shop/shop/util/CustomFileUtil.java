@@ -27,6 +27,7 @@ import java.util.UUID;
 public class CustomFileUtil {
 
     @Value("${com.korea.upload.path}")
+//    @Value("${backend.korea.upload.path}")
     private String uploadPath;
 
     @PostConstruct
