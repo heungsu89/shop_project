@@ -19,6 +19,11 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Query("SELECT c FROM Cart c WHERE c.member.id = :memberId ORDER BY c.id DESC")
     List<Cart> findAllByMemberId(@Param("memberId") Long memberId);
 
+    // 회원Id를 기준으로 장바구니 목록 조회
+    @EntityGraph(attributePaths = {"item"})
+    @Query("SELECT c FROM Cart c WHERE c.member.id = :memberId AND c.checkItem = true ORDER BY c.id DESC")
+    List<Cart> findAllByMemberIdWithCheckItem(@Param("memberId") Long memberId);
+
     // 회원Id와 상품Id를 기준으로 장바구니 목록 조회(중복 등록 방지용)
     @EntityGraph(attributePaths = {"item"})
     @Query("SELECT c FROM Cart c WHERE c.member.id = :memberId AND c.item.id = :itemId ORDER BY c.id DESC")
@@ -28,6 +33,11 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @EntityGraph(attributePaths = {"item"})
     @Query("SELECT c FROM Cart c WHERE c.member.id = :memberId AND c.itemOption.id = :optionId ORDER BY c.id DESC")
     Cart findByMemberIdAndOptionId(@Param("memberId") Long memberId, @Param("optionId") Long optionId);
+
+    // 회원Id와 옵션Id, 선택여부를 기준으로 장바구니 목록 조회
+    @EntityGraph(attributePaths = {"item"})
+    @Query("SELECT c FROM Cart c WHERE c.member.id = :memberId AND c.itemOption.id = :optionId AND c.checkItem = true ORDER BY c.id DESC")
+    Cart findByMemberIdAndOptionIdAndCheckItem(@Param("memberId") Long memberId, @Param("optionId") Long optionId);
 
     // 회원Id를 기준으로 장바구니 목록 조회
     @EntityGraph(attributePaths = {"item"})

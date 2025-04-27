@@ -36,10 +36,24 @@ public class CartController {
         return ResponseEntity.ok(getCartByMemberId);
     }
 
-    // 회원Id를 기준으로 장바구니 조회
+    // 회원Id를 기준으로 선택된 상품들만 장바구니 조회
+    @GetMapping("/checkItem/{memberId}")
+    public ResponseEntity<List<CartDTO>> getCartByMemberIdWithCheckItem(@PathVariable("memberId") Long memberId) {
+        List<CartDTO> getCartByMemberId = cartService.getCartListWithCheckItem(memberId);
+        return ResponseEntity.ok(getCartByMemberId);
+    }
+
+    // 회원Id와 옵션Id를 기준으로 선택된 상품들만 장바구니 조회
     @PostMapping("/getSelectList")
-    public ResponseEntity<List<CartDTO>> getCartByMemberIdAndItemId(@RequestBody CartDTO cartDTO) {
-        List<CartDTO> getCartByMemberIdANDItemId = cartService.getCartListByMemberIdANDItemId(cartDTO);
+    public ResponseEntity<List<CartDTO>> getCartByMemberIdWithOptionId(@RequestBody CartDTO cartDTO) {
+        List<CartDTO> getCartByMemberId = cartService.getCartListByMemberIdANDOptionId(cartDTO);
+        return ResponseEntity.ok(getCartByMemberId);
+    }
+
+    // 회원Id를 기준으로 선택된 상품들의 상태를 수정
+    @PostMapping("/editSelectList")
+    public ResponseEntity<List<CartDTO>> editCartListByMemberIdANDOptionId(@RequestBody CartDTO cartDTO) {
+        List<CartDTO> getCartByMemberIdANDItemId = cartService.editCartListByMemberIdANDOptionId(cartDTO);
         return ResponseEntity.ok(getCartByMemberIdANDItemId);
     }
 

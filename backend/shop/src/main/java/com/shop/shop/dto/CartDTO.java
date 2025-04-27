@@ -44,6 +44,8 @@ public class CartDTO {
 
     private boolean checkQty;
 
+    private boolean checkItem;
+
     public CartDTO(Cart cart) {
         this.cartId = cart.getId();
         this.memberId = cart.getMember().getId();
@@ -53,6 +55,7 @@ public class CartDTO {
         this.itemName = cart.getItem().getName();
         this.itemPrice = cart.getItem().getPrice();
         this.discountRate = cart.getItem().getDiscountRate();
+        this.checkItem = cart.isCheckItem();
 
         if (cart.getItemImage() != null) {
             this.imageId = cart.getItemImage().getId();

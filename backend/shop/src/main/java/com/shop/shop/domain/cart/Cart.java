@@ -40,6 +40,8 @@ public class Cart {
 
     private boolean incrementQty;
 
+    private boolean checkItem;
+
     private int qty;
 
     public void registerCart(Member member, Item item, ItemOption itemOption, ItemImage itemImage) {
@@ -51,6 +53,10 @@ public class Cart {
 
     public void changeQty(int qty) {
         this.qty = qty;
+    }
+
+    public void changeCheckItem(boolean checkItem) {
+        this.checkItem = checkItem;
     }
 
 }

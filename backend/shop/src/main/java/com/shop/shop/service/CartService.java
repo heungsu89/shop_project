@@ -13,8 +13,17 @@ public interface CartService {
     // 회원Id를 기준으로 장바구니 목록 조회
     public List<CartDTO> getCartList(Long memberId);
 
+    // 회원Id를 기준으로 선택된 장바구니 목록 조회
+    public List<CartDTO> getCartListWithCheckItem(Long memberId);
+
     // 회원Id를 기준으로 특정 상품Id 들을 장바구니 목록에서 조회
-    public List<CartDTO> getCartListByMemberIdANDItemId(CartDTO cartDTO);
+    public List<CartDTO> getCartListByMemberIdANDOptionId(CartDTO cartDTO);
+
+    // 회원Id를 기준으로 특정 상품Id 들을 장바구니 목록에서 조회
+    public List<CartDTO> getCartListByMemberIdANDOptionIdAndCheckItem(CartDTO cartDTO);
+
+    // 회원Id를 기준으로 특정 상품Id 들을 장바구니 목록에서 수정
+    public List<CartDTO> editCartListByMemberIdANDOptionId(CartDTO cartDTO);
 
     // 장바구니 목록에서 상품 삭제
     public void deleteCartItem(CartDTO cartDTO);

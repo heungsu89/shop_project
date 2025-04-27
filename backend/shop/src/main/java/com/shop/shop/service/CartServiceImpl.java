@@ -64,12 +64,13 @@ public class CartServiceImpl implements CartService {
         Cart cart = new Cart();
         cart.registerCart(member, item, option, itemImage);
         cart.changeQty(cartDTO.getQty());
+        cart.changeCheckItem(false);
 
         cartRepository.save(cart);
         return new CartDTO(cart);
     }
 
-    // 회원Id를 기준으로 장바구니 불러오기
+    // 회원Id를 기준으로 선택된 상품들만 장바구니 불러오기
     @Override
     public List<CartDTO> getCartList(Long memberId) {
         Member member = memberRepository.findById(memberId)
@@ -80,9 +81,20 @@ public class CartServiceImpl implements CartService {
         return cartList.stream().map(CartDTO::new).toList();
     }
 
+    // 회원Id를 기준으로 선택된 상품들만 장바구니 불러오기
+    @Override
+    public List<CartDTO> getCartListWithCheckItem(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        List<Cart> cartList = cartRepository.findAllByMemberIdWithCheckItem(member.getId());
+
+        return cartList.stream().map(CartDTO::new).toList();
+    }
+
     // 특정 회원Id와 선택된 옵션Id 들을 기준으로 조회 장바구니 조회
     @Override
-    public List<CartDTO> getCartListByMemberIdANDItemId(CartDTO cartDTO) {
+    public List<CartDTO> getCartListByMemberIdANDOptionId(CartDTO cartDTO) {
         Member member = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
         log.info("SelectId: " + Arrays.toString(cartDTO.getSelectId()));
         List<Cart> cartList = new ArrayList<>();
@@ -92,6 +104,39 @@ public class CartServiceImpl implements CartService {
                 throw new RuntimeException("해당 상품을 찾을 수 없습니다. 요청된 상품Id: " + cart);
             }
             cartList.add(cart);
+        }
+        return cartList.stream().map(CartDTO::new).toList();
+    }
+
+    // 특정 회원Id와 선택된 옵션Id, 선택여부를 기준으로 조회 장바구니 조회
+    @Override
+    public List<CartDTO> getCartListByMemberIdANDOptionIdAndCheckItem(CartDTO cartDTO) {
+        Member member = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+        log.info("SelectId: " + Arrays.toString(cartDTO.getSelectId()));
+        List<Cart> cartList = new ArrayList<>();
+        for (Long cartItemId : cartDTO.getSelectId()) {
+            Cart cart = cartRepository.findByMemberIdAndOptionIdAndCheckItem(member.getId(), cartItemId);
+            if (cart == null) {
+                throw new RuntimeException("해당 상품을 찾을 수 없습니다. 요청된 상품Id: " + cart);
+            }
+            cartList.add(cart);
+        }
+        return cartList.stream().map(CartDTO::new).toList();
+    }
+
+    // 특정 회원Id와 선택된 옵션Id 들을 기준으로 상태 수정
+    @Override
+    public List<CartDTO> editCartListByMemberIdANDOptionId(CartDTO cartDTO) {
+        Member member = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+        List<Cart> cartList = new ArrayList<>();
+        for (Long cartItemId : cartDTO.getSelectId()) {
+            Cart cart = cartRepository.findByMemberIdAndOptionId(member.getId(), cartItemId);
+            if (cart == null) {
+                throw new RuntimeException("해당 상품을 찾을 수 없습니다. 요청된 상품Id: " + cart);
+            }
+            cart.changeCheckItem(true);
+            Cart editCartItem = cartRepository.save(cart);
+            cartList.add(editCartItem);
         }
         return cartList.stream().map(CartDTO::new).toList();
     }
