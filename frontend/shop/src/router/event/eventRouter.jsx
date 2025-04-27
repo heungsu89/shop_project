@@ -3,21 +3,39 @@ import React, { Suspense, lazy } from "react";
 const Loading = () => <div>Loading....</div>;
 
 const EventPage = lazy(() => import("../../Pages/event/EventPage"));
-const EventDetail = lazy(() => import("../../Pages/magazine/MagazineDetail"));
+const EventDetailPage = lazy(() => import("../../Pages/event/EventDetailPage"));
+const EventListComponent = lazy(() => import("../../Components/event/EventListComponent"));
+const EventDetailComponent = lazy(() => import("../../Components/event/EventDetailComponent"));
 
 const eventRouter = () => [
   {
-    path: "event",
+    path: "list",
+    element: (
+      <Suspense fallback={<Loading />}><EventPage /></Suspense>
+    ),
     children: [
       {
         index: true,
         element: (
-          <Suspense fallback={<Loading/>}><EventPage/> </Suspense>
-        ),
-      },
-    ],
+          <EventListComponent />
+        )
+      }
+    ]
+  },
+  {
+    path: "detail/:id",
+    element: (
+      <Suspense fallback={<Loading />}><EventDetailPage /></Suspense>
+    ),
+    children: [
+      {
+        index: true,
+        element: (
+          <EventDetailComponent />
+        )
+      }
+    ]
   },
 ];
 
 export default eventRouter;
-

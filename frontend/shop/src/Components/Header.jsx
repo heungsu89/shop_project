@@ -63,7 +63,7 @@ const Header = ({ isMypage }) => {
               ))}
             {/* <li><Link to="/shop">SHOP</Link></li> */}
             <li><Link to={`/magazine/list?page=0&size=10`}>MAGAZINE</Link></li>
-            <li><Link to={`/event?page=0&size=10`}>EVENT</Link></li>
+            <li><Link to={`/event/list?page=0&size=10`}>EVENT</Link></li>
           </ul>
         </nav>
 

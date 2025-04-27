@@ -4,12 +4,29 @@
     img{width: 100%;height: 100%; object-fit: cover;}
   }
   .volume{display: block;font-size: var(--h5);}
-  .title{font-size: var(--h1);font-weight: normal;}
+  .title{font-size: var(--h1);font-weight: normal;line-height: 1.1;}
   
 }
 .itemContentWrap{margin: 0 auto;max-width: 620px;
-  .itemImage{width: 100%;
+  .itemImage{width: 100%; margin-bottom: 40px;
     img{max-width: 100%;}
   }
-  .itemContentWrap{}
+  .itemDiscripton{font-size:var(--h5)}
+}
+
+
+.itemSidebar.list{
+  h2{margin-bottom: 40px;}
+  .discription{font-size:var(--h5);text-align: end;}
+}
+
+
+
+.itemSidebar.borad{
+  h2{margin-bottom: 40px;}
+  span{display: block;}
+  .number{font-size:var(--h5);}
+  .title{font-size: var(--h1);font-weight: normal;text-align: end;line-height: 1.1;margin: 4px 0 10px;}
+  .date{font-size:var(--h5);color: var(--placeholder);}
+  .pagination{margin-top: auto;}
 }

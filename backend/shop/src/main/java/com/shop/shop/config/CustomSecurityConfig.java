@@ -34,7 +34,6 @@ public class CustomSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -58,8 +57,7 @@ public class CustomSecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/upload/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole("MANAGER", "ADMIN")
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class)
                 .anonymous(anonymous -> anonymous.disable())
                 .csrf(csrf -> csrf.disable())
@@ -71,7 +69,8 @@ public class CustomSecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 

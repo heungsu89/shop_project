@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { getMagazineList } from "../../api/BoardApi";
+import { getEventList } from "../../api/BoardApi";
 import Pagination from "../Pagination";
 
 const MagazineListComponent = () => {
-  const [magazines, setMagazines] = useState([]);
+  const [events, setEvents] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
 
   // const startIndex = currentPage * pageSize;
@@ -21,7 +21,7 @@ const MagazineListComponent = () => {
 
 
   const fetchList = () => {
-    getMagazineList(page,size).then(setMagazines);
+    getEventList(page,size).then(setEvents);
   }
 
 
@@ -31,20 +31,20 @@ const MagazineListComponent = () => {
       <div className="rightNavLayoutWrap">
         <section className="rightNavLayoutContainer">
           <ul className="boradListWrap innerWrap">
-            {magazines?.content?.map((magazine,index) => {
-              const displayIndex = magazines.totalElements - (page * size + index);
+            {events?.content?.map((events,index) => {
+              const displayIndex = events.totalElements - (page * size + index);
 
             return(
-              <li key={magazine.magazineListId} className="item">
+              <li key={events.eventListId} className="item">
                 <div className="imageContainer">
-                  <img src={`http://localhost:8081/upload/${magazine.uploadFileNames[0]}`} alt={`${magazine.title}`} />
+                  <img src={`http://localhost:8081/upload/${events.uploadFileNames[0]}`} alt={`${events.title}`} />
                 </div>
                 <div className="textContainer">
                   <div className="textWrapper"> 
-                    <Link to={`/magazine/detail/${magazine.magazineListId}`}>
+                    <Link to={`/event/detail/${events.eventListId}`}>
                         <span className="volume">- VOL. {displayIndex}</span>
                         <h3 className="title">
-                        {magazine.title.split(/[-–]/).map((part, idx, arr) => (
+                        {events.title.split(/[-–]/).map((part, idx, arr) => (
                           <React.Fragment key={idx}>
                             {part.trim()}
                             {idx !== arr.length - 1 && <br />}
@@ -61,16 +61,16 @@ const MagazineListComponent = () => {
 
         <aside className="itemSidebar list">
           <div className="innerSiedbarWrap">
-            <h2>MAGAZINE</h2>
-            <p className="discription">NØRD documents inspiration<br /> drawn from everyday life and beyond fashion<br />
-              Through interviews, essays, and visuals,<br />we explore brand philosophies and aesthetics.</p>
+            <h2>EVENT</h2>
+            {/* <p className="discription">NØRD documents inspiration<br /> drawn from everyday life and beyond fashion<br />
+              Through interviews, essays, and visuals,<br />we explore brand philosophies and aesthetics.</p> */}
             <div className="searchBox">
               <input type="text" placeholder="SEARCH TEXT" />
               <button className="btn black">SEARCH</button>
             </div>
             <div className="paginationSection">
-                <div className="totalCount">TOTAL : {magazines.totalElements}</div>
-                <Pagination pageInfo={magazines}/>
+                <div className="totalCount">TOTAL : {events.totalElements}</div>
+                <Pagination pageInfo={events}/>
             </div>
           </div>
         </aside>

@@ -14,9 +14,12 @@ import java.util.List;
 public interface CategoryItemService {
 
     CategoryItemDTO registerCategoryItem(Item item, Long categoryId);
-    public Page<CategoryItemDTO> getAllCategoryItem(Pageable pageable);
-    public Page<CategoryItemDTO> getAllItemsFromCategoryItem(Pageable pageable, Long categoryId);
-    public Page<CategoryItemDTO> getAllItemsFromCategoryItemWithStatus(Pageable pageable, CategoryItemDTO categoryItemDTO);
 
+    public Page<CategoryItemDTO> getAllCategoryItem(Pageable pageable);
+
+    public Page<CategoryItemDTO> getAllItemsFromCategoryItem(Pageable pageable, Long categoryId);
+
+    public Page<CategoryItemDTO> getAllItemsFromCategoryItemWithStatus(Pageable pageable, Long categoryId,
+            String categoryItemStatus);
 
 }

@@ -14,3 +14,16 @@ export const fetchItems = async (id,page,size) => {
       throw error;
     }
 };
+
+// GET 방식으로 수정
+export const fetchItemsSort = async (categoryId, page, size, sort = "NEWEST") => {
+  const response = await axios.get(`${host}categoryItemPageWithStatus`, {
+    params: {
+      categoryId: Number(categoryId),
+      categoryItemStatus: sort,
+      page,
+      size
+    }
+  });
+  return response.data;
+};

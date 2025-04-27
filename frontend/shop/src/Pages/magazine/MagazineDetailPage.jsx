@@ -5,11 +5,12 @@ import BasicLayout from "../../layout/BasicLayout";
 import "../../static/css/siderbar.scss"
 import "../../static/css/borad.scss";
 
-const EventPage = () => {
+const MagazineDetail = () => {
   return (
     <BasicLayout>
-      <Outlet/>
+      <Outlet></Outlet>
     </BasicLayout>
   );
 };
-export default EventPage;
+
+export default MagazineDetail;

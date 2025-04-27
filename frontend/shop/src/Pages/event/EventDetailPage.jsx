@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Outlet } from "react-router-dom";
 import BasicLayout from "../../layout/BasicLayout";
 
 import "../../static/css/siderbar.scss"
 import "../../static/css/borad.scss";
 
-const MagazineDetail = () => {
-
+const EventDetailPage = () => {
   return (
     <BasicLayout>
       <Outlet></Outlet>
@@ -14,4 +13,4 @@ const MagazineDetail = () => {
   );
 };
 
-export default MagazineDetail;
+export default EventDetailPage;

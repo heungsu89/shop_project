@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import Pagination from "../../Components/Pagination";
 
-const SidebarComponent = ({items,childCategorys,categoryName,page,size}) => {
+const SidebarComponent = ({items,childCategorys,categoryName,page,size,setSort}) => {
     return(
         <aside className="itemSidebar">
             <div className="innerSiedbarWrap">
@@ -31,9 +31,9 @@ const SidebarComponent = ({items,childCategorys,categoryName,page,size}) => {
             <div className="paginationSection">
                 <div className="totalCount">TOTAL : {items.totalElements}</div>
                 <div className="sortButtons">
-                    <button type="button" className="btn line">NEWEST</button>
-                    <button type="button" className="btn line">PRICE HIGH</button>
-                    <button type="button" className="btn line">PRICE LOW</button>
+                    <button type="button" className="btn line" onClick={() => setSort("NEWEST")}>NEWEST</button>
+                    <button type="button" className="btn line" onClick={() => setSort("HIGH_PRICE")}>PRICE HIGH</button>
+                    <button type="button" className="btn line" onClick={() => setSort("LOW_PRICE")}>PRICE LOW</button>
                 </div>
                 <Pagination pageInfo={items}/>
             </div>

@@ -18,6 +18,7 @@ const ProductListComponent = () => {
   const [items, setItems] = useState([]);
   const [categoryName, setCategoryName] = useState("");
   const [childCategories, setChildCategories] = useState([]);
+  const [sort, setSort] = useState("NEWEST");
   
   useEffect(() => {
     fetchItems(categoryId, page, size).then(setItems);
@@ -118,6 +119,7 @@ const ProductListComponent = () => {
         categoryName={categoryName}
         page={page}
         size={size}
+        setSort={setSort}
       />
     </>
   );

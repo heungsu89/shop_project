@@ -40,6 +40,7 @@ export const categoryModify = async (data) =>{
         throw error;
     }
 }
+
 /** 카테고리 삭제 */
 export const categoryDelete = async(id)=>{
     try {
@@ -51,6 +52,7 @@ export const categoryDelete = async(id)=>{
         throw error;
     }
 }
+
 /** 카테고리 조회 */
 export const getCategories = async (id)=>{
   try {
@@ -62,3 +64,4 @@ export const getCategories = async (id)=>{
     throw error;
   }
 }
+
