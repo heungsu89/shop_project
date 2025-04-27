@@ -53,13 +53,13 @@ public class CartServiceImpl implements CartService {
             itemImage = images.get(0);
         }
 
-//        Cart duplicatePrevention = cartRepository.findByMemberIdAndOptionId(member.getId(), item.getId());
-//
-//        // 존재한다면 삭제 후 null값 반환
-//        if (duplicatePrevention != null) {
-//            cartRepository.deleteById(duplicatePrevention.getId());
-//            return null;
-//        }
+        Cart duplicatePrevention = cartRepository.findByMemberIdAndOptionId(member.getId(), option.getId());
+
+        // 존재한다면 삭제 후 null값 반환
+        if (duplicatePrevention != null) {
+            cartRepository.deleteById(duplicatePrevention.getId());
+            return null;
+        }
 
         Cart cart = new Cart();
         cart.registerCart(member, item, option, itemImage);
