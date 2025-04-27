@@ -55,8 +55,8 @@ const MyNav = ({ memberInfo }) => {
           </div>
             <nav className="userNav">
               <ul>
-                <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="order">주문</NavLink></li>
-                <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="inquiry">문의</NavLink></li>
+                <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="order?page=0&size=10">주문</NavLink></li>
+                <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="inquiry?page=0&size=10">문의</NavLink></li>
                 <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`mileage/${userInfo?.memberId}?page=0&size=10`}>마일리지</NavLink></li>
                 <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`wish/${userInfo?.memberId}?page=0&size=10`}>관심상품</NavLink></li>
                 <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`profile/${userInfo?.memberId}`}>개인정보</NavLink></li>

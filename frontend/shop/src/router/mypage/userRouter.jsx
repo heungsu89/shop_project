@@ -1,9 +1,11 @@
 import { Suspense, lazy } from "react";
+import { Navigate } from "react-router-dom"; // ✅ 추가
 const Loading = () => <div>Loading....</div>;
 
 const UserMainPage = lazy(() => import("../../Pages/myPage/user/UserMainPage"));
 const OrderComponent = lazy(() => import("../../Components/mypage/user/order/OrderComponent"));
 const OrderListComponent = lazy(() => import("../../Components/mypage/user/order/OrderListComponent"));
+const OrderDetailComponent = lazy(() => import("../../Components/mypage/user/order/OrderDetailComponent"));
 
 const InquiryComponent = lazy(() => import("../../Components/mypage/user/inquiry/InquiryComponent"));
 const MileageComponent = lazy(() => import("../../Components/mypage/user/mileage/MileageComponent"));
@@ -11,7 +13,6 @@ const MileageListComponent = lazy(() => import("../../Components/mypage/user/mil
 const WishCompoent = lazy(() => import("../../Components/mypage/user/wish/WishCompoent"));
 const WishListCompoent = lazy(() => import("../../Components/mypage/user/wish/WishListCompoent"));
 const ProfileComponent = lazy(() => import("../../Components/mypage/user/profile/ProfileComponent"));
-
 
 const uesrRouter = () => {
     return [
@@ -22,14 +23,22 @@ const uesrRouter = () => {
             ),
             children: [
                 {
+                    index: true, // ✅ 추가 : mypage 들어오면 바로 order로 이동
+                    element: <Navigate to="order" replace />
+                },
+                {
                     path: "order",
                     element: (
                         <Suspense fallback={<Loading />}><OrderComponent /></Suspense>
                     ),
-                    children:[
+                    children: [
                         {
-                            index : true,
-                            element : <OrderListComponent/>
+                            index: true,
+                            element: <OrderListComponent />
+                        },
+                        {
+                            path : "detail/:orderId",
+                            element: <OrderDetailComponent />
                         }
                     ]
                 },
@@ -46,7 +55,7 @@ const uesrRouter = () => {
                     ),
                     children: [
                         {
-                            index: true,  // <- 기본 라우트
+                            index: true,
                             element: <Suspense fallback={<Loading />}><MileageListComponent /></Suspense>
                         },
                     ]
@@ -58,7 +67,7 @@ const uesrRouter = () => {
                     ),
                     children: [
                         {
-                            index: true,  // <- 기본 라우트
+                            index: true,
                             element: <Suspense fallback={<Loading />}><WishListCompoent /></Suspense>
                         },
                     ]
