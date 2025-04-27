@@ -14,6 +14,7 @@ import com.shop.shop.util.CustomFileUtil;
 import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 @Service
 //@Getter
 @RequiredArgsConstructor
+@Log4j2
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
@@ -63,7 +65,11 @@ public class ItemServiceImpl implements ItemService {
 
         // 아이템 저장
         savedItem = itemRepository.save(item);
+        log.info("옵션: " + itemDTO.getOptions().get(0).getOptionName());
+        log.info("옵션: " + itemDTO.getOptions().get(0).getOptionValue());
+        log.info("옵션: " + itemDTO.getOptions().get(0).getOptionPrice());
 
+        List<ItemOption> savedOptions = new ArrayList<>();
         // 옵션 저장
         if (itemDTO.getOptions() != null) {
             List<ItemOption> options = itemDTO.getOptions().stream()
@@ -75,7 +81,7 @@ public class ItemServiceImpl implements ItemService {
                             .itemId(item.getId()) // 연관된 itemId 설정
                             .build())
                     .toList();
-            itemOptionRepository.saveAll(options);
+            savedOptions = itemOptionRepository.saveAll(options);
         }
 
         // 인포 저장
@@ -99,9 +105,9 @@ public class ItemServiceImpl implements ItemService {
                             .build())
                     .toList();
             itemImageRepository.saveAll(images);
-            return new ItemDTO(item, images, item.getOptions(), item.getInfo());
+            return new ItemDTO(item, images, savedOptions, item.getInfo());
         }
-        return new ItemDTO(item, item.getImages(), item.getOptions(), item.getInfo());
+        return new ItemDTO(item, item.getImages(), savedOptions, item.getInfo());
     }
 
     // 페이징 조회 - 목록+이미지
