@@ -16,6 +16,7 @@ public class OrderItemDTO {
     private int orderPrice;
     private int qty;
     private Long itemId;
+    private String itemName;
     private int discountRate;
     private int discountPrice;
     private Long itemOptionId;
@@ -32,6 +33,7 @@ public class OrderItemDTO {
             this.discountRate = orderItem.getItem().getDiscountRate();
             this.discountPrice = orderItem.getDiscountPrice();
             this.itemId = (orderItem.getItem() != null) ? orderItem.getItem().getId() : null;
+            this.itemName = (orderItem.getItem().getName() != null) ? orderItem.getItem().getName() : null;
             this.itemOptionId = (orderItem.getItemOption() != null) ? orderItem.getItemOption().getId() : null;
             this.orderId = (orderItem.getOrder() != null) ? orderItem.getOrder().getId() : null;
             this.optionName = (orderItem.getItemOption().getOptionName() != null) ? orderItem.getItemOption().getOptionName() : null;
