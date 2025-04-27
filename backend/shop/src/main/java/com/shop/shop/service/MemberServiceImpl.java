@@ -121,7 +121,13 @@ public class MemberServiceImpl implements MemberService {
                 .social(false)
                 .delFlag(false)
                 .build();
-        member.addRole(MemberRole.USER);
+
+        // 전달받은 회원역할에따라 일반회원인지 관리자인지 구별 후 생성
+        if (MemberRole.valueOf(memberDTO.getRoleNames().get(0)) == MemberRole.ADMIN) {
+            member.addRole(MemberRole.ADMIN);
+        } else {
+            member.addRole(MemberRole.USER);
+        }
 
         memberRepository.save(member);
     }
