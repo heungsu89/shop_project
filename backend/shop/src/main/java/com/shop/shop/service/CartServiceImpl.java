@@ -13,12 +13,15 @@ import com.shop.shop.dto.WishListDTO;
 import com.shop.shop.exception.NotEnoughStockException;
 import com.shop.shop.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
@@ -50,13 +53,13 @@ public class CartServiceImpl implements CartService {
             itemImage = images.get(0);
         }
 
-        Cart duplicatePrevention = cartRepository.findByMemberIdAndOptionId(member.getId(), item.getId());
-
-        // 존재한다면 삭제 후 null값 반환
-        if (duplicatePrevention != null) {
-            cartRepository.deleteById(duplicatePrevention.getId());
-            return null;
-        }
+//        Cart duplicatePrevention = cartRepository.findByMemberIdAndOptionId(member.getId(), item.getId());
+//
+//        // 존재한다면 삭제 후 null값 반환
+//        if (duplicatePrevention != null) {
+//            cartRepository.deleteById(duplicatePrevention.getId());
+//            return null;
+//        }
 
         Cart cart = new Cart();
         cart.registerCart(member, item, option, itemImage);
@@ -77,13 +80,14 @@ public class CartServiceImpl implements CartService {
         return cartList.stream().map(CartDTO::new).toList();
     }
 
-    // 특정 회원Id와 선택된 상품Id 들을 기준으로 조회 장바구니 조회
+    // 특정 회원Id와 선택된 옵션Id 들을 기준으로 조회 장바구니 조회
     @Override
     public List<CartDTO> getCartListByMemberIdANDItemId(CartDTO cartDTO) {
         Member member = memberRepository.findById(cartDTO.getMemberId()).orElseThrow(() -> new RuntimeException("해당 회원을 찾을 수 없습니다."));
+        log.info("SelectId: " + Arrays.toString(cartDTO.getSelectId()));
         List<Cart> cartList = new ArrayList<>();
         for (Long cartItemId : cartDTO.getSelectId()) {
-            Cart cart = cartRepository.findCartItemByMemberIdANDItemId(member.getId(), cartItemId);
+            Cart cart = cartRepository.findByMemberIdAndOptionId(member.getId(), cartItemId);
             if (cart == null) {
                 throw new RuntimeException("해당 상품을 찾을 수 없습니다. 요청된 상품Id: " + cart);
             }
