@@ -95,7 +95,7 @@ public class CartController {
     }
 
     // 옵션 재고량 수정
-    @PostMapping("/updateQty")
+    @PutMapping("/updateQty")
     public ResponseEntity<CheckDTO> updateQty(
             @RequestParam Long optionId,
             @RequestParam int changeQty // 예) +1 이면 증가, -1 이면 감소
@@ -105,7 +105,7 @@ public class CartController {
     }
 
     // 장바구니 옵션 재고량 수정
-    @PostMapping("/updateCartQty")
+    @PutMapping("/updateCartQty")
     public ResponseEntity<Void> updateCartQty(
             @RequestParam Long cartId,
             @RequestParam int newQty) {
