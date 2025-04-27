@@ -114,6 +114,9 @@ public class OrderServiceImpl implements OrderService {
             totalDiscountAmount += ((int)((float)((cart.getItem().getPrice() + cart.getItemOption().getOptionPrice()) * cart.getQty()) * (1 - ((float)cart.getItem().getDiscountRate() / 100))));
         }
         order.changeTotalAmount(totalDiscountAmount);
+        if (totalDiscountAmount < 100000) { // 최종 결제 금액이 100,000원보다 적을 경우
+            totalDiscountAmount+=3000; // 배송비 + 3000원
+        } 
         log.info("totalDiscountAmount: " + totalDiscountAmount);
 
         // 회원 등급별 마일리지 적립 수치 설정
