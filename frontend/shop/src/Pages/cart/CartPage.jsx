@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import {fetchCartItems,clearCartByMemberId,deleteSelectedItems,addWishlistItem, updateCartQty} from "../../api/cartApi";
+import {fetchCartItems,clearCartByMemberId,deleteSelectedItems,addWishlistItem, updateCartQty, selectItems} from "../../api/cartApi";
 import { addComma } from '../../util/priecUtil';
 import { getMemberById } from '../../api/memberApi';
 import { getCookie } from "../../util/cookieUtil";
@@ -159,27 +159,39 @@ const decreaseQuantity = async (item) => {
 
   const handleSelectedOrder = () => {
     if (checkedItems.length > 0) {
-      const selectedItems = cartItems.filter((item) => checkedItems.includes(item.cartId));
-      const orderDetails = selectedItems.map(item => ({
-        ...item,
-        selectedOptionId: selectedSizes[item.cartId]
-      }));
-      console.log("선택 주문 상품:", orderDetails);
-      alert("선택 주문 완료 (콘솔 로그 확인)");
+      const selectedItems = cartItems.filter(item => checkedItems.includes(item.cartId));
+      const selectIds = selectedItems.map(item => item.optionId); // ★ optionId만 모으기
+  
+      const requestData = {
+        memberId: loginState.memberId,
+        selectId: selectIds
+      };
+  
+      console.log("선택 주문 데이터:", requestData);
+      selectItems(requestData).then(data=> console.log(data));
+      // 이제 이걸 주문 API에 POST로 보내면 돼
+      // orderAdd(requestData).then()
+      navigate('/order', { state: requestData });
     } else {
       alert("선택된 상품이 없습니다.");
     }
   };
+  
 
   const handleAllOrder = () => {
     if (cartItems.length > 0) {
-      const orderDetails = cartItems.map(item => ({
-        ...item,
-        selectedOptionId: selectedSizes[item.cartId]
-      }));
-      console.log("전체 주문 상품:", orderDetails);
-      navigate('/order')
-      alert("전체 주문 완료 (콘솔 로그 확인)");
+      const selectIds = cartItems.map(item => item.optionId); // ★ 모든 optionId 모으기
+  
+      const requestData = {
+        memberId: loginState.memberId,
+        selectId: selectIds
+      };
+  
+      console.log("전체 주문 데이터:", requestData);
+
+      // selectItems(requestData).then(data=> console.log(data));
+      // orderAdd(requestData).then()
+      // navigate('/order', { state: requestData });
     } else {
       alert("장바구니에 상품이 없습니다.");
     }

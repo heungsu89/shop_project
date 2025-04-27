@@ -83,3 +83,14 @@ export const updateCartQty = async (cartId, newQty) => {
   });
   return response.data;
 };
+
+export const selectItems = async (data) =>{
+  try{
+    const res = await axios.post(`${CART_HOST}/getSelectList`);
+    console.log("선택 상품 옵션별 : " + res.data)
+    return res.data;
+  }catch(error){
+    throw error;
+  }
+}
+
