@@ -131,7 +131,7 @@ public class OrderController {
         return ResponseEntity.ok(getOrderList);
     }
 
-    // 특정 주문 수정
+    // 특정 주문배송지 수정
     @PutMapping("/edit")
     public ResponseEntity<OrderDTO> editOrder(@RequestBody OrderDTO orderDTO) {
         OrderDTO editedOrder = orderService.editOrder(orderDTO);
