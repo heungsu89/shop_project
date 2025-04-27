@@ -56,7 +56,7 @@ const MyNav = ({ memberInfo }) => {
               <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`member${pageParam}`}>회원</NavLink></li>
               <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`event${pageParam}`}>이벤트</NavLink></li>
               <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to={`magazine${pageParam}`}>매거진</NavLink></li>
-              <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="adminInfo">관리자정보</NavLink></li>
+              {/* <li><NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="adminInfo">관리자정보</NavLink></li> */}
             </ul>
           </nav>
         </div>

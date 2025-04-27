@@ -84,9 +84,10 @@ export const updateCartQty = async (cartId, newQty) => {
   return response.data;
 };
 
+/** 주문으로 넘길 상품들 체크해서 응답 */
 export const selectItems = async (data) =>{
   try{
-    const res = await axios.post(`${CART_HOST}/getSelectList`);
+    const res = await axios.post(`${CART_HOST}/editSelectList`,data);
     console.log("선택 상품 옵션별 : " + res.data)
     return res.data;
   }catch(error){
@@ -94,3 +95,14 @@ export const selectItems = async (data) =>{
   }
 }
 
+/** 회원의 주문 아이템 리스트 불러오기 */
+export const getSelectList = async (memberId) =>{
+  console.log(memberId)
+  try{
+    const res = await axios.get(`${CART_HOST}/checkItem/${memberId}`);
+    console.log("장바구니 선택 아이템 : " + res.data)
+    return res.data;
+  }catch(error){
+    throw error;
+  }
+}

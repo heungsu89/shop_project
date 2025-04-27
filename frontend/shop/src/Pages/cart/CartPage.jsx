@@ -189,9 +189,16 @@ const decreaseQuantity = async (item) => {
   
       console.log("전체 주문 데이터:", requestData);
 
-      // selectItems(requestData).then(data=> console.log(data));
+      selectItems(requestData).then(data=>{
+        try{ 
+          alert("주문 아이템 추가 완료");
+          navigate('/order');
+        }catch(error){
+          throw error;
+        }
+      });
       // orderAdd(requestData).then()
-      // navigate('/order', { state: requestData });
+      
     } else {
       alert("장바구니에 상품이 없습니다.");
     }

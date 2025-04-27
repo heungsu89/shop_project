@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { orderAdd } from "../../api/order";
-import { fetchCartItems } from "../../api/cartApi";
+import { getSelectList } from "../../api/cartApi";
 import { addComma } from "../../util/priecUtil";
 import AddressSearch from "../AddressSearch";
 import "../../static/css/order.scss";
@@ -27,7 +27,7 @@ const OrderComponent = ({ memberInfo }) => {
   const [usingMileage, setUsingMileage] = useState(0);
 
   useEffect(() => {
-    fetchCartItems(memberInfo.id).then(setCartItems);
+    getSelectList(memberInfo.id).then(setCartItems);
   }, [memberInfo]);
 
   useEffect(() => {
@@ -127,7 +127,7 @@ const OrderComponent = ({ memberInfo }) => {
 
   const earnedMileage = Math.floor(totalItemAmount * rate);
 
-  console.log(memberInfo)
+  console.log(cartItems)
 
   const handleOrderSubmit = () => {
     const orderData = {
@@ -142,10 +142,19 @@ const OrderComponent = ({ memberInfo }) => {
       recipientNumber: recipient.recipientNumber,
       recipient_zip_code: recipient.zipCode,
       recipient_default_address: recipient.defaultAddress,
-      recipient_detailed_address: recipient.detailedAddress
+      recipient_detailed_address: recipient.detailedAddress,
+      selectId: cartItems
+      .filter(item => item.optionId !== null && item.optionId !== undefined)
+      .map(item => item.optionId)
     };
     console.log("전송할 주문 데이터:", orderData);
-    orderAdd(orderData).then();
+    orderAdd(orderData).then(data=>{
+      try{
+        alert("등록성공!")
+      }catch(error){
+        throw error;
+      }
+    });
   };
   return (
     <>
@@ -176,6 +185,7 @@ const OrderComponent = ({ memberInfo }) => {
                           <img src={`http://localhost:8081/upload/${item.imageName}`} alt={item.itemName} />
                         </div>
                         <div className="itemInfo">
+                          <p>개발 확인용 옵션 아이디 값: {item.optionId}</p>
                           <p>{item.itemName}</p>
                           <p>{item.optionName} : {item.optionValue} (수량 : {item.qty})</p>
                         </div>
