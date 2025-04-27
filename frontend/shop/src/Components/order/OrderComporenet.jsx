@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { orderAdd } from "../../api/order";
 import { getSelectList } from "../../api/cartApi";
 import { addComma } from "../../util/priecUtil";
+import { useNavigate } from "react-router-dom";
 import AddressSearch from "../AddressSearch";
 import "../../static/css/order.scss";
 import "../../static/css/siderbar.scss";
 
 const OrderComponent = ({ memberInfo }) => {
+  const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
   const [usePayerMemberInfo, setUsePayerMemberInfo] = useState(true);
   const [useRecipientMemberInfo, setUseRecipientMemberInfo] = useState(true);
@@ -150,7 +152,8 @@ const OrderComponent = ({ memberInfo }) => {
     console.log("전송할 주문 데이터:", orderData);
     orderAdd(orderData).then(data=>{
       try{
-        alert("등록성공!")
+        navigate("/orderComplete", { state: { order: data } });
+        alert("등록성공!");
       }catch(error){
         throw error;
       }
@@ -362,7 +365,7 @@ const OrderComponent = ({ memberInfo }) => {
         <div className="innerSiedbarWrap">
           <div className="totalPriecInfo">
             <div><strong>주문금액</strong><strong>{addComma(totalItemAmount)}원</strong></div>
-            {/* <div><strong>적립 마일리지</strong><strong>{addComma(earnedMileage)}P</strong></div> */}
+            <div><strong>적립 마일리지</strong><strong>{addComma(earnedMileage)}P</strong></div>
             <div><strong>배송비</strong><strong>+{addComma(shippingFee)}원</strong></div>
             {mileageStatus === 'REDEEM' ? (
               <div><strong>사용 마일리지</strong><strong>-{addComma(usingMileage)}P</strong></div>

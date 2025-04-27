@@ -31,31 +31,34 @@ const MagazineListComponent = () => {
       <div className="rightNavLayoutWrap">
         <section className="rightNavLayoutContainer">
           <ul className="boradListWrap innerWrap">
-            {magazines?.content?.map((magazine,index) => {
-              const displayIndex = magazines.totalElements - (page * size + index);
-
-            return(
-              <li key={magazine.magazineListId} className="item">
-                <div className="imageContainer">
-                  <img src={`http://localhost:8081/upload/${magazine.uploadFileNames[0]}`} alt={`${magazine.title}`} />
-                </div>
-                <div className="textContainer">
-                  <div className="textWrapper"> 
-                    <Link to={`/magazine/detail/${magazine.magazineListId}`}>
-                        <span className="volume">- VOL. {displayIndex}</span>
-                        <h3 className="title">
-                        {magazine.title.split(/[-–]/).map((part, idx, arr) => (
-                          <React.Fragment key={idx}>
-                            {part.trim()}
-                            {idx !== arr.length - 1 && <br />}
-                          </React.Fragment>
-                        ))}
-                      </h3>
-                      </Link>
-                  </div>
-                </div>
-              </li>
-            )})}
+          {magazines?.content?.length > 0 ? (
+              magazines?.content?.map((item,index) => {
+                const displayIndex = item.totalElements - (page * size + index);
+                return(
+                  <li key={item.magazineListId} className="item">
+                    <div className="imageContainer">
+                      <img src={`http://localhost:8081/upload/${item.uploadFileNames[0]}`} alt={`${item.title}`} />
+                    </div>
+                    <div className="textContainer">
+                      <div className="textWrapper"> 
+                        <Link to={`/magazine/detail/${item.magazineListId}`}>
+                            <span className="volume">- VOL. {displayIndex}</span>
+                            <h3 className="title">
+                            {item.title.split(/[-–]/).map((part, idx, arr) => (
+                              <React.Fragment key={idx}>
+                                {part.trim()}
+                                {idx !== arr.length - 1 && <br />}
+                              </React.Fragment>
+                            ))}
+                          </h3>
+                          </Link>
+                      </div>
+                    </div>
+                  </li>
+              )})
+          ) : (
+            <li className="noDataView">등록된 글이 없습니다.</li>
+          )}
           </ul>
         </section>
 

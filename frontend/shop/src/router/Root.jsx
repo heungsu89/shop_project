@@ -14,7 +14,7 @@ const Guide = lazy(() => import("../Pages/footer/GuidePage"));
 const Privacy = lazy(() => import("../Pages/footer/PrivacyPolicyPage"));
 const Terms = lazy(() => import("../Pages/footer/TermsPage"));
 const Order = lazy(() => import("../Pages/order/OrderPage"));
-const Magazine = lazy(() => import("../Pages/magazine/MagazinePage"));
+const OrderComplete = lazy(()=>import("../Pages/order/OrderCompletePage"));
 const rootRouter = createBrowserRouter([
   {
     path: "/",
@@ -63,6 +63,10 @@ const rootRouter = createBrowserRouter([
   {
     path:"order",
     element : <Suspense fallback={Loading}><Order/></Suspense>
+  },
+  {
+    path:"orderComplete",
+    element : <Suspense fallback={Loading}><OrderComplete/></Suspense>
   }
 ]);
 

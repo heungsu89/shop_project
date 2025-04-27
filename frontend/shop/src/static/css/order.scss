@@ -13,10 +13,6 @@
             }
         }
     }
-    
-
-
-    
 }
 .itemSidebar.order .innerSiedbarWrap{height: auto; align-items: normal;
     .totalPriecInfo{margin-bottom: 20px;
@@ -31,4 +27,11 @@
         span{font-size:var(h5);}
     }
 
+}
+
+.odrCompleteWrap{
+    .completeTitle{text-align: center;margin: 40px 0;
+        p{font-size: var(--h5);margin-top: 20px;}
+    }
+    a.btn{max-width: 600px;margin: 0 auto;margin: 40px auto 100px;}
 }

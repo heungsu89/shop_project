@@ -10,7 +10,6 @@ const MyNav = ({ memberInfo }) => {
 
   useEffect(() => {
     setUserInfo(memberInfo);
-
   }, [memberInfo]);
 
 
@@ -21,21 +20,8 @@ const MyNav = ({ memberInfo }) => {
         setIsUSer(data);
         console.log("isUser", isUser);
       })
-
   }, [userInfo]);
 
-
-  // {isAdmin ? (
-  //   <>
-  //     <strong>관리자</strong>
-  //     <p>오늘도 화이팅하세요.</p>
-  //   </>
-  // ) : (
-  //   <>
-  //     <strong>권한 없음</strong>
-  //     <p></p>
-  //   </>
-  // )}
 
   return (
     <aside className='myNavWrap'>

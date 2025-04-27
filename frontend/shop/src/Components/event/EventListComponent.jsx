@@ -31,31 +31,34 @@ const MagazineListComponent = () => {
       <div className="rightNavLayoutWrap">
         <section className="rightNavLayoutContainer">
           <ul className="boradListWrap innerWrap">
-            {events?.content?.map((events,index) => {
-              const displayIndex = events.totalElements - (page * size + index);
-
-            return(
-              <li key={events.eventListId} className="item">
-                <div className="imageContainer">
-                  <img src={`http://localhost:8081/upload/${events.uploadFileNames[0]}`} alt={`${events.title}`} />
-                </div>
-                <div className="textContainer">
-                  <div className="textWrapper"> 
-                    <Link to={`/event/detail/${events.eventListId}`}>
-                        <span className="volume">- VOL. {displayIndex}</span>
-                        <h3 className="title">
-                        {events.title.split(/[-–]/).map((part, idx, arr) => (
-                          <React.Fragment key={idx}>
-                            {part.trim()}
-                            {idx !== arr.length - 1 && <br />}
-                          </React.Fragment>
-                        ))}
-                      </h3>
-                      </Link>
+          {events?.content?.length > 0 ? (
+            events?.content?.map((item,index) => {
+              const displayIndex = item.totalElements - (page * size + index);
+              return(
+                <li key={item.eventListId} className="item">
+                  <div className="imageContainer">
+                    <img src={`http://localhost:8081/upload/${item.uploadFileNames[0]}`} alt={`${events.title}`} />
                   </div>
-                </div>
-              </li>
-            )})}
+                  <div className="textContainer">
+                    <div className="textWrapper"> 
+                      <Link to={`/event/detail/${item.eventListId}`}>
+                          <span className="volume">- VOL. {displayIndex}</span>
+                          <h3 className="title">
+                          {item.title.split(/[-–]/).map((part, idx, arr) => (
+                            <React.Fragment key={idx}>
+                              {part.trim()}
+                              {idx !== arr.length - 1 && <br />}
+                            </React.Fragment>
+                          ))}
+                        </h3>
+                        </Link>
+                    </div>
+                  </div>
+                </li>
+              )})
+          ) : (
+            <li className="noDataView">등록된 글이 없습니다.</li>
+          )}
           </ul>
         </section>
 

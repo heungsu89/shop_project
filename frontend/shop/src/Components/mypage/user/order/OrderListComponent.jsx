@@ -2,9 +2,12 @@ import { Outlet } from "react-router-dom";
 
 const OrderComponent = () => {
   return(
-    <div className="myPageComponent">
-        <Outlet />
+    <>
+    <h2 className="pageTitle">주문</h2>
+    <div className="pageContainer">
+
     </div>
+    </>
   )
 }
 

@@ -3,6 +3,8 @@ const Loading = () => <div>Loading....</div>;
 
 const UserMainPage = lazy(() => import("../../Pages/myPage/user/UserMainPage"));
 const OrderComponent = lazy(() => import("../../Components/mypage/user/order/OrderComponent"));
+const OrderListComponent = lazy(() => import("../../Components/mypage/user/order/OrderListComponent"));
+
 const InquiryComponent = lazy(() => import("../../Components/mypage/user/inquiry/InquiryComponent"));
 const MileageComponent = lazy(() => import("../../Components/mypage/user/mileage/MileageComponent"));
 const MileageListComponent = lazy(() => import("../../Components/mypage/user/mileage/MileageListComponent"));
@@ -24,6 +26,12 @@ const uesrRouter = () => {
                     element: (
                         <Suspense fallback={<Loading />}><OrderComponent /></Suspense>
                     ),
+                    children:[
+                        {
+                            index : true,
+                            element : <OrderListComponent/>
+                        }
+                    ]
                 },
                 {
                     path: "inquiry",

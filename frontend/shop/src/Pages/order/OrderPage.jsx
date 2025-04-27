@@ -20,8 +20,7 @@ const OrderPage =()=>{
     }
   }, [isLoggedIn]);
 
-  if (!isLoggedIn || !memberInfo) return null; // 렌더링 차단 (필요 시 로딩 처리 가능)
-
+  if (!isLoggedIn || !memberInfo) return null;
 
     return(
       <BasicLayout>

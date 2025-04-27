@@ -153,11 +153,9 @@ $tbw140 : 140px;
 /** 버튼 디자인 모음 */
 button.btn,
 a.btn{display: flex;justify-content: center;align-items: center;font-size: var(--text-base);border: none;border-radius: 3px;min-width: 74px;border:1px solid transparent;padding: 6px 12px;
-  
   &.black{color: var(--ash-white);background: var(--charcoal-grey);border-color: var(--charcoal-grey);}
   &.gray{color: var(--charcoal-grey);background: var(--ash-white);border-color: var(--ash-white);}
   &.line{color: var(--charcoal-grey);background: var(--white);border-color: var(--charcoal-grey);}
-
   /**큰 버튼 기본 */
   &.bigBtn{font-size: 16px;padding: 10px 20px;
     /**볼드 처리 */
@@ -228,5 +226,27 @@ a.btn{display: flex;justify-content: center;align-items: center;font-size: var(-
 /** 우측 네비 레이아웃*/
 .rightNavLayoutWrap {display: flex; // productWrap
   .rightNavLayoutContainer {flex: 1;padding: 40px 0;overflow: hidden; //productContainer
+  }
+}
+
+/** 명세서 */
+.statementWrap{
+  .statementInnerWrap{width:100%;max-width:600px;margin: 0 auto;}
+  .statementBox{display: flex; flex-direction: column; gap: 40px 0; padding: 30px 40px; border: solid 1px var(--charcoal-grey); border-radius: 3px;
+    &.top{margin-bottom: 40px;}
+    &.top section{border-bottom: dotted 1px var(--charcoal-grey);}
+    section{padding-bottom: 20px;}
+    h3{font-size:var(--h4);margin-bottom: 20px;}
+    ul{display: flex; flex-direction: column; gap: 14px;
+      li{display: flex;justify-content: space-between; gap: 20px;
+        strong{font-weight: normal;}
+      }
+    }
+    .address span{display: block;text-align: end;line-height: 1.4;}
+    .totalPrice{display: flex;align-items: center; justify-content: space-between;
+      strong{font-weight: normal;}
+      h3{font-weight: normal;margin-bottom: 0;}
+    }
+    .tablePage .itemTableWrap .itemTable{min-width: 0;}
   }
 }
