@@ -280,11 +280,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO editOrder(OrderDTO orderDTO) {
         Order order = orderRepository.findById(orderDTO.getId()).orElseThrow(() -> new RuntimeException("해당 주문을 찾을 수 없습니다."));
-        order.changeRecipient_zip_code(orderDTO.getRecipient_zip_code());
-        order.changeRecipient_default_address(orderDTO.getRecipient_default_address());
-        order.changeRecipient_detailed_address(orderDTO.getRecipient_detailed_address());
-        Order changedOrder = orderRepository.save(order);
-        return new OrderDTO(changedOrder);
+        if (order.getOrderStatus() == OrderStatus.PENDING || order.getOrderStatus() == OrderStatus.PAID || order.getOrderStatus() == OrderStatus.PREPARING) {
+            order.changeRecipient_zip_code(orderDTO.getRecipient_zip_code());
+            order.changeRecipient_default_address(orderDTO.getRecipient_default_address());
+            order.changeRecipient_detailed_address(orderDTO.getRecipient_detailed_address());
+            Order changedOrder = orderRepository.save(order);
+            return new OrderDTO(changedOrder);
+        } else {
+            throw new RuntimeException("상품배송이 시작되어 배송지를 수정할 수 없습니다.");
+        }
     }
 
     // 주문 상태 수정
