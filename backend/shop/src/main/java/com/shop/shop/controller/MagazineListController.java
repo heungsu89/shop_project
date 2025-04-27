@@ -35,16 +35,16 @@ public class MagazineListController {
     public ResponseEntity<MagazineListDTO> createMagazineList(
             @RequestParam("title") String title,
             @RequestParam("writer") String writer,
-//            @RequestParam("content") String content,
-            @RequestParam("content") MultipartFile content,
+            @RequestParam("content") String content,
+//            @RequestParam("content") MultipartFile content,
             @RequestParam(value = "files", required = false) List<MultipartFile> files
     ) throws IOException {
-        String contentFile = new String(content.getBytes(), StandardCharsets.UTF_8);
+//        String contentFile = new String(content.getBytes(), StandardCharsets.UTF_8);
 
         MagazineListDTO magazineListDTO = new MagazineListDTO();
         magazineListDTO.setTitle(title);
         magazineListDTO.setWriter(writer);
-        magazineListDTO.setContent(contentFile);
+        magazineListDTO.setContent(content);
 
         // 파일 처리
         if (files != null && !files.isEmpty()) {
