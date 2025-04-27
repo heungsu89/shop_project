@@ -1,5 +1,6 @@
 package com.shop.shop.controller;
 
+import com.shop.shop.domain.order.Order;
 import com.shop.shop.dto.OrderDTO;
 import com.shop.shop.repository.OrderItemRepository;
 import com.shop.shop.repository.OrderRepository;
@@ -35,6 +36,14 @@ public class OrderController {
             throw new RuntimeException("주문생성이 제대로 이루어지지 않았습니다.");
         }
         return ResponseEntity.ok(createdOrder);
+    }
+
+    // 특정 주문Id를 기준으로 주문 상세 조회
+    @GetMapping("/getOrderById/{orderId}")
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable("orderId") Long orderId) {
+        Order getOrder = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("해당 주문 내역이 존재하지 않습니다."));
+        OrderDTO orderDTO = new OrderDTO(getOrder);
+        return ResponseEntity.ok(orderDTO);
     }
 
     // 회원Id 를 기준으로 주문 내역 모두 조회
