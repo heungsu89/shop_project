@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface OrderService {
 
+    public OrderDTO findByOrderId(Long orderId);
     public List<OrderDTO> findAllByMemberId(Long memberId);
     public Page<OrderDTO> findAllByMemberId(Pageable pageable, Long memberId);
     public OrderDTO findByDeliveryId(Long deliveryId);

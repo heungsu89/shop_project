@@ -181,6 +181,21 @@ public class OrderServiceImpl implements OrderService {
         memberRepository.save(member);
     }
 
+    // 주문Id를 기준으로 주문 상세 조회
+    @Override
+    public OrderDTO findByOrderId(Long orderId) {
+        Order order = orderRepository.findByOrderId(orderId);
+        if (order == null) {
+            throw new RuntimeException("해당 주문을 조회할 수 없습니다.");
+        }
+        List<OrderItem> orderItemList = orderItemRepository.findByOrderId(order.getId());
+        if (orderItemList == null || orderItemList.isEmpty()) {
+            throw new RuntimeException("해당 주문의 주문 상품을 조회할 수 없습니다.");
+        }
+
+        return new OrderDTO(order, orderItemList);
+    }
+
     // 회원Id를 기준으로 주문 모두 조회
     @Override
     public List<OrderDTO> findAllByMemberId(Long memberId) {

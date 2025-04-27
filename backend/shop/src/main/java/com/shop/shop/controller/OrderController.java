@@ -40,14 +40,17 @@ public class OrderController {
 
     // 특정 주문Id를 기준으로 주문 상세 조회
     @GetMapping("/getOrderById/{orderId}")
-    public ResponseEntity<OrderDTO> getOrderById(@PathVariable("orderId") Long orderId) {
-        Order getOrder = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("해당 주문 내역이 존재하지 않습니다."));
-        OrderDTO orderDTO = new OrderDTO(getOrder);
-        return ResponseEntity.ok(orderDTO);
+    public ResponseEntity<OrderDTO> getOrderByOrderId(@PathVariable("orderId") Long orderId) {
+        OrderDTO getOrder = orderService.findByOrderId(orderId);
+        if (getOrder == null) {
+            throw new RuntimeException("해당 주문 내역이 존재하지 않습니다.");
+        }
+
+        return ResponseEntity.ok(getOrder);
     }
 
     // 회원Id 를 기준으로 주문 내역 모두 조회
-    @GetMapping("/getOrderWithMemberId")
+    @GetMapping("/getOrderWithMemberId/{memberId}")
     public ResponseEntity<List<OrderDTO>> getOrderListByMemberId(@PathVariable Long memberId) {
         List<OrderDTO> getOrderList = orderService.findAllByMemberId(memberId);
         if (getOrderList == null || getOrderList.isEmpty()) {
@@ -57,7 +60,7 @@ public class OrderController {
     }
 
     // 회원Id 를 기준으로 주문 내역 모두 조회(페이징)
-    @GetMapping("/getOrderWithMemberIdPage")
+    @GetMapping("/getOrderWithMemberIdPage/{memberId}")
     public ResponseEntity<Page<OrderDTO>> getOrderListByMemberId(
             @PathVariable Long memberId,
             @RequestParam(defaultValue = "0") int page,

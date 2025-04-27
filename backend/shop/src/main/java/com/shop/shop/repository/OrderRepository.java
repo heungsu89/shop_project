@@ -15,6 +15,11 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
+    // 주문Id를 기준으로 주문 내역 조회
+//    @EntityGraph(attributePaths = {"orderItem"})
+    @Query("SELECT o FROM Order o WHERE o.id = :orderId AND o.delFlag = false ORDER BY o.id DESC")
+    public Order findByOrderId(@Param("orderId") Long orderId);
+
     // 회원Id를 기준으로 주문 내역 모두 조회
 //    @EntityGraph(attributePaths = {"orderItem"})
     @Query("SELECT o FROM Order o WHERE o.member.id = :memberId AND o.delFlag = false ORDER BY o.id DESC")
