@@ -54,7 +54,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = Item.builder()
                 .name(itemDTO.getName())
                 .description(itemDTO.getDescription())
-                .totalScore(itemDTO.getTotalScore())
+                .totalScore(0)
                 .price(itemDTO.getPrice())
                 .discountRate(itemDTO.getDiscountRate())
                 .delFlag(false)
