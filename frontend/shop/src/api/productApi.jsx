@@ -25,7 +25,6 @@ export const getProductById = async (id) => {
 export const registerProduct = async ({ itemDTO, categoryId, files }) => {
   const formData = new FormData();
 
-  // ❗ 문자열로 넣는 것 유지
   formData.append("itemDTO", new Blob([JSON.stringify(itemDTO)], { type: "application/json" }));
   formData.append("categoryId", String(categoryId));
   files.forEach(file => {
@@ -36,7 +35,6 @@ export const registerProduct = async ({ itemDTO, categoryId, files }) => {
     const res = await axios.post(`${host}/add`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     });
-    alert("상품등록완료");
     return res.data;
   } catch (error) {
     console.error("상품 등록 실패:", error.response?.data || error.message);

@@ -44,7 +44,6 @@ export const addItem = async (itemData) => {
 
   try {
     const res = await jwtAxios.post(`${itemHost}/add`, itemData); 
-    console.log('상품 추가 성공:', res.data);
     return res.data;
   } catch (error) {
     console.error('상품 추가 실패:', error.response?.data || error.message);

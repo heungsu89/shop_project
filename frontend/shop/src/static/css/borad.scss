@@ -21,12 +21,11 @@
 }
 
 
-
 .itemSidebar.borad{
   h2{margin-bottom: 40px;}
   span{display: block;}
   .number{font-size:var(--h5);}
-  .title{font-size: var(--h1);font-weight: normal;text-align: end;line-height: 1.1;margin: 4px 0 10px;}
+  .title{font-size: var(--h1);font-weight: normal;text-align: end;line-height: 1.1;margin: 4px 0 10px; overflow-wrap: break-word;}
   .date{font-size:var(--h5);color: var(--placeholder);}
   .pagination{margin-top: auto;}
 }

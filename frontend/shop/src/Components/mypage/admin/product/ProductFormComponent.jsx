@@ -8,11 +8,11 @@ import { getProductById, deleteProduct, updateProduct, registerProduct } from '.
 import '../../../../static/css/adminProduct.scss';
 
 const DEFAULT_FORM = {
-  name: '베이직 마이',
-  description: '상품 테스트',
+  name: '',
+  description: '',
   totalScore: '',
-  price: 58000,
-  discountRate: 10,
+  price: 0,
+  discountRate: 0,
   delFlag: false,
   options: [],
   info: { 브랜드: '노드', 원산지: '한국' }

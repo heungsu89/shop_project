@@ -44,12 +44,12 @@ const MagazineListComponent = () => {
                       <Link to={`/event/detail/${item.eventListId}`}>
                           <span className="volume">- VOL. {displayIndex}</span>
                           <h3 className="title">
-                          {item.title.split(/[-–]/).map((part, idx, arr) => (
-                            <React.Fragment key={idx}>
-                              {part.trim()}
-                              {idx !== arr.length - 1 && <br />}
-                            </React.Fragment>
-                          ))}
+                              {item.title.split('').map((char, idx) => (
+                                <React.Fragment key={idx}>
+                                  {char}
+                                  {(char === '-' || char === '–') && <br />}
+                                </React.Fragment>
+                              ))}
                         </h3>
                         </Link>
                     </div>

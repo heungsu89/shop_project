@@ -249,41 +249,46 @@ const decreaseQuantity = async (item) => {
               </tr>
             </thead>
           <tbody className="itemTbody">
-          {cartItems.map((item) => {
-          const dcPrice = Math.floor(item.itemPrice * (1 - item.discountRate / 100));
-          return(
-            <tr className="itemTr" key={item.cartId}>
-              <td className="itemNumber">
-                  <div className="selectInputWrap checkbox">
-                    <input id={`item_${item.cartId}`} type="checkbox" checked={checkedItems.includes(item.cartId)} onChange={()=>{handleSingleCheck(item.cartId)}} />
-                    <label for={`item_${item.cartId}`}><span className="blind">전체선택</span></label>
-                  </div>
-              </td>
-              <td className="itemInfo">
-                {item.imageName && (
-                <div className="itemImg">
-                  <img src={`http://localhost:8081/upload/${item.imageName}`} alt={item.itemName} className="itemImage" />
-                </div>
-                )}
-                <div className="itemDetailInfo">
-                  <span className="itemName">{item.itemName}</span>
-                  <span>{item.optionName} : {item.optionValue} {item.optionPrice > 0 && `(${item.optionPrice})`} </span>
-                  <div className="quantityControl">
-                    <button type="button" onClick={() => decreaseQuantity(item)}>-</button>
-                    <span>{item.qty}</span>
-                    <button type="button" onClick={() => increaseQuantity(item)}>+</button>
-                  </div>
-                </div>
-              </td>
-              <td className="itemPriceInfo">{addComma((dcPrice + item.optionPrice))}원</td>
-              <td className="itemPriceInfo">{addComma(((dcPrice + item.optionPrice) * item.qty))}원</td>
-              <td className="itemPriceInfo">{(((dcPrice + item.optionPrice) * item.qty) * rate).toLocaleString()}원</td>
-              <td className="itemWriter">
-                <button onClick={() => handleAddToWishlist(item.itemId)}>관심상품 등록</button>
-                <button onClick={() => handleRemoveItem(item.cartId)}>카트에서 삭제</button>
-              </td>
-            </tr>
-          )})}
+          {cartItems?.length > 0 ? (
+            cartItems.map((item) => {
+              const dcPrice = Math.floor(item.itemPrice * (1 - item.discountRate / 100));
+              return(
+                <tr className="itemTr" key={item.cartId}>
+                  <td className="itemNumber">
+                      <div className="selectInputWrap checkbox">
+                        <input id={`item_${item.cartId}`} type="checkbox" checked={checkedItems.includes(item.cartId)} onChange={()=>{handleSingleCheck(item.cartId)}} />
+                        <label for={`item_${item.cartId}`}><span className="blind">전체선택</span></label>
+                      </div>
+                  </td>
+                  <td className="itemInfo">
+                    {item.imageName && (
+                    <div className="itemImg">
+                      <img src={`http://localhost:8081/upload/${item.imageName}`} alt={item.itemName} className="itemImage" />
+                    </div>
+                    )}
+                    <div className="itemDetailInfo">
+                      <span className="itemName">{item.itemName}</span>
+                      <span>{item.optionName} : {item.optionValue} {item.optionPrice > 0 && `(${item.optionPrice})`} </span>
+                      <div className="quantityControl">
+                        <button type="button" onClick={() => decreaseQuantity(item)}>-</button>
+                        <span>{item.qty}</span>
+                        <button type="button" onClick={() => increaseQuantity(item)}>+</button>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="itemPriceInfo">{addComma((dcPrice + item.optionPrice))}원</td>
+                  <td className="itemPriceInfo">{addComma(((dcPrice + item.optionPrice) * item.qty))}원</td>
+                  <td className="itemPriceInfo">{(((dcPrice + item.optionPrice) * item.qty) * rate).toLocaleString()}원</td>
+                  <td className="itemWriter">
+                    <button onClick={() => handleAddToWishlist(item.itemId)}>관심상품 등록</button>
+                    <button onClick={() => handleRemoveItem(item.cartId)}>카트에서 삭제</button>
+                  </td>
+                </tr>
+              )})
+          ) : (
+            <tr className="itemTr"><td colSpan={6} className="noDataView">장바구니에 담긴 상품이 없습니다.</td></tr>
+          )}
+
           </tbody>
           </table>
         </div>
