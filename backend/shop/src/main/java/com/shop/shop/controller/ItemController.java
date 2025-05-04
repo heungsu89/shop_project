@@ -1,5 +1,6 @@
 package com.shop.shop.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shop.shop.domain.category.Category;
 import com.shop.shop.domain.item.Item;
@@ -151,7 +152,7 @@ public class ItemController {
         }
     }
 
-    // 아이템 등록 PostMan
+    // 아이템 등록 (PostMan)
     @PostMapping(value = "/addPost")
     public ResponseEntity<ItemDTO> registerItem(
             @RequestPart(value = "itemDTO") String itemDTOJson, // String으로 받아서 JSON 파싱
@@ -188,5 +189,18 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+    // 아이템 수정 (PostMan)
+    @PutMapping(value = "/modifyPost", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ItemDTO> updateItemFromPostMan(
+            @RequestPart(value = "itemDTO") String itemDTOJson, //
+            @RequestPart(value = "files", required = false) List<MultipartFile> files
+    ) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ItemDTO itemDTO = objectMapper.readValue(itemDTOJson, ItemDTO.class);
+
+        System.out.println("파일 수: " + (files != null ? files.size() : 0));
+        return ResponseEntity.ok(itemService.updateItem(itemDTO.getId(), itemDTO, files));
+    };
 
 }

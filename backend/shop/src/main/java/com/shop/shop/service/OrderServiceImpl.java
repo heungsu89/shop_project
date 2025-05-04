@@ -184,6 +184,19 @@ public class OrderServiceImpl implements OrderService {
         memberRepository.save(member);
     }
 
+    // 모든 주문 내역 조회
+    @Override
+    public Page<OrderDTO> findAllOrders(Pageable pageable) {
+        Page<Order> orderPage = orderRepository.findAllOrders(pageable);
+        if (orderPage == null || orderPage.isEmpty()) {
+            throw new RuntimeException("조회된 주문내역이 없습니다.");
+        }
+        return orderPage.map(order -> {
+            List<OrderItem> items = orderItemRepository.findByOrderId(order.getId());
+            return new OrderDTO(order, items);
+        });
+    }
+
     // 주문Id를 기준으로 주문 상세 조회
     @Override
     public OrderDTO findByOrderId(Long orderId) {

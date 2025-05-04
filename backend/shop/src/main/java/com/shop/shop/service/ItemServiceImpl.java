@@ -208,12 +208,12 @@ public class ItemServiceImpl implements ItemService {
         CategoryItem categoryItem = categoryItemRepository.findByItemId(itemDTO.getId());
         if (categoryItem == null) {
             throw new RuntimeException("해당 상품이 속한 카테고리를 찾지 못했습니다.");
-        } else {
-            if (item.getCategoryId() != itemDTO.getCategoryId()) {
-                categoryItemRepository.deleteById(categoryItem.getId());
-                categoryItemService.registerCategoryItem(item, itemDTO.getCategoryId());
-            }
         }
+        if (item.getCategoryId() != itemDTO.getCategoryId()) {
+            categoryItemRepository.deleteById(categoryItem.getId());
+            categoryItemService.registerCategoryItem(item, itemDTO.getCategoryId());
+        }
+
 
         // 기본 필드 수정
         if (itemDTO.getName() != null) {

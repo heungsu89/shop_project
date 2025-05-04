@@ -38,6 +38,16 @@ public class OrderController {
         return ResponseEntity.ok(createdOrder);
     }
 
+    // 모든 주문 조회
+    @GetMapping("/getOrderList")
+    public ResponseEntity<Page<OrderDTO>> getAllOrder(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OrderDTO> getOrderPage = orderService.findAllOrders(pageable);
+        return ResponseEntity.ok(getOrderPage);
+    }
+
     // 특정 주문Id를 기준으로 주문 상세 조회
     @GetMapping("/getOrderById/{orderId}")
     public ResponseEntity<OrderDTO> getOrderByOrderId(@PathVariable("orderId") Long orderId) {
