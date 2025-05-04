@@ -22,6 +22,7 @@ public class OrderDTO {
 
     private Long id;
     private Long memberId;
+    private String memberEmail;
     private LocalDateTime orderDate;
     private int totalAmount;
     private OrderStatus orderStatus;
@@ -53,6 +54,7 @@ public class OrderDTO {
     public OrderDTO(Order order, List<OrderItem> items) {
         this.id = order.getId();
         this.memberId = order.getMember().getId();
+        this.memberEmail = order.getMember().getEmail();
         this.orderDate = order.getOrderDate();
         this.totalAmount = order.getTotalAmount();
         this.orderStatus = order.getOrderStatus();
@@ -80,6 +82,7 @@ public class OrderDTO {
     public OrderDTO(Order order) {
         this.id = order.getId();
         this.memberId = order.getMember().getId();
+        this.memberEmail = order.getMember().getEmail();
         this.orderDate = order.getOrderDate();
         this.totalAmount = order.getTotalAmount();
         this.orderStatus = order.getOrderStatus();
