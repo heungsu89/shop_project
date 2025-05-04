@@ -173,7 +173,7 @@ public class OrderServiceImpl implements OrderService {
         // 마일리지 내역 생성
         mileageService.createMileage(new MileageDTO(mileage));
 
-        // 회원 마일리지량 증가
+        // 회원 마일리지량 변화
         if (mileageStatus == MileageStatus.REDEEM) {
             member.minusMileage(amount);
         } else if (mileageStatus == MileageStatus.NO_REDEEM) {

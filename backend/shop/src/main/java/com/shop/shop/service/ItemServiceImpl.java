@@ -1,6 +1,7 @@
 package com.shop.shop.service;
 
 import com.shop.shop.domain.cart.WishList;
+import com.shop.shop.domain.category.CategoryItem;
 import com.shop.shop.domain.item.Item;
 import com.shop.shop.domain.item.ItemImage;
 import com.shop.shop.domain.item.ItemInfo;
@@ -43,6 +44,8 @@ public class ItemServiceImpl implements ItemService {
     private final CustomFileUtil fileUtil;
     private final WishListRepository wishListRepository;
     private final MemberRepository memberRepository;
+    private final CategoryItemRepository categoryItemRepository;
+    private final CategoryItemService categoryItemService;
 
     @Getter
     private Item savedItem;
@@ -202,6 +205,15 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDTO updateItem(Long id, ItemDTO itemDTO, List<MultipartFile> files) {
         Item item = itemRepository.findById(id).orElseThrow();
+        CategoryItem categoryItem = categoryItemRepository.findByItemId(itemDTO.getId());
+        if (categoryItem == null) {
+            throw new RuntimeException("해당 상품이 속한 카테고리를 찾지 못했습니다.");
+        } else {
+            if (item.getCategoryId() != itemDTO.getCategoryId()) {
+                categoryItemRepository.deleteById(categoryItem.getId());
+                categoryItemService.registerCategoryItem(item, itemDTO.getCategoryId());
+            }
+        }
 
         // 기본 필드 수정
         if (itemDTO.getName() != null) {

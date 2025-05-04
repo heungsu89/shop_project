@@ -52,4 +52,8 @@ public interface CategoryItemRepository extends JpaRepository<CategoryItem, Long
     @Query("SELECT ci FROM CategoryItem ci WHERE ci.category.id = :categoryId ORDER BY ci.id DESC")
     List<CategoryItem> findAllByCategoryId(@Param("categoryId") Long categoryId);
 
+    // itemId를 기준으로 조회
+    @Query("SELECT ci FROM CategoryItem ci WHERE ci.item.id = :itemId")
+    CategoryItem findByItemId(@Param("itemId") Long itemId);
+
 }
