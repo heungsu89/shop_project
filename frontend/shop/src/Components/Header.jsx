@@ -61,7 +61,6 @@ const Header = ({ isMypage }) => {
                   <Link to={`/product/list/${cat.id}?page=0&size=9`}>{cat.categoryName}</Link>
                 </li>
               ))}
-            {/* <li><Link to="/shop">SHOP</Link></li> */}
             <li><Link to={`/magazine/list?page=0&size=10`}>MAGAZINE</Link></li>
             <li><Link to={`/event/list?page=0&size=10`}>EVENT</Link></li>
           </ul>

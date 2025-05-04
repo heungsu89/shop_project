@@ -6,6 +6,7 @@ const AdminMainPage = lazy(() => import("../../Pages/myPage/admin/AdminMainPage"
 
 const OrderComponent = lazy(() => import("../../Components/mypage/admin/order/OrderComponent"));
 const OrderListComponent = lazy(() => import("../../Components/mypage/admin/order/OrderListComponent"));
+const OrderDetailComponent = lazy(() => import("../../Components/mypage/admin/order/OrderDetailCompoent"));
 
 const ProductComponent = lazy(() => import("../../Components/mypage/admin/product/ProductComponent"));
 const ProductListComponent = lazy(()=>import("../../Components/mypage/admin/product/ProductListComponent"));
@@ -50,6 +51,10 @@ const adminRouter = () => {
             {
               index: true,  // <- 기본 라우트
               element: <OrderListComponent />
+            },
+            {
+              path: "detail/:orderId",  // <- 기본 라우트
+              element: <OrderDetailComponent />
             },
           ]
         },

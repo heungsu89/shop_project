@@ -32,10 +32,43 @@ export const getIdOrderList = async (id,page,size)=>{
 }
 
 /** 회원 아이디로 주문조회*/
-export const getOneOrder = async (id)=>{
+export const getOneOrder = async (id) =>{
     try{
         const res = await axios.get(`${host}/getOrderById/${id}`);
         console.log(res.data)
+        return res.data;
+    }catch(error){
+        throw error;
+    }
+}
+
+/** 모든 주문 조회 */
+export const getOrderList = async (page,size) =>{
+    try{
+        const res = await axios.get(`${host}/getOrderList?page=${page}&size=${size}`);
+        return res.data;
+    }catch(error){
+        throw error;
+    }
+}
+
+/** 주문삭제 */
+export const orderDelete =  async (oderId) => {
+    try{
+        const res = await axios.delete(`${host}/delete/${oderId}`);
+        return res.data;
+    }catch(error){
+        throw error;
+    }
+}
+
+/** 주문삭제 */
+export const editStatus = async (oderId,deliveryStatus) => {
+    try{
+        const res = await axios.put(`${host}/editStatus}`,{
+            id : oderId,
+            deliveryStatus
+        });
         return res.data;
     }catch(error){
         throw error;

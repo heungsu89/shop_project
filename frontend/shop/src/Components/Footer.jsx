@@ -1,9 +1,43 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
+import { getCookie, removeCookie } from "../util/cookieUtil";
+import { categoryList } from '../api/categoryApi';
 import Logo from '../static/svg/logo.svg?react';
-
+import LogoutComponent from './member/LogoutComponent';
 
 const Footer = ({ isMypage }) => {
+  const navigate = useNavigate();
+  const loginState = useSelector(state => state.loginSlice);
+  const isLoggedIn = loginState && loginState.email !== '';
+  const [memberInfo, setInfo] = useState(null);
+  const [categories, setCategories] = useState([]);
+
+    /** 동적으로 생성된 카테고리 불러오기기 */
+    const fetchCategories = useCallback(() => {
+      categoryList().then(setCategories);
+    }, []);
+
+  /** 로그인 정보 확인 및 동적 카테고리 감지 업데이트 */
+  useEffect(() => {
+    fetchCategories();
+
+    if (isLoggedIn) {
+      const info = getCookie("member");
+      setInfo(info);
+    } else {
+      setInfo(null);
+    }
+
+    const handleUpdate = () => fetchCategories();
+    window.addEventListener('categoryUpdated', handleUpdate);
+
+    return () => window.removeEventListener('categoryUpdated', handleUpdate);
+  }, [isLoggedIn, fetchCategories]);
+
+  /** 관리자, 일반유저 인지 따라 링크 다르게 하기 */
+  const mypageLink = memberInfo?.roleNames?.includes("ADMIN") ? "/admin/mypage" : "/user/mypage";
+
   return (
     <footer className="footer">
       <div className={`innerWrap ${isMypage ? 'mypage' : ''}`}>
@@ -14,18 +48,13 @@ const Footer = ({ isMypage }) => {
           </h2>
           <nav className="f_siteMap">
               <ul className="f_cartegory">
-              <li>
-                  <Link to="/shop">SHOP</Link>
-                  <ul className="f_subCartegory">
-                    <li><Link to="/">OUTWEAR</Link></li>
-                    <li><Link to="/">TOP</Link></li>
-                    <li><Link to="/">KNITWEAR</Link></li>
-                    <li><Link to="/">BOTTOM</Link></li>
-                    <li><Link to="/">ACC</Link></li>
-                  </ul>
-                </li>
-                <li><Link to="/magazine">MAGAZINE</Link></li>
-                <li><Link to="/event">EVENT</Link></li>
+              {categories.map((cat) => (
+                  <li key={cat.id}>
+                    <Link to={`/product/list/${cat.id}?page=0&size=9`}>{cat.categoryName}</Link>
+                  </li>
+                ))}
+              <li><Link to={`/magazine/list?page=0&size=10`}>MAGAZINE</Link></li>
+              <li><Link to={`/event/list?page=0&size=10`}>EVENT</Link></li>
               </ul>
           </nav>
         </div>
