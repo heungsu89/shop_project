@@ -8,6 +8,13 @@
       "type": "java",
       "name": "ShopApplication",
       "request": "launch",
+      "mainClass": "ShopApplication",
+      "projectName": "shop"
+    },
+    {
+      "type": "java",
+      "name": "ShopApplication",
+      "request": "launch",
       "mainClass": "com.shop.shop.ShopApplication",
       "projectName": "shop"
     },
