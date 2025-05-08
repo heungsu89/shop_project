@@ -1,9 +1,7 @@
 package com.shop.shop.controller;
 
 import com.shop.shop.dto.CartDTO;
-import com.shop.shop.dto.CategoryDTO;
 import com.shop.shop.dto.CheckDTO;
-import com.shop.shop.dto.WishListDTO;
 import com.shop.shop.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
