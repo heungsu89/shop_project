@@ -56,6 +56,7 @@ public class CategoryController {
         return ResponseEntity.ok(category);
     }
 
+    // Id를 기준으로 특정 카테고리 조회
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> getCategory(@PathVariable("id") Long id) {
         // 먼저 부모 카테고리에서 시도
@@ -155,6 +156,7 @@ public class CategoryController {
     // return ResponseEntity.ok(categoryItemDTOPage);
     // }
 
+    // 카테고리 상태를 기준으로 카테고리 상품 조회
     @GetMapping("/categoryItemPageWithStatus")
     public ResponseEntity<Page<CategoryItemDTO>> getAllCategoryItemsWithStatus(
             @RequestParam Long categoryId,
