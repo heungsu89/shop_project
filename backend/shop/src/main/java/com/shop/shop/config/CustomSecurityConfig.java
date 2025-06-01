@@ -58,6 +58,7 @@ public class CustomSecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/upload/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole("MANAGER", "ADMIN")
+                        .requestMatchers("/api/search/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JWTCheckFilter(), UsernamePasswordAuthenticationFilter.class)
                 .anonymous(anonymous -> anonymous.disable())

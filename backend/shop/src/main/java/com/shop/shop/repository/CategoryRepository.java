@@ -43,4 +43,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT c FROM Category c WHERE c.parent.id = :parentId AND c.viewStatus = false ORDER BY c.id DESC")
     List<Category> findAllChildCategories(@Param("parentId") Long parentId);
 
+    // categoryName 의 단어가 포함된 모든 카테고리 조회
+    @Query("SELECT c FROM Category c WHERE c.categoryName LIKE CONCAT('%', :categoryName, '%') AND c.viewStatus = false ORDER BY c.id DESC")
+    List<Category> findAllByCategoryName(@Param("categoryName") String categoryName);
+
 }

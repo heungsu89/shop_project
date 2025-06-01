@@ -36,6 +36,10 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 //    @Query("SELECT i FROM Item i WHERE i.delFlag = false")
 //    Page<Item> findAllWithImagesAndOptionsAndInfo(Pageable pageable);
 
+    // itemName 의 단어가 포함된 상품들 중 삭제가 되지 않은 상품들을 조회
+    @Query("SELECT i FROM Item i WHERE i.name LIKE CONCAT('%', :itemName, '%') AND i.delFlag = false ORDER BY i.id DESC")
+    List<Item> findAllByItemName(@Param("itemName") String itemName);
+    
     Item findByName(String name);
 
 }
